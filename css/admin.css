@@ -1180,6 +1180,75 @@
   font-size:.8rem;
 }
 
+
+
+/* =========================================================
+   CREATE / EDIT ALBUM PHOTO UPLOAD
+   ========================================================= */
+
+.album-create-upload{
+  display:grid;
+  gap:12px;
+  padding:18px;
+  border:1px solid var(--portal-line);
+  border-radius:17px;
+  background:#fbfaf8;
+}
+
+.album-create-upload__heading{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+}
+
+.album-create-upload__heading>div{
+  display:grid;
+  gap:4px;
+}
+
+.album-create-upload__heading strong{
+  font-size:.86rem;
+  color:var(--portal-ink);
+}
+
+.album-create-upload__heading span{
+  max-width:720px;
+  color:var(--portal-muted);
+  font-size:.76rem;
+  line-height:1.5;
+}
+
+.gallery-upload-box--create{
+  background:#fff;
+}
+
+.album-selected-photos{
+  display:grid;
+  gap:8px;
+  padding:13px 15px;
+  border-radius:13px;
+  background:#f2eee8;
+}
+
+.album-selected-photos>strong{
+  font-size:.76rem;
+  color:var(--portal-ink);
+}
+
+.album-selected-photos__list{
+  display:grid;
+  gap:4px;
+  max-height:130px;
+  overflow:auto;
+}
+
+.album-selected-photos__list span{
+  color:var(--portal-muted);
+  font-size:.72rem;
+  overflow-wrap:anywhere;
+}
+
 /* =========================================================
    RESPONSIVE — TABLET
    ========================================================= */
