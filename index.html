@@ -70,11 +70,12 @@
           </div>
           <img src="assets/images/bihu-community.jpg" alt="Assam Association Vancouver Bihu community celebration">
         </article>
-        <div class="event-grid">
+        <div id="dynamic-events" class="event-grid">
           <article class="event-card reveal"><img src="assets/images/community-picnic.jpg" alt="Community picnic"><div><span class="tag">Community</span><h3>Annual Picnic</h3><p>Relaxed outdoor gatherings for families, friends and newcomers.</p></div></article>
           <article class="event-card reveal"><img src="assets/images/performance.jpg" alt="Cultural performance"><div><span class="tag">Culture</span><h3>Stage & Cultural Programs</h3><p>Dance, music and performances celebrating the richness of our heritage.</p></div></article>
           <article class="event-card reveal"><img src="assets/images/drama.jpg" alt="Community drama performance"><div><span class="tag">Arts</span><h3>Community Performances</h3><p>Creative programs that bring our stories and community talent to the stage.</p></div></article>
         </div>
+        <p id="events-empty" class="muted" hidden>No upcoming events have been published yet.</p>
       </div>
     </section>
 
@@ -133,6 +134,9 @@
       <p class="copyright">© <span id="year"></span> Assam Association Vancouver.</p>
     </div>
   </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/events.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

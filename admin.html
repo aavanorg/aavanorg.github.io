@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Committee Admin | Assam Association Vancouver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-page">
+  <header class="admin-header">
+    <a href="index.html" class="admin-brand"><img src="assets/images/logo.png" alt="Assam Association Vancouver"><span>Committee Portal</span></a>
+    <div class="header-user"><span id="headerIdentity"></span><button id="logoutBtn" class="btn btn-dark" hidden>Sign out</button></div>
+  </header>
+
+  <main class="admin-shell">
+    <section id="setupNotice" class="admin-panel" hidden>
+      <h1>Backend connection needed</h1>
+      <p>The portal is installed, but Supabase has not been connected. Follow <strong>SUPABASE-SETUP.txt</strong>, then add the public project URL and anon/publishable key to <code>js/supabase-config.js</code>.</p>
+    </section>
+
+    <section id="authPanel" class="admin-panel login-panel">
+      <p class="eyebrow">COMMITTEE PORTAL</p>
+      <h1>Committee access</h1>
+      <p>Committee members use their own email address. New accounts remain pending until an Admin approves them.</p>
+      <div class="auth-tabs">
+        <button id="loginTab" class="auth-tab active" type="button">Sign in</button>
+        <button id="signupTab" class="auth-tab" type="button">Request access</button>
+      </div>
+
+      <form id="loginForm" class="admin-form compact">
+        <label>Email<input id="loginEmail" type="email" autocomplete="email" required></label>
+        <label>Password<input id="loginPassword" type="password" autocomplete="current-password" required></label>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+        <button id="forgotPasswordBtn" class="text-button left" type="button">Forgot password?</button>
+        <p id="loginMessage" class="form-message"></p>
+      </form>
+
+      <form id="signupForm" class="admin-form compact" hidden>
+        <label>Your name<input id="signupName" maxlength="100" autocomplete="name" required></label>
+        <label>Personal email<input id="signupEmail" type="email" autocomplete="email" required></label>
+        <label>Create password<input id="signupPassword" type="password" minlength="8" autocomplete="new-password" required></label>
+        <button class="btn btn-primary" type="submit">Request committee access</button>
+        <p class="helper">Creating an account does not grant editing access. An Admin must approve it.</p>
+        <p id="signupMessage" class="form-message"></p>
+      </form>
+    </section>
+
+    <section id="pendingPanel" class="admin-panel login-panel" hidden>
+      <p class="eyebrow">ACCOUNT STATUS</p>
+      <h1 id="pendingTitle">Approval required</h1>
+      <p id="pendingCopy">Your account exists, but an Admin has not approved committee access yet.</p>
+      <button id="pendingLogoutBtn" class="btn btn-dark">Sign out</button>
+    </section>
+
+    <section id="dashboard" hidden>
+      <div class="admin-title-row">
+        <div><p class="eyebrow">COMMITTEE DASHBOARD</p><h1>Website management</h1><p id="roleSummary" class="role-summary"></p></div>
+      </div>
+
+      <div class="dashboard-tabs">
+        <button class="dashboard-tab active" data-panel="eventsPanel" type="button">Events</button>
+        <button id="accessTab" class="dashboard-tab" data-panel="accessPanel" type="button" hidden>Access Management</button>
+      </div>
+
+      <section id="eventsPanel" class="dashboard-panel">
+        <div class="panel-toolbar">
+          <div><h2>Upcoming events</h2><p>Published events appear automatically on the public website.</p></div>
+          <button id="newEventBtn" class="btn btn-primary">+ Add Event</button>
+        </div>
+
+        <div id="eventFormPanel" class="admin-panel" hidden>
+          <div class="panel-title"><h2 id="formTitle">Add event</h2><button id="cancelEditBtn" class="text-button" type="button">Cancel</button></div>
+          <form id="eventForm" class="admin-form">
+            <input id="eventId" type="hidden">
+            <div class="form-grid">
+              <label>Event title<input id="eventTitle" required maxlength="120"></label>
+              <label>Event date<input id="eventDate" type="date" required></label>
+              <label>Time<input id="eventTime" placeholder="6:00 PM"></label>
+              <label>Venue<input id="eventVenue" placeholder="Burnaby, BC"></label>
+            </div>
+            <label>Short description<textarea id="eventSummary" rows="4" maxlength="600" required></textarea></label>
+            <label>Registration / details link<input id="eventRegistration" type="url" placeholder="https://..."></label>
+            <label>Event image<input id="eventImage" type="file" accept="image/jpeg,image/png,image/webp"></label>
+            <div class="check-row">
+              <label><input id="eventFeatured" type="checkbox"> Featured event</label>
+              <label><input id="eventPublished" type="checkbox" checked> Published</label>
+            </div>
+            <button class="btn btn-primary" type="submit">Save Event</button>
+            <p id="eventMessage" class="form-message"></p>
+          </form>
+        </div>
+
+        <div id="eventsList" class="admin-list"></div>
+      </section>
+
+      <section id="accessPanel" class="dashboard-panel" hidden>
+        <div class="panel-toolbar">
+          <div><h2>Access Management</h2><p>Approve committee accounts, assign roles, or disable access.</p></div>
+        </div>
+        <div class="role-guide admin-panel slim">
+          <strong>Roles:</strong>
+          <span><b>Admin</b> — events + user access</span>
+          <span><b>Editor</b> — add/edit/publish events</span>
+          <span><b>Viewer</b> — sign in and view dashboard only</span>
+        </div>
+        <p id="membersMessage" class="form-message"></p>
+        <div id="membersList" class="members-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
