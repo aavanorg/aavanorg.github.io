@@ -2,216 +2,1898 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Assam Association Vancouver — celebrating Assamese culture, heritage and community in British Columbia.">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Assam Association Vancouver — celebrating Assamese culture, community and connection across British Columbia.">
+  <meta name="theme-color" content="#fbfaf7">
   <title>Assam Association Vancouver</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/admin.css">
 </head>
+
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
   <header class="site-header" id="top">
-    <div class="container nav-wrap">
+    <div class="container header-inner">
       <a class="brand" href="#top" aria-label="Assam Association Vancouver home">
-        <img src="assets/images/logo.png" alt="Assam Association Vancouver logo">
+        <img src="assets/images/logo.png" alt="Assam Association Vancouver">
       </a>
-      <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
-      <nav class="nav" aria-label="Main navigation">
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="siteNav"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
         <a href="#about">About</a>
         <a href="#events">Events</a>
-        <a href="#culture">Discover Assam</a>
+        <a href="#assam">Discover Assam</a>
         <a href="#gallery">Gallery</a>
         <a href="#membership">Membership</a>
-        <a href="#sponsors">Sponsors</a>
+        <a href="#partners">Partners</a>
         <a href="#contact">Contact</a>
-        <a class="nav-cta" href="#membership">Join Us</a>
       </nav>
+
+      <div class="header-actions">
+        <button class="header-login" type="button" data-committee-login>
+          Committee Login
+        </button>
+        <button class="header-join" type="button" data-membership-open>
+          Join Us
+        </button>
+      </div>
     </div>
   </header>
 
-  <main>
-    <section class="hero">
-      <div class="hero-overlay"></div>
-      <div class="container hero-content reveal">
-        <p class="eyebrow light">ASSAM • VANCOUVER • COMMUNITY</p>
-        <h1>Celebrating Assam.<br><span>Connecting Community.</span></h1>
-        <p class="hero-copy">A home for Assamese culture, friendship and community spirit in British Columbia.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#events">Explore Events</a>
-          <a class="btn btn-ghost" href="#about">Our Story</a>
-        </div>
-      </div>
-      <a class="scroll-cue" href="#about" aria-label="Scroll to About">↓</a>
-    </section>
+  <main id="main">
 
-    <section class="section intro" id="about">
-      <div class="container narrow reveal">
-        <p class="eyebrow">WHO WE ARE</p>
-        <h2>A community connected by culture.</h2>
-        <p class="lead">Assam Association Vancouver brings people together through cultural celebrations, community gatherings, music, dance, food and the traditions of Assam.</p>
-        <p class="muted">This first GitHub version uses photographs recovered from the previous association website. Additional historical text can be restored as it becomes available.</p>
-      </div>
-    </section>
+    <section class="hero-premium" aria-labelledby="heroTitle">
+      <div class="container hero-grid">
 
-    <section class="section feature" id="events">
-      <div class="container">
-        <div class="section-heading reveal">
-          <div><p class="eyebrow">COMMUNITY EVENTS</p><h2>Come celebrate with us.</h2></div>
-          <p>From Bihu celebrations to picnics and cultural programs, our events bring generations together.</p>
-        </div>
-        <article class="featured-event reveal">
-          <div class="featured-copy">
-            <span class="pill">Featured celebration</span>
-            <h3>Bihu in Vancouver</h3>
-            <p>Music, dance, food and community — celebrating the traditions that keep Assam close to home.</p>
-            <div class="meta-row"><span>📍 Greater Vancouver, BC</span><span>📅 New event details coming soon</span></div>
-            <a class="btn btn-dark" href="#contact">Event Updates</a>
+        <div class="hero-copy-block reveal">
+          <p class="eyebrow">ASSAM • VANCOUVER • COMMUNITY</p>
+
+          <h1 id="heroTitle">
+            Rooted in Assam.<br>
+            <span>Growing together in Vancouver.</span>
+          </h1>
+
+          <p class="hero-lead">
+            A home for Assamese culture, friendship, family and community life
+            across British Columbia.
+          </p>
+
+          <div class="hero-actions-row">
+            <a class="btn btn-primary" href="#events">Explore Events</a>
+            <button class="btn btn-secondary" type="button" data-membership-open>
+              Become a Member
+            </button>
           </div>
-          <img src="assets/images/bihu-community.jpg" alt="Assam Association Vancouver Bihu community celebration">
-        </article>
-        <div id="dynamic-events" class="event-grid">
-          <article class="event-card reveal"><img src="assets/images/community-picnic.jpg" alt="Community picnic"><div><span class="tag">Community</span><h3>Annual Picnic</h3><p>Relaxed outdoor gatherings for families, friends and newcomers.</p></div></article>
-          <article class="event-card reveal"><img src="assets/images/performance.jpg" alt="Cultural performance"><div><span class="tag">Culture</span><h3>Stage & Cultural Programs</h3><p>Dance, music and performances celebrating the richness of our heritage.</p></div></article>
-          <article class="event-card reveal"><img src="assets/images/drama.jpg" alt="Community drama performance"><div><span class="tag">Arts</span><h3>Community Performances</h3><p>Creative programs that bring our stories and community talent to the stage.</p></div></article>
+
+          <div class="hero-signals" aria-label="Community values">
+            <div>
+              <strong>Culture</strong>
+              <span>Celebrate our heritage</span>
+            </div>
+
+            <div>
+              <strong>Connection</strong>
+              <span>Bring generations together</span>
+            </div>
+
+            <div>
+              <strong>Community</strong>
+              <span>Build belonging in BC</span>
+            </div>
+          </div>
         </div>
-        <p id="events-empty" class="muted" hidden>No upcoming events have been published yet.</p>
+
+        <div class="hero-visual reveal">
+          <div class="hero-photo-frame">
+            <img
+              src="assets/images/hero-bihu.jpg"
+              alt="Assamese Bihu celebration in Vancouver"
+            >
+          </div>
+
+          <div class="hero-floating-card">
+            <span class="mini-label">AAVAN COMMUNITY</span>
+            <strong>
+              Culture feels closer when we celebrate it together.
+            </strong>
+            <a href="#about">
+              Our story <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <section class="section culture" id="culture">
+    <section class="trust-strip" aria-label="Association highlights">
+      <div class="container trust-grid">
+        <span>Assamese culture</span>
+        <span>Family gatherings</span>
+        <span>Youth & community</span>
+        <span>Music, dance & food</span>
+        <span>Greater Vancouver, BC</span>
+      </div>
+    </section>
+
+    <section class="section about-premium" id="about">
+      <div class="container about-grid">
+
+        <div class="about-label reveal">
+          <p class="eyebrow">WHO WE ARE</p>
+          <span class="section-number">01</span>
+        </div>
+
+        <div class="about-main reveal">
+          <h2>
+            A community shaped by where we come from —
+            and where we are now.
+          </h2>
+
+          <div class="about-copy-columns">
+            <p>
+              Assam Association Vancouver brings people together through
+              cultural celebrations, community gatherings, music, dance, food
+              and the traditions that connect us to Assam.
+            </p>
+
+            <p>
+              Our goal is simple: create a welcoming place where families,
+              students, newcomers and long-time residents can participate,
+              contribute and keep our culture alive for the next generation.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section events-premium" id="events">
       <div class="container">
-        <div class="culture-head reveal"><p class="eyebrow light">OUR ROOTS</p><h2>Discover Assam</h2><p>Explore the traditions, landscapes and flavours that shape our identity.</p></div>
-        <div class="culture-grid">
-          <article class="culture-card large reveal" style="--bg:url('../assets/images/tea-garden.jpg')"><div><span>LAND & HERITAGE</span><h3>Tea, landscapes & home</h3></div></article>
-          <article class="culture-card reveal" style="--bg:url('../assets/images/assam-food.jpg')"><div><span>FLAVOURS</span><h3>Food & hospitality</h3></div></article>
-          <article class="culture-card reveal" style="--bg:url('../assets/images/hero-bihu.jpg')"><div><span>TRADITIONS</span><h3>Bihu & dance</h3></div></article>
+
+        <div class="section-header reveal">
+          <div>
+            <p class="eyebrow">WHAT'S HAPPENING</p>
+            <h2>Gather. Celebrate. Belong.</h2>
+          </div>
+
+          <p>
+            Upcoming events are managed by the committee and appear here
+            automatically when published.
+          </p>
         </div>
+
+        <div id="featured-event-slot">
+          <article class="event-feature reveal">
+
+            <div class="event-feature-media">
+              <img
+                src="assets/images/bihu-community.jpg"
+                alt="Bihu celebration with Assam Association Vancouver"
+              >
+              <span class="event-badge">Featured celebration</span>
+            </div>
+
+            <div class="event-feature-copy">
+              <p class="event-kicker">COMMUNITY TRADITION</p>
+              <h3>Bihu in Vancouver</h3>
+
+              <p>
+                Music, dance, food and community — celebrating the traditions
+                that keep Assam close to home.
+              </p>
+
+              <div class="event-details">
+                <span>Greater Vancouver, BC</span>
+                <span>New event details coming soon</span>
+              </div>
+
+              <a class="inline-arrow" href="#contact">
+                Get event updates <span>→</span>
+              </a>
+            </div>
+
+          </article>
+        </div>
+
+        <div
+          id="dynamic-events"
+          class="event-list-grid"
+          aria-live="polite"
+        >
+
+          <article class="event-mini reveal">
+            <img
+              src="assets/images/community-picnic.jpg"
+              alt="Community picnic"
+            >
+            <div>
+              <span>Community</span>
+              <h3>Annual Picnic</h3>
+              <p>
+                Relaxed outdoor gatherings for families, friends and newcomers.
+              </p>
+            </div>
+          </article>
+
+          <article class="event-mini reveal">
+            <img
+              src="assets/images/performance.jpg"
+              alt="Cultural performance"
+            >
+            <div>
+              <span>Culture</span>
+              <h3>Stage & Cultural Programs</h3>
+              <p>
+                Music, dance and performances that celebrate Assamese heritage.
+              </p>
+            </div>
+          </article>
+
+          <article class="event-mini reveal">
+            <img
+              src="assets/images/drama.jpg"
+              alt="Community drama performance"
+            >
+            <div>
+              <span>Arts</span>
+              <h3>Community Performances</h3>
+              <p>
+                Creative programs that give community talent a stage.
+              </p>
+            </div>
+          </article>
+
+        </div>
+
+        <p id="events-empty" class="empty-state" hidden>
+          No upcoming events are currently published.
+        </p>
+
       </div>
     </section>
 
-    <section class="section gallery" id="gallery">
+    <section class="section assam-editorial" id="assam">
       <div class="container">
-        <div class="section-heading reveal"><div><p class="eyebrow">OUR COMMUNITY</p><h2>Moments worth remembering.</h2></div><p>A glimpse into celebrations and gatherings preserved from the association's previous website.</p></div>
-        <div class="gallery-grid">
-          <img class="wide reveal" src="assets/images/community-group.jpg" alt="Assam Association Vancouver community group">
-          <img class="reveal" src="assets/images/hero-bihu.jpg" alt="Bihu cultural dance">
-          <img class="reveal" src="assets/images/performance.jpg" alt="Cultural performance">
-          <img class="reveal" src="assets/images/community-picnic.jpg" alt="Community picnic gathering">
-          <img class="reveal" src="assets/images/drama.jpg" alt="Community drama event">
+
+        <div class="assam-title reveal">
+          <p class="eyebrow light">DISCOVER ASSAM</p>
+          <h2>
+            More than a place.<br>
+            A way of life.
+          </h2>
+          <p>
+            Explore the landscapes, flavours, celebrations and traditions that
+            continue to shape our community far from home.
+          </p>
+        </div>
+
+        <div class="assam-grid">
+
+          <article class="assam-card assam-card-tall reveal">
+            <img
+              src="assets/images/tea-garden.jpg"
+              alt="Tea garden in Assam"
+            >
+            <div>
+              <span>LAND & HERITAGE</span>
+              <h3>Tea, river, rain & home</h3>
+              <p>Landscapes that live in memory and identity.</p>
+            </div>
+          </article>
+
+          <article class="assam-card reveal">
+            <img
+              src="assets/images/assam-food.jpg"
+              alt="Assamese food"
+            >
+            <div>
+              <span>FOOD & HOSPITALITY</span>
+              <h3>Flavours that gather people</h3>
+            </div>
+          </article>
+
+          <article class="assam-card reveal">
+            <img
+              src="assets/images/hero-bihu.jpg"
+              alt="Bihu dance"
+            >
+            <div>
+              <span>MUSIC & DANCE</span>
+              <h3>Bihu across generations</h3>
+            </div>
+          </article>
+
+          <article class="assam-quote reveal">
+            <span>OUR ROOTS</span>
+            <blockquote>
+              “Culture stays alive when it is practiced, shared and passed on.”
+            </blockquote>
+          </article>
+
         </div>
       </div>
     </section>
 
-    <section class="section membership" id="membership">
-      <div class="container membership-box reveal">
-        <div><p class="eyebrow light">BELONG • CONTRIBUTE • CELEBRATE</p><h2>There is a place for you here.</h2><p>Whether you are new to British Columbia or have been part of the community for years, connect with Assam Association Vancouver.</p></div>
-        <a class="btn btn-light" href="#contact">Membership Information</a>
+    <section class="section gallery-premium" id="gallery">
+      <div class="container">
+
+        <div class="section-header reveal">
+          <div>
+            <p class="eyebrow">OUR COMMUNITY</p>
+            <h2>Moments that become memory.</h2>
+          </div>
+
+          <p>
+            Photographs recovered from the association's previous website,
+            reintroduced as part of the new digital archive.
+          </p>
+        </div>
+
+        <div class="gallery-bento">
+
+          <figure class="gallery-main reveal">
+            <img
+              src="assets/images/community-group.jpg"
+              alt="Assam Association Vancouver community group"
+            >
+            <figcaption>
+              Community, friendship and celebration
+            </figcaption>
+          </figure>
+
+          <figure class="reveal">
+            <img
+              src="assets/images/hero-bihu.jpg"
+              alt="Bihu performance"
+            >
+            <figcaption>Bihu</figcaption>
+          </figure>
+
+          <figure class="reveal">
+            <img
+              src="assets/images/performance.jpg"
+              alt="Stage performance"
+            >
+            <figcaption>Culture on stage</figcaption>
+          </figure>
+
+          <figure class="reveal">
+            <img
+              src="assets/images/community-picnic.jpg"
+              alt="Community picnic"
+            >
+            <figcaption>Community outdoors</figcaption>
+          </figure>
+
+          <figure class="reveal">
+            <img
+              src="assets/images/drama.jpg"
+              alt="Drama performance"
+            >
+            <figcaption>Stories & performance</figcaption>
+          </figure>
+
+        </div>
       </div>
     </section>
 
-    <section class="section sponsors" id="sponsors">
-      <div class="container narrow reveal">
-        <p class="eyebrow">COMMUNITY SUPPORT</p>
-        <h2>Partners make community possible.</h2>
-        <p class="lead">A dedicated sponsor showcase can be added here once the current sponsor list and logos are confirmed.</p>
-        <a class="text-link" href="#contact">Become a community partner →</a>
+    <section class="section membership-premium" id="membership">
+      <div class="container">
+
+        <div class="membership-shell reveal">
+
+          <div class="membership-intro">
+            <p class="eyebrow light">MEMBERSHIP</p>
+
+            <h2>
+              Belong to something that feels like home.
+            </h2>
+
+            <p>
+              Join AAVAN to take part in community programs, cultural
+              celebrations and the work of keeping Assamese identity strong
+              in British Columbia.
+            </p>
+
+            <button
+              class="btn btn-light"
+              type="button"
+              data-membership-open
+            >
+              Start Membership Application
+            </button>
+          </div>
+
+          <div
+            class="membership-plans-preview"
+            id="membershipPlanPreview"
+          >
+
+            <article>
+              <span>Family</span>
+              <strong>$40</strong>
+              <small>per year</small>
+            </article>
+
+            <article>
+              <span>Working Adult</span>
+              <strong>$25</strong>
+              <small>per year</small>
+            </article>
+
+            <article>
+              <span>Independent Student</span>
+              <strong>$15</strong>
+              <small>per year</small>
+            </article>
+
+          </div>
+
+        </div>
       </div>
     </section>
 
-    <section class="section contact" id="contact">
-      <div class="container contact-grid reveal">
-        <div><p class="eyebrow">STAY CONNECTED</p><h2>Join the conversation.</h2><p>Membership, event, volunteer and sponsorship contact details can be connected here once the current official channels are confirmed.</p></div>
-        <div class="contact-card"><strong>Assam Association Vancouver</strong><span>Greater Vancouver, British Columbia</span><span>Official contact details to be confirmed</span><a href="#top">Back to top ↑</a></div>
+    <section class="section partners-premium" id="partners">
+      <div class="container partner-grid reveal">
+
+        <div>
+          <p class="eyebrow">COMMUNITY PARTNERS</p>
+          <h2>Support that strengthens community.</h2>
+        </div>
+
+        <div class="partner-copy">
+          <p>
+            Sponsor and partner recognition can be managed here as AAVAN
+            confirms its current community supporters.
+          </p>
+
+          <a class="inline-arrow" href="#contact">
+            Partner with AAVAN <span>→</span>
+          </a>
+        </div>
+
       </div>
     </section>
+
+    <section class="section contact-premium" id="contact">
+      <div class="container contact-layout reveal">
+
+        <div>
+          <p class="eyebrow">STAY CONNECTED</p>
+          <h2>Have a question? Start here.</h2>
+
+          <p>
+            Membership, volunteering, sponsorship and event enquiries can all
+            begin with the association.
+          </p>
+        </div>
+
+        <div class="contact-panel">
+          <span class="contact-label">
+            ASSAM ASSOCIATION VANCOUVER
+          </span>
+
+          <strong>
+            Greater Vancouver, British Columbia
+          </strong>
+
+          <a href="mailto:aavanmembers@gmail.com">
+            aavanmembers@gmail.com
+          </a>
+
+          <div class="contact-actions">
+            <button type="button" data-membership-open>
+              Join AAVAN
+            </button>
+
+            <button type="button" data-committee-login>
+              Committee Login
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-grid">
-      <img src="assets/images/logo.png" alt="Assam Association Vancouver">
-      <p>Celebrating Assamese culture, heritage and community in British Columbia.</p>
-      <button id="committeeLoginBtn" class="committee-login-link" type="button">Committee Login</button>
-      <p class="copyright">© <span id="year"></span> Assam Association Vancouver.</p>
+    <div class="container footer-main">
+
+      <div class="footer-brand">
+        <img
+          src="assets/images/logo.png"
+          alt="Assam Association Vancouver"
+        >
+
+        <p>
+          Celebrating Assamese culture, heritage and community in
+          British Columbia.
+        </p>
+      </div>
+
+      <div class="footer-column">
+        <h3>Explore</h3>
+        <a href="#about">About</a>
+        <a href="#events">Events</a>
+        <a href="#assam">Discover Assam</a>
+        <a href="#gallery">Gallery</a>
+      </div>
+
+      <div class="footer-column">
+        <h3>Community</h3>
+
+        <button type="button" data-membership-open>
+          Membership
+        </button>
+
+        <a href="#partners">Partners</a>
+        <a href="#contact">Contact</a>
+
+        <button type="button" data-committee-login>
+          Committee Login
+        </button>
+      </div>
+
+      <div class="footer-column">
+        <h3>Connect</h3>
+
+        <a href="mailto:aavanmembers@gmail.com">
+          Email
+        </a>
+
+        <span>Greater Vancouver, BC</span>
+        <span>Social links coming soon</span>
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <span>
+        © <span id="year"></span> Assam Association Vancouver
+      </span>
+
+      <div>
+        <a href="#">Privacy</a>
+        <a href="#">Community Guidelines</a>
+        <a href="#top">Back to top ↑</a>
+      </div>
     </div>
   </footer>
 
+  <!-- Membership Application -->
+  <div
+    id="membershipModal"
+    class="modal-layer"
+    hidden
+    aria-hidden="true"
+  >
 
-  <div id="committeePortal" class="committee-portal" hidden aria-hidden="true">
-    <div class="committee-portal-backdrop" data-portal-close></div>
-    <section class="committee-portal-shell" role="dialog" aria-modal="true" aria-labelledby="committeePortalTitle">
-      <div class="committee-portal-topbar">
-        <div class="committee-portal-brand"><img src="assets/images/logo.png" alt=""><div><strong id="committeePortalTitle">Committee Portal</strong><span id="headerIdentity"></span></div></div>
-        <div class="committee-portal-actions"><button id="logoutBtn" class="btn btn-dark" hidden>Sign out</button><button id="committeePortalClose" class="portal-close" type="button" aria-label="Close committee portal">×</button></div>
+    <div
+      class="modal-backdrop"
+      data-membership-close
+    ></div>
+
+    <section
+      class="membership-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="membershipModalTitle"
+    >
+
+      <header class="modal-header">
+
+        <div>
+          <span class="modal-kicker">
+            JOIN AAVAN
+          </span>
+
+          <strong id="membershipModalTitle">
+            Membership Application
+          </strong>
+        </div>
+
+        <button
+          class="modal-close"
+          type="button"
+          data-membership-close
+          aria-label="Close membership application"
+        >
+          ×
+        </button>
+
+      </header>
+
+      <div
+        class="membership-progress"
+        aria-label="Application progress"
+      >
+
+        <button
+          class="progress-step active"
+          type="button"
+          data-step-jump="1"
+        >
+          <span>1</span>
+          About you
+        </button>
+
+        <button
+          class="progress-step"
+          type="button"
+          data-step-jump="2"
+        >
+          <span>2</span>
+          Household
+        </button>
+
+        <button
+          class="progress-step"
+          type="button"
+          data-step-jump="3"
+        >
+          <span>3</span>
+          Interests
+        </button>
+
+        <button
+          class="progress-step"
+          type="button"
+          data-step-jump="4"
+        >
+          <span>4</span>
+          Membership
+        </button>
+
+        <button
+          class="progress-step"
+          type="button"
+          data-step-jump="5"
+        >
+          <span>5</span>
+          Payment
+        </button>
+
       </div>
-      <div class="committee-portal-content">
-        <section id="setupNotice" class="admin-panel" hidden>
-          <h2>Backend connection needed</h2><p>Supabase is not connected yet.</p>
+
+      <form
+        id="membershipForm"
+        class="membership-form"
+      >
+
+        <section
+          class="membership-step active"
+          data-membership-step="1"
+        >
+
+          <div class="form-intro">
+            <p class="eyebrow">STEP 01</p>
+            <h2>Tell us about yourself.</h2>
+            <p>
+              We use this information only to manage your membership and
+              communicate about AAVAN activities.
+            </p>
+          </div>
+
+          <div class="form-grid-2">
+
+            <label class="full">
+              Full name
+              <input
+                name="full_name"
+                required
+                autocomplete="name"
+              >
+            </label>
+
+            <label>
+              Email address
+              <input
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+              >
+            </label>
+
+            <label>
+              Phone number
+              <input
+                name="phone"
+                type="tel"
+                required
+                autocomplete="tel"
+              >
+            </label>
+
+            <label class="full">
+              Street address
+              <input
+                name="address"
+                autocomplete="street-address"
+              >
+            </label>
+
+            <label>
+              City
+              <input
+                name="city"
+                autocomplete="address-level2"
+              >
+            </label>
+
+            <label>
+              Province
+              <input
+                name="province"
+                value="British Columbia"
+                autocomplete="address-level1"
+              >
+            </label>
+
+            <label>
+              Postal code
+              <input
+                name="postal_code"
+                autocomplete="postal-code"
+              >
+            </label>
+
+            <label>
+              Date of birth
+              <span class="optional">optional</span>
+              <input
+                name="date_of_birth"
+                type="date"
+              >
+            </label>
+
+          </div>
         </section>
 
-        <section id="authPanel" class="admin-panel login-panel">
-          <p class="eyebrow">COMMITTEE PORTAL</p>
-          <h2>Committee access</h2>
-          <p>Committee members use their own email address. New accounts remain pending until an Admin approves them.</p>
-          <div class="auth-tabs"><button id="loginTab" class="auth-tab active" type="button">Sign in</button><button id="signupTab" class="auth-tab" type="button">Request access</button></div>
-          <form id="loginForm" class="admin-form compact">
-            <label>Email<input id="loginEmail" type="email" autocomplete="email" required></label>
-            <label>Password<input id="loginPassword" type="password" autocomplete="current-password" required></label>
-            <button class="btn btn-primary" type="submit">Sign in</button>
-            <button id="forgotPasswordBtn" class="text-button left" type="button">Forgot password?</button>
-            <p id="loginMessage" class="form-message"></p>
-          </form>
-          <form id="signupForm" class="admin-form compact" hidden>
-            <label>Your name<input id="signupName" maxlength="100" autocomplete="name" required></label>
-            <label>Personal email<input id="signupEmail" type="email" autocomplete="email" required></label>
-            <label>Create password<input id="signupPassword" type="password" minlength="8" autocomplete="new-password" required></label>
-            <button class="btn btn-primary" type="submit">Request committee access</button>
-            <p class="helper">Creating an account does not grant editing access. An Admin must approve it.</p>
-            <p id="signupMessage" class="form-message"></p>
-          </form>
-        </section>
+        <section
+          class="membership-step"
+          data-membership-step="2"
+          hidden
+        >
 
-        <section id="pendingPanel" class="admin-panel login-panel" hidden>
-          <p class="eyebrow">ACCOUNT STATUS</p><h2 id="pendingTitle">Approval required</h2><p id="pendingCopy">Your account exists, but an Admin has not approved committee access yet.</p><button id="pendingLogoutBtn" class="btn btn-dark">Sign out</button>
-        </section>
+          <div class="form-intro">
+            <p class="eyebrow">STEP 02</p>
+            <h2>Your household.</h2>
+            <p>
+              Family details appear only when they are relevant to the
+              membership you choose.
+            </p>
+          </div>
 
-        <section id="dashboard" hidden>
-          <div class="admin-title-row"><div><p class="eyebrow">COMMITTEE DASHBOARD</p><h2>Website management</h2><p id="roleSummary" class="role-summary"></p></div></div>
-          <div class="dashboard-tabs"><button class="dashboard-tab active" data-panel="eventsPanel" type="button">Events</button><button id="accessTab" class="dashboard-tab" data-panel="accessPanel" type="button" hidden>Access Management</button></div>
+          <label>
+            Spouse / partner name
+            <span class="optional">optional</span>
+            <input name="spouse_name">
+          </label>
 
-          <section id="eventsPanel" class="dashboard-panel">
-            <div class="panel-toolbar"><div><h2>Upcoming events</h2><p>Published events appear automatically on the public website.</p></div><button id="newEventBtn" class="btn btn-primary">+ Add Event</button></div>
-            <div id="eventFormPanel" class="admin-panel" hidden>
-              <div class="panel-title"><h2 id="formTitle">Add event</h2><button id="cancelEditBtn" class="text-button" type="button">Cancel</button></div>
-              <form id="eventForm" class="admin-form">
-                <input id="eventId" type="hidden">
-                <div class="form-grid"><label>Event title<input id="eventTitle" required maxlength="120"></label><label>Event date<input id="eventDate" type="date" required></label><label>Time<input id="eventTime" type="time"></label><label>Venue<input id="eventVenue" placeholder="Burnaby, BC"></label></div>
-                <label>Short description<textarea id="eventSummary" rows="4" maxlength="600" required></textarea></label>
-                <label>Registration / details link<input id="eventRegistration" type="url" placeholder="https://..."></label>
-                <label>Event image<input id="eventImage" type="file" accept="image/jpeg,image/png,image/webp"></label>
-                <div class="check-row"><label><input id="eventFeatured" type="checkbox"> Featured event</label><label><input id="eventPublished" type="checkbox" checked> Published</label></div>
-                <button class="btn btn-primary" type="submit">Save Event</button><p id="eventMessage" class="form-message"></p>
-              </form>
+          <div class="family-builder">
+
+            <div class="family-builder-head">
+
+              <div>
+                <strong>Family members</strong>
+                <span>
+                  Add dependants or other household members included with your
+                  family membership.
+                </span>
+              </div>
+
+              <button
+                id="addFamilyMemberBtn"
+                class="small-action"
+                type="button"
+              >
+                + Add family member
+              </button>
+
             </div>
-            <div id="eventsList" class="admin-list"></div>
-          </section>
 
-          <section id="accessPanel" class="dashboard-panel" hidden>
-            <div class="panel-toolbar"><div><h2>Access Management</h2><p>Approve committee accounts, assign roles, or disable access.</p></div></div>
-            <div class="role-guide admin-panel slim"><strong>Roles:</strong><span><b>Admin</b> — events + user access</span><span><b>Editor</b> — add/edit/publish events</span><span><b>Viewer</b> — sign in and view dashboard only</span></div>
-            <p id="membersMessage" class="form-message"></p><div id="membersList" class="members-list"></div>
-          </section>
+            <div id="familyMembers"></div>
+
+          </div>
+
         </section>
-      </div>
+
+        <section
+          class="membership-step"
+          data-membership-step="3"
+          hidden
+        >
+
+          <div class="form-intro">
+            <p class="eyebrow">STEP 03</p>
+            <h2>How would you like to connect?</h2>
+            <p>
+              Select anything that interests you. This helps the committee
+              plan programs and volunteer opportunities.
+            </p>
+          </div>
+
+          <div class="interest-grid">
+
+            <label>
+              <input
+                type="checkbox"
+                name="interests"
+                value="Arts & Crafts"
+              >
+              <span>Arts & Crafts</span>
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                name="interests"
+                value="Games & Sports"
+              >
+              <span>Games & Sports</span>
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                name="interests"
+                value="Literature"
+              >
+              <span>Literature</span>
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                name="interests"
+                value="Music"
+              >
+              <span>Music</span>
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                name="interests"
+                value="Social & Community Service"
+              >
+              <span>Social & Community Service</span>
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                name="interests"
+                value="Dance"
+              >
+              <span>Dance</span>
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                name="interests"
+                value="Youth Programs"
+              >
+              <span>Youth Programs</span>
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                name="interests"
+                value="Volunteering"
+              >
+              <span>Volunteering</span>
+            </label>
+
+          </div>
+
+          <label>
+            Anything else?
+            <span class="optional">optional</span>
+            <textarea
+              name="notes"
+              rows="4"
+              maxlength="700"
+            ></textarea>
+          </label>
+
+        </section>
+
+        <section
+          class="membership-step"
+          data-membership-step="4"
+          hidden
+        >
+
+          <div class="form-intro">
+            <p class="eyebrow">STEP 04</p>
+            <h2>Choose your membership.</h2>
+            <p>
+              Membership rates are managed by the committee and can be
+              updated without changing the website code.
+            </p>
+          </div>
+
+          <div
+            id="membershipPlanOptions"
+            class="membership-plan-options"
+            aria-live="polite"
+          ></div>
+
+        </section>
+
+        <section
+          class="membership-step"
+          data-membership-step="5"
+          hidden
+        >
+
+          <div class="form-intro">
+            <p class="eyebrow">STEP 05</p>
+            <h2>Review & Interac payment.</h2>
+            <p>
+              Review your application, then send the exact membership amount
+              by Interac e-Transfer.
+            </p>
+          </div>
+
+          <div class="payment-summary">
+
+            <div>
+              <span>Membership</span>
+              <strong id="paymentPlanName">—</strong>
+            </div>
+
+            <div>
+              <span>Amount due</span>
+              <strong id="paymentAmount">—</strong>
+            </div>
+
+            <div>
+              <span>Interac e-Transfer</span>
+              <strong id="paymentEmail">
+                aavanmembers@gmail.com
+              </strong>
+            </div>
+
+          </div>
+
+          <div class="payment-note">
+            <strong>How payment verification works</strong>
+            <p>
+              Send the Interac transfer to the email above. Your application
+              will remain <b>Pending payment verification</b> until an AAVAN
+              Admin confirms the transfer.
+            </p>
+          </div>
+
+          <label>
+            Interac confirmation / reference number
+            <span class="optional">optional but recommended</span>
+            <input
+              name="interac_reference"
+              maxlength="120"
+            >
+          </label>
+
+          <label class="agreement">
+            <input
+              type="checkbox"
+              name="declaration"
+              required
+            >
+            <span>
+              I confirm that the information in this application is accurate
+              and I agree to be contacted regarding my AAVAN membership.
+            </span>
+          </label>
+
+        </section>
+
+        <div class="membership-form-footer">
+
+          <button
+            id="membershipBack"
+            class="btn btn-secondary"
+            type="button"
+            hidden
+          >
+            Back
+          </button>
+
+          <div class="membership-form-spacer"></div>
+
+          <button
+            id="membershipNext"
+            class="btn btn-primary"
+            type="button"
+          >
+            Continue
+          </button>
+
+          <button
+            id="membershipSubmit"
+            class="btn btn-primary"
+            type="submit"
+            hidden
+          >
+            Submit Application
+          </button>
+
+        </div>
+
+        <p
+          id="membershipMessage"
+          class="form-message"
+          aria-live="polite"
+        ></p>
+
+      </form>
+
+      <section
+        id="membershipSuccess"
+        class="membership-success"
+        hidden
+      >
+
+        <span class="success-mark">✓</span>
+
+        <p class="eyebrow">
+          APPLICATION RECEIVED
+        </p>
+
+        <h2>
+          Welcome to the next step.
+        </h2>
+
+        <p>
+          Your AAVAN membership application has been submitted. Keep your
+          reference number for your records.
+        </p>
+
+        <div>
+          <span>Application reference</span>
+          <strong id="membershipReference">—</strong>
+        </div>
+
+        <div>
+          <span>Status</span>
+          <strong>Pending payment verification</strong>
+        </div>
+
+        <button
+          class="btn btn-primary"
+          type="button"
+          data-membership-close
+        >
+          Close
+        </button>
+
+      </section>
+
     </section>
+  </div>
+
+  <!-- Committee Portal -->
+  <div
+    id="committeePortal"
+    class="committee-portal"
+    hidden
+    aria-hidden="true"
+  >
+
+    <div
+      class="committee-portal-backdrop"
+      data-portal-close
+    ></div>
+
+    <section
+      class="committee-portal-shell"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="committeePortalTitle"
+    >
+
+      <header class="committee-portal-topbar">
+
+        <div class="committee-portal-brand">
+          <img
+            src="assets/images/logo.png"
+            alt=""
+          >
+
+          <div>
+            <strong id="committeePortalTitle">
+              Committee Portal
+            </strong>
+
+            <span id="headerIdentity">
+              Secure committee workspace
+            </span>
+          </div>
+        </div>
+
+        <div class="committee-portal-actions">
+
+          <button
+            id="logoutBtn"
+            class="portal-signout"
+            type="button"
+            hidden
+          >
+            Sign out
+          </button>
+
+          <button
+            id="committeePortalClose"
+            class="portal-close"
+            type="button"
+            aria-label="Close committee portal"
+          >
+            ×
+          </button>
+
+        </div>
+
+      </header>
+
+      <div class="committee-portal-content">
+
+        <section
+          id="setupNotice"
+          class="portal-state"
+          hidden
+        >
+          <p class="eyebrow">SETUP REQUIRED</p>
+          <h2>Backend connection needed.</h2>
+          <p>
+            Supabase is not connected correctly.
+          </p>
+        </section>
+
+        <section
+          id="authPanel"
+          class="committee-auth"
+        >
+
+          <div class="committee-auth-brand-panel">
+
+            <img
+              src="assets/images/hero-bihu.jpg"
+              alt=""
+              aria-hidden="true"
+            >
+
+            <div class="auth-brand-overlay"></div>
+
+            <div class="auth-brand-copy">
+              <span>
+                ASSAM ASSOCIATION VANCOUVER
+              </span>
+
+              <h2>
+                Committee<br>
+                workspace.
+              </h2>
+
+              <p>
+                Secure access for approved committee members managing AAVAN's
+                digital community.
+              </p>
+            </div>
+
+          </div>
+
+          <div class="committee-auth-form-panel">
+
+            <div class="auth-panel-head">
+              <p class="eyebrow">
+                COMMITTEE PORTAL
+              </p>
+
+              <h2 id="authModeTitle">
+                Sign in.
+              </h2>
+
+              <p id="authModeCopy">
+                Use your approved committee email and password.
+              </p>
+            </div>
+
+            <div
+              class="auth-switch"
+              role="tablist"
+              aria-label="Committee access mode"
+            >
+
+              <button
+                id="loginTab"
+                class="active"
+                type="button"
+                role="tab"
+                aria-selected="true"
+              >
+                Login
+              </button>
+
+              <button
+                id="signupTab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+              >
+                Request Access
+              </button>
+
+            </div>
+
+            <form
+              id="loginForm"
+              class="portal-form"
+            >
+
+              <label>
+                Email
+                <input
+                  id="loginEmail"
+                  type="email"
+                  required
+                  autocomplete="email"
+                >
+              </label>
+
+              <label>
+                Password
+                <input
+                  id="loginPassword"
+                  type="password"
+                  required
+                  autocomplete="current-password"
+                >
+              </label>
+
+              <button
+                class="portal-primary"
+                type="submit"
+              >
+                Sign in
+              </button>
+
+              <button
+                id="forgotPasswordBtn"
+                class="portal-link"
+                type="button"
+              >
+                Forgot password?
+              </button>
+
+              <p
+                id="loginMessage"
+                class="form-message"
+              ></p>
+
+            </form>
+
+            <form
+              id="signupForm"
+              class="portal-form"
+              hidden
+            >
+
+              <label>
+                Your name
+                <input
+                  id="signupName"
+                  required
+                  maxlength="100"
+                  autocomplete="name"
+                >
+              </label>
+
+              <label>
+                Personal email
+                <input
+                  id="signupEmail"
+                  type="email"
+                  required
+                  autocomplete="email"
+                >
+              </label>
+
+              <label>
+                Create password
+                <input
+                  id="signupPassword"
+                  type="password"
+                  required
+                  minlength="8"
+                  autocomplete="new-password"
+                >
+              </label>
+
+              <label>
+                Confirm password
+                <input
+                  id="signupPasswordConfirm"
+                  type="password"
+                  required
+                  minlength="8"
+                  autocomplete="new-password"
+                >
+              </label>
+
+              <button
+                class="portal-primary"
+                type="submit"
+              >
+                Request committee access
+              </button>
+
+              <div class="portal-note">
+                <strong>
+                  Admin approval required.
+                </strong>
+
+                <span>
+                  Creating an account does not grant access. An AAVAN Admin
+                  must approve your account and assign a role.
+                </span>
+              </div>
+
+              <p
+                id="signupMessage"
+                class="form-message"
+              ></p>
+
+            </form>
+
+          </div>
+
+        </section>
+
+        <section
+          id="pendingPanel"
+          class="portal-state"
+          hidden
+        >
+
+          <p class="eyebrow">
+            ACCOUNT STATUS
+          </p>
+
+          <h2 id="pendingTitle">
+            Approval required.
+          </h2>
+
+          <p id="pendingCopy">
+            Your account exists, but an Admin has not approved committee
+            access yet.
+          </p>
+
+          <button
+            id="pendingLogoutBtn"
+            class="btn btn-primary"
+            type="button"
+          >
+            Sign out
+          </button>
+
+        </section>
+
+        <section
+          id="dashboard"
+          class="committee-dashboard"
+          hidden
+        >
+
+          <aside class="dashboard-sidebar">
+
+            <div class="dashboard-user">
+              <span
+                class="avatar"
+                id="dashboardAvatar"
+              >
+                A
+              </span>
+
+              <div>
+                <strong id="dashboardUserName">
+                  Committee Member
+                </strong>
+
+                <span id="roleSummary"></span>
+              </div>
+            </div>
+
+            <nav aria-label="Committee dashboard">
+
+              <button
+                class="dashboard-nav active"
+                data-panel="overviewPanel"
+                type="button"
+              >
+                Overview
+              </button>
+
+              <button
+                class="dashboard-nav"
+                data-panel="eventsPanel"
+                type="button"
+              >
+                Events
+              </button>
+
+              <button
+                id="membershipsTab"
+                class="dashboard-nav"
+                data-panel="membershipsPanel"
+                type="button"
+                hidden
+              >
+                Memberships
+              </button>
+
+              <button
+                id="accessTab"
+                class="dashboard-nav"
+                data-panel="accessPanel"
+                type="button"
+                hidden
+              >
+                Access Management
+              </button>
+
+              <button
+                id="settingsTab"
+                class="dashboard-nav"
+                data-panel="settingsPanel"
+                type="button"
+                hidden
+              >
+                Settings
+              </button>
+
+            </nav>
+
+          </aside>
+
+          <div class="dashboard-main">
+
+            <section
+              id="overviewPanel"
+              class="dashboard-panel active"
+            >
+
+              <div class="dashboard-heading">
+                <div>
+                  <p class="eyebrow">OVERVIEW</p>
+                  <h2>Committee dashboard</h2>
+                </div>
+
+                <p>
+                  A quick view of what needs attention.
+                </p>
+              </div>
+
+              <div class="metric-grid">
+
+                <article>
+                  <span>Upcoming Events</span>
+                  <strong id="metricEvents">—</strong>
+                </article>
+
+                <article class="admin-only-metric">
+                  <span>Pending Access</span>
+                  <strong id="metricAccess">—</strong>
+                </article>
+
+                <article class="admin-only-metric">
+                  <span>Membership Applications</span>
+                  <strong id="metricMemberships">—</strong>
+                </article>
+
+                <article>
+                  <span>Your Role</span>
+                  <strong id="metricRole">—</strong>
+                </article>
+
+              </div>
+
+              <div class="dashboard-card">
+                <h3>What you can manage</h3>
+                <p id="permissionSummary">
+                  Loading permissions…
+                </p>
+              </div>
+
+            </section>
+
+            <section
+              id="eventsPanel"
+              class="dashboard-panel"
+              hidden
+            >
+
+              <div class="dashboard-heading">
+
+                <div>
+                  <p class="eyebrow">EVENTS</p>
+                  <h2>Event management</h2>
+                </div>
+
+                <button
+                  id="newEventBtn"
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  + Add Event
+                </button>
+
+              </div>
+
+              <div
+                id="eventFormPanel"
+                class="dashboard-card"
+                hidden
+              >
+
+                <div class="card-heading">
+
+                  <div>
+                    <h3 id="formTitle">
+                      Add event
+                    </h3>
+
+                    <p>
+                      Published events appear automatically on the public
+                      homepage.
+                    </p>
+                  </div>
+
+                  <button
+                    id="cancelEditBtn"
+                    class="text-button"
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+
+                </div>
+
+                <form
+                  id="eventForm"
+                  class="admin-form"
+                >
+
+                  <input
+                    id="eventId"
+                    type="hidden"
+                  >
+
+                  <div class="form-grid-2">
+
+                    <label>
+                      Event title
+                      <input
+                        id="eventTitle"
+                        required
+                        maxlength="120"
+                      >
+                    </label>
+
+                    <label>
+                      Event date
+                      <input
+                        id="eventDate"
+                        type="date"
+                        required
+                      >
+                    </label>
+
+                    <label>
+                      Start time
+                      <input
+                        id="eventTime"
+                        type="time"
+                      >
+                    </label>
+
+                    <label>
+                      Venue
+                      <input
+                        id="eventVenue"
+                        placeholder="Burnaby, BC"
+                      >
+                    </label>
+
+                  </div>
+
+                  <label>
+                    Description
+                    <textarea
+                      id="eventSummary"
+                      rows="4"
+                      maxlength="700"
+                      required
+                    ></textarea>
+                  </label>
+
+                  <label>
+                    Registration / details URL
+                    <input
+                      id="eventRegistration"
+                      type="url"
+                      placeholder="https://..."
+                    >
+                  </label>
+
+                  <label>
+                    Event image
+                    <input
+                      id="eventImage"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                    >
+                  </label>
+
+                  <div class="check-row">
+
+                    <label>
+                      <input
+                        id="eventFeatured"
+                        type="checkbox"
+                      >
+                      Featured event
+                    </label>
+
+                    <label>
+                      <input
+                        id="eventPublished"
+                        type="checkbox"
+                        checked
+                      >
+                      Published
+                    </label>
+
+                  </div>
+
+                  <button
+                    class="btn btn-primary"
+                    type="submit"
+                  >
+                    Save Event
+                  </button>
+
+                  <p
+                    id="eventMessage"
+                    class="form-message"
+                  ></p>
+
+                </form>
+
+              </div>
+
+              <div
+                id="eventsList"
+                class="admin-list"
+              ></div>
+
+            </section>
+
+            <section
+              id="membershipsPanel"
+              class="dashboard-panel"
+              hidden
+            >
+
+              <div class="dashboard-heading">
+                <div>
+                  <p class="eyebrow">MEMBERSHIPS</p>
+                  <h2>Applications & payments</h2>
+                </div>
+              </div>
+
+              <div class="dashboard-toolbar">
+
+                <select id="membershipStatusFilter">
+                  <option value="all">
+                    All applications
+                  </option>
+
+                  <option value="pending_payment">
+                    Pending payment verification
+                  </option>
+
+                  <option value="active">
+                    Active
+                  </option>
+
+                  <option value="declined">
+                    Declined
+                  </option>
+                </select>
+
+                <input
+                  id="membershipSearch"
+                  type="search"
+                  placeholder="Search name or email"
+                >
+
+              </div>
+
+              <div
+                id="membershipApplicationsList"
+                class="admin-list"
+              ></div>
+
+            </section>
+
+            <section
+              id="accessPanel"
+              class="dashboard-panel"
+              hidden
+            >
+
+              <div class="dashboard-heading">
+
+                <div>
+                  <p class="eyebrow">ACCESS</p>
+                  <h2>Committee access management</h2>
+                </div>
+
+                <p>
+                  Approve accounts, assign roles or disable access.
+                </p>
+
+              </div>
+
+              <p
+                id="membersMessage"
+                class="form-message"
+              ></p>
+
+              <div
+                id="membersList"
+                class="members-list"
+              ></div>
+
+            </section>
+
+            <section
+              id="settingsPanel"
+              class="dashboard-panel"
+              hidden
+            >
+
+              <div class="dashboard-heading">
+
+                <div>
+                  <p class="eyebrow">SETTINGS</p>
+                  <h2>Membership settings</h2>
+                </div>
+
+                <p>
+                  Change plans and payment instructions without editing code.
+                </p>
+
+              </div>
+
+              <div class="settings-grid">
+
+                <div class="dashboard-card">
+
+                  <div class="card-heading">
+
+                    <div>
+                      <h3>Membership plans</h3>
+                      <p>
+                        Update prices, names and availability.
+                      </p>
+                    </div>
+
+                    <button
+                      id="addPlanBtn"
+                      class="small-action"
+                      type="button"
+                    >
+                      + Add Plan
+                    </button>
+
+                  </div>
+
+                  <div
+                    id="planSettingsList"
+                    class="settings-list"
+                  ></div>
+
+                </div>
+
+                <div class="dashboard-card">
+
+                  <h3>
+                    Payment settings
+                  </h3>
+
+                  <form
+                    id="paymentSettingsForm"
+                    class="admin-form"
+                  >
+
+                    <label>
+                      Interac e-Transfer email
+                      <input
+                        id="settingInteracEmail"
+                        type="email"
+                        required
+                      >
+                    </label>
+
+                    <label>
+                      Payment instructions
+                      <textarea
+                        id="settingPaymentInstructions"
+                        rows="5"
+                      ></textarea>
+                    </label>
+
+                    <button
+                      class="btn btn-primary"
+                      type="submit"
+                    >
+                      Save Payment Settings
+                    </button>
+
+                    <p
+                      id="settingsMessage"
+                      class="form-message"
+                    ></p>
+
+                  </form>
+
+                </div>
+
+              </div>
+
+            </section>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </section>
+
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/events.js"></script>
+  <script src="js/membership.js"></script>
   <script src="js/admin.js"></script>
   <script src="js/committee-portal.js"></script>
   <script src="js/main.js"></script>
+
 </body>
 </html>
