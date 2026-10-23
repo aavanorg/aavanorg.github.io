@@ -1,47 +1,138 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assam Association of Vancouver</title>
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f9f9f9; color: #333; }
-        header { background-color: #C4191C; color: white; text-align: center; padding: 50px 20px; }
-        header h1 { margin: 0; font-size: 38px; font-weight: 700; letter-spacing: 1px; }
-        header p { margin: 10px 0 0 0; font-size: 18px; opacity: 0.9; }
-        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-        .section-card { background: white; padding: 30px; margin-bottom: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #C4191C; }
-        h2 { color: #C4191C; font-size: 24px; margin-top: 0; }
-        p { font-size: 16px; color: #444; }
-        footer { background-color: #333; color: #ccc; text-align: center; padding: 20px; font-size: 14px; margin-top: 60px; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Assam Association Vancouver — celebrating Assamese culture, heritage and community in British Columbia.">
+  <title>Assam Association Vancouver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-    <header>
-        <h1>Assam Association of Vancouver</h1>
-        <p>Assam Association Vancouver (Aavan)</p>
-    </header>
-
-    <div class="container">
-        <div class="section-card">
-            <h2>Who We Are</h2>
-            <p><strong>Assam Association of Vancouver</strong> is a community-driven non-profit organization devoted to preserving Assamese heritage and celebrating cultural identity in British Columbia.</p>
-            <p>Through festivals, cultural programs, and shared experiences, we create opportunities for families, youth, and community members to stay connected to their roots while building lasting friendships in Canada.</p>
-            <p>We are proud to foster a spirit of inclusivity, multicultural harmony, and community support by bringing people together through culture, tradition, and belonging.</p>
-        </div>
-
-        <div class="section-card">
-            <h2>Our Mission</h2>
-            <p>The Assam Association of Vancouver, founded in 2017, is a non-profit, socio-cultural organization to promote, foster, and showcase the rich cultural heritage of Assam in India. It primarily promotes multiculturalism and racial tolerance among the different communities originating from Assam as well as from different parts of the world in the province of British Columbia.</p>
-            <p>We focus on helping the younger generation preserve, protect, and advance our cultural heritage. We promote our culture to the broader Canadian community by organizing our cultural events and participating in other cultural events. We assist people in British Columbia originating from or with ties to Assam, India, in their economic or professional pursuits.</p>
-            <p>The association is also engaged in helping the local community with charitable work like food banks and disaster relief. We provide volunteering opportunities to our community youth, as well as bursaries and awards to youths/students who showcase exemplary commitment to cultural and community involvement.</p>
-        </div>
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a class="brand" href="#top" aria-label="Assam Association Vancouver home">
+        <img src="assets/images/logo.png" alt="Assam Association Vancouver logo">
+      </a>
+      <button class="menu-toggle" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#events">Events</a>
+        <a href="#culture">Discover Assam</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#membership">Membership</a>
+        <a href="#sponsors">Sponsors</a>
+        <a href="#contact">Contact</a>
+        <a class="nav-cta" href="#membership">Join Us</a>
+      </nav>
     </div>
+  </header>
 
-    <footer>
-        <p>&copy; 2026 Assam Association of Vancouver. All Rights Reserved.</p>
-    </footer>
+  <main>
+    <section class="hero">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content reveal">
+        <p class="eyebrow light">ASSAM • VANCOUVER • COMMUNITY</p>
+        <h1>Celebrating Assam.<br><span>Connecting Community.</span></h1>
+        <p class="hero-copy">A home for Assamese culture, friendship and community spirit in British Columbia.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#events">Explore Events</a>
+          <a class="btn btn-ghost" href="#about">Our Story</a>
+        </div>
+      </div>
+      <a class="scroll-cue" href="#about" aria-label="Scroll to About">↓</a>
+    </section>
 
+    <section class="section intro" id="about">
+      <div class="container narrow reveal">
+        <p class="eyebrow">WHO WE ARE</p>
+        <h2>A community connected by culture.</h2>
+        <p class="lead">Assam Association Vancouver brings people together through cultural celebrations, community gatherings, music, dance, food and the traditions of Assam.</p>
+        <p class="muted">This first GitHub version uses photographs recovered from the previous association website. Additional historical text can be restored as it becomes available.</p>
+      </div>
+    </section>
+
+    <section class="section feature" id="events">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div><p class="eyebrow">COMMUNITY EVENTS</p><h2>Come celebrate with us.</h2></div>
+          <p>From Bihu celebrations to picnics and cultural programs, our events bring generations together.</p>
+        </div>
+        <article class="featured-event reveal">
+          <div class="featured-copy">
+            <span class="pill">Featured celebration</span>
+            <h3>Bihu in Vancouver</h3>
+            <p>Music, dance, food and community — celebrating the traditions that keep Assam close to home.</p>
+            <div class="meta-row"><span>📍 Greater Vancouver, BC</span><span>📅 New event details coming soon</span></div>
+            <a class="btn btn-dark" href="#contact">Event Updates</a>
+          </div>
+          <img src="assets/images/bihu-community.jpg" alt="Assam Association Vancouver Bihu community celebration">
+        </article>
+        <div class="event-grid">
+          <article class="event-card reveal"><img src="assets/images/community-picnic.jpg" alt="Community picnic"><div><span class="tag">Community</span><h3>Annual Picnic</h3><p>Relaxed outdoor gatherings for families, friends and newcomers.</p></div></article>
+          <article class="event-card reveal"><img src="assets/images/performance.jpg" alt="Cultural performance"><div><span class="tag">Culture</span><h3>Stage & Cultural Programs</h3><p>Dance, music and performances celebrating the richness of our heritage.</p></div></article>
+          <article class="event-card reveal"><img src="assets/images/drama.jpg" alt="Community drama performance"><div><span class="tag">Arts</span><h3>Community Performances</h3><p>Creative programs that bring our stories and community talent to the stage.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section culture" id="culture">
+      <div class="container">
+        <div class="culture-head reveal"><p class="eyebrow light">OUR ROOTS</p><h2>Discover Assam</h2><p>Explore the traditions, landscapes and flavours that shape our identity.</p></div>
+        <div class="culture-grid">
+          <article class="culture-card large reveal" style="--bg:url('../assets/images/tea-garden.jpg')"><div><span>LAND & HERITAGE</span><h3>Tea, landscapes & home</h3></div></article>
+          <article class="culture-card reveal" style="--bg:url('../assets/images/assam-food.jpg')"><div><span>FLAVOURS</span><h3>Food & hospitality</h3></div></article>
+          <article class="culture-card reveal" style="--bg:url('../assets/images/hero-bihu.jpg')"><div><span>TRADITIONS</span><h3>Bihu & dance</h3></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery" id="gallery">
+      <div class="container">
+        <div class="section-heading reveal"><div><p class="eyebrow">OUR COMMUNITY</p><h2>Moments worth remembering.</h2></div><p>A glimpse into celebrations and gatherings preserved from the association's previous website.</p></div>
+        <div class="gallery-grid">
+          <img class="wide reveal" src="assets/images/community-group.jpg" alt="Assam Association Vancouver community group">
+          <img class="reveal" src="assets/images/hero-bihu.jpg" alt="Bihu cultural dance">
+          <img class="reveal" src="assets/images/performance.jpg" alt="Cultural performance">
+          <img class="reveal" src="assets/images/community-picnic.jpg" alt="Community picnic gathering">
+          <img class="reveal" src="assets/images/drama.jpg" alt="Community drama event">
+        </div>
+      </div>
+    </section>
+
+    <section class="section membership" id="membership">
+      <div class="container membership-box reveal">
+        <div><p class="eyebrow light">BELONG • CONTRIBUTE • CELEBRATE</p><h2>There is a place for you here.</h2><p>Whether you are new to British Columbia or have been part of the community for years, connect with Assam Association Vancouver.</p></div>
+        <a class="btn btn-light" href="#contact">Membership Information</a>
+      </div>
+    </section>
+
+    <section class="section sponsors" id="sponsors">
+      <div class="container narrow reveal">
+        <p class="eyebrow">COMMUNITY SUPPORT</p>
+        <h2>Partners make community possible.</h2>
+        <p class="lead">A dedicated sponsor showcase can be added here once the current sponsor list and logos are confirmed.</p>
+        <a class="text-link" href="#contact">Become a community partner →</a>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact">
+      <div class="container contact-grid reveal">
+        <div><p class="eyebrow">STAY CONNECTED</p><h2>Join the conversation.</h2><p>Membership, event, volunteer and sponsorship contact details can be connected here once the current official channels are confirmed.</p></div>
+        <div class="contact-card"><strong>Assam Association Vancouver</strong><span>Greater Vancouver, British Columbia</span><span>Official contact details to be confirmed</span><a href="#top">Back to top ↑</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <img src="assets/images/logo.png" alt="Assam Association Vancouver">
+      <p>Celebrating Assamese culture, heritage and community in British Columbia.</p>
+      <p class="copyright">© <span id="year"></span> Assam Association Vancouver.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
 </body>
 </html>
