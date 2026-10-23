@@ -1762,13 +1762,23 @@
                   <h2>Photo archive</h2>
                 </div>
 
-                <button
-                  id="newAlbumBtn"
-                  class="btn btn-primary"
-                  type="button"
-                >
-                  + New Album
-                </button>
+                <div class="gallery-header-actions">
+                  <button
+                    id="uploadPhotosBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    + Upload Photos
+                  </button>
+
+                  <button
+                    id="newAlbumBtn"
+                    class="btn btn-primary"
+                    type="button"
+                  >
+                    + New Album
+                  </button>
+                </div>
               </div>
 
               <div class="dashboard-toolbar">
@@ -1781,6 +1791,70 @@
                   type="search"
                   placeholder="Search album or event"
                 >
+              </div>
+
+              <div
+                id="quickPhotoUploadPanel"
+                class="dashboard-card quick-photo-upload-panel"
+                hidden
+              >
+                <div class="card-heading">
+                  <div>
+                    <h3>Upload photos to an existing album</h3>
+                    <p>
+                      Choose the album, select one or multiple photos, then upload.
+                    </p>
+                  </div>
+
+                  <button
+                    id="cancelQuickPhotoUploadBtn"
+                    class="text-button"
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+                </div>
+
+                <form
+                  id="quickPhotoUploadForm"
+                  class="admin-form"
+                >
+                  <label>
+                    Choose album
+                    <select
+                      id="quickPhotoAlbumSelect"
+                      required
+                    >
+                      <option value="">Select an album</option>
+                    </select>
+                  </label>
+
+                  <label class="gallery-upload-box">
+                    <span>Choose photos</span>
+                    <small>
+                      JPEG, PNG or WebP. You can select multiple files.
+                    </small>
+                    <input
+                      id="quickPhotoFiles"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      multiple
+                      required
+                    >
+                  </label>
+
+                  <button
+                    class="btn btn-primary"
+                    type="submit"
+                  >
+                    Upload Photos
+                  </button>
+
+                  <p
+                    id="quickPhotoUploadMessage"
+                    class="form-message"
+                  ></p>
+                </form>
               </div>
 
               <div
