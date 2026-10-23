@@ -14,123 +14,71 @@
      ========================================================= */
 
   const dashboard = document.getElementById('dashboard');
+  const dashboardUserName = document.getElementById('dashboardUserName');
+  const dashboardAvatar = document.getElementById('dashboardAvatar');
+  const roleSummary = document.getElementById('roleSummary');
 
-  const dashboardUserName =
-    document.getElementById('dashboardUserName');
+  const metricEvents = document.getElementById('metricEvents');
+  const metricAccess = document.getElementById('metricAccess');
+  const metricMemberships = document.getElementById('metricMemberships');
+  const metricRole = document.getElementById('metricRole');
+  const permissionSummary = document.getElementById('permissionSummary');
 
-  const dashboardAvatar =
-    document.getElementById('dashboardAvatar');
+  const membershipsTab = document.getElementById('membershipsTab');
+  const accessTab = document.getElementById('accessTab');
+  const settingsTab = document.getElementById('settingsTab');
 
-  const roleSummary =
-    document.getElementById('roleSummary');
+  /* Events */
+  const eventsList = document.getElementById('eventsList');
+  const eventFormPanel = document.getElementById('eventFormPanel');
+  const newEventBtn = document.getElementById('newEventBtn');
+  const cancelEditBtn = document.getElementById('cancelEditBtn');
+  const eventForm = document.getElementById('eventForm');
+  const eventId = document.getElementById('eventId');
+  const eventTitle = document.getElementById('eventTitle');
+  const eventDate = document.getElementById('eventDate');
+  const eventEndDate = document.getElementById('eventEndDate');
+  const eventTime = document.getElementById('eventTime');
+  const eventVenue = document.getElementById('eventVenue');
+  const eventSummary = document.getElementById('eventSummary');
+  const eventRegistration = document.getElementById('eventRegistration');
+  const eventImage = document.getElementById('eventImage');
+  const eventFeatured = document.getElementById('eventFeatured');
+  const eventPublished = document.getElementById('eventPublished');
+  const eventMessage = document.getElementById('eventMessage');
+  const formTitle = document.getElementById('formTitle');
 
-  const metricEvents =
-    document.getElementById('metricEvents');
+  /* Access */
+  const membersList = document.getElementById('membersList');
+  const pendingMembersList = document.getElementById('pendingMembersList');
+  const pendingRequestCount = document.getElementById('pendingRequestCount');
+  const membersMessage = document.getElementById('membersMessage');
 
-  const metricAccess =
-    document.getElementById('metricAccess');
+  const addCommitteeUserBtn = document.getElementById('addCommitteeUserBtn');
+  const addCommitteeUserPanel = document.getElementById('addCommitteeUserPanel');
+  const cancelAddCommitteeUserBtn = document.getElementById('cancelAddCommitteeUserBtn');
+  const committeeInviteForm = document.getElementById('committeeInviteForm');
+  const inviteFullName = document.getElementById('inviteFullName');
+  const inviteEmail = document.getElementById('inviteEmail');
+  const inviteRole = document.getElementById('inviteRole');
+  const inviteMessage = document.getElementById('inviteMessage');
 
-  const metricMemberships =
-    document.getElementById('metricMemberships');
-
-  const metricRole =
-    document.getElementById('metricRole');
-
-  const permissionSummary =
-    document.getElementById('permissionSummary');
-
-  const membershipsTab =
-    document.getElementById('membershipsTab');
-
-  const accessTab =
-    document.getElementById('accessTab');
-
-  const settingsTab =
-    document.getElementById('settingsTab');
-
-  const eventsList =
-    document.getElementById('eventsList');
-
-  const eventFormPanel =
-    document.getElementById('eventFormPanel');
-
-  const newEventBtn =
-    document.getElementById('newEventBtn');
-
-  const cancelEditBtn =
-    document.getElementById('cancelEditBtn');
-
-  const eventForm =
-    document.getElementById('eventForm');
-
-  const eventId =
-    document.getElementById('eventId');
-
-  const eventTitle =
-    document.getElementById('eventTitle');
-
-  const eventDate =
-    document.getElementById('eventDate');
-
-  const eventTime =
-    document.getElementById('eventTime');
-
-  const eventVenue =
-    document.getElementById('eventVenue');
-
-  const eventSummary =
-    document.getElementById('eventSummary');
-
-  const eventRegistration =
-    document.getElementById('eventRegistration');
-
-  const eventImage =
-    document.getElementById('eventImage');
-
-  const eventFeatured =
-    document.getElementById('eventFeatured');
-
-  const eventPublished =
-    document.getElementById('eventPublished');
-
-  const eventMessage =
-    document.getElementById('eventMessage');
-
-  const formTitle =
-    document.getElementById('formTitle');
-
-  const membersList =
-    document.getElementById('membersList');
-
-  const membersMessage =
-    document.getElementById('membersMessage');
-
+  /* Memberships */
   const membershipApplicationsList =
     document.getElementById('membershipApplicationsList');
-
   const membershipStatusFilter =
     document.getElementById('membershipStatusFilter');
-
   const membershipSearch =
     document.getElementById('membershipSearch');
 
-  const planSettingsList =
-    document.getElementById('planSettingsList');
-
-  const addPlanBtn =
-    document.getElementById('addPlanBtn');
-
-  const paymentSettingsForm =
-    document.getElementById('paymentSettingsForm');
-
-  const settingInteracEmail =
-    document.getElementById('settingInteracEmail');
-
+  /* Settings */
+  const planSettingsList = document.getElementById('planSettingsList');
+  const addPlanBtn = document.getElementById('addPlanBtn');
+  const paymentSettingsForm = document.getElementById('paymentSettingsForm');
+  const settingInteracEmail = document.getElementById('settingInteracEmail');
   const settingPaymentInstructions =
     document.getElementById('settingPaymentInstructions');
-
-  const settingsMessage =
-    document.getElementById('settingsMessage');
+  const settingsMessage = document.getElementById('settingsMessage');
 
   /* =========================================================
      HELPERS
@@ -150,16 +98,38 @@
       currency: 'CAD'
     }).format(Number(value || 0));
 
+  const getLocalDateString = (date = new Date()) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const formatDate = (value) => {
     if (!value) return '—';
 
-    const date = new Date(`${value}T00:00:00`);
+    const [year, month, day] = String(value).split('-').map(Number);
+
+    if (!year || !month || !day) return value;
+
+    const date = new Date(year, month - 1, day);
 
     return new Intl.DateTimeFormat('en-CA', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
     }).format(date);
+  };
+
+  const formatEventDateRange = (event) => {
+    const start = event.event_date;
+    const end = event.end_date;
+
+    if (!start && !end) return 'No date';
+    if (!start && end) return `Through ${formatDate(end)}`;
+    if (!end || end === start) return formatDate(start);
+
+    return `${formatDate(start)} – ${formatDate(end)}`;
   };
 
   const setMessage = (
@@ -170,10 +140,7 @@
     if (!element) return;
 
     element.textContent = text;
-    element.classList.toggle(
-      'error',
-      Boolean(isError)
-    );
+    element.classList.toggle('error', Boolean(isError));
   };
 
   const getInitials = (name = '') => {
@@ -193,14 +160,13 @@
     currentProfile?.status === 'active';
 
   const canEdit = () =>
-    ['admin', 'editor'].includes(
-      currentProfile?.role
-    ) &&
+    ['admin', 'editor'].includes(currentProfile?.role) &&
     currentProfile?.status === 'active';
 
   const refreshPublicData = () => {
     window.AAVAN?.events?.reload?.();
     window.AAVAN?.membership?.reloadPlans?.();
+    window.AAVAN?.gallery?.reload?.();
   };
 
   /* =========================================================
@@ -229,8 +195,7 @@
             panel.classList.remove('active');
           });
 
-        const panel =
-          document.getElementById(panelId);
+        const panel = document.getElementById(panelId);
 
         if (panel) {
           panel.hidden = false;
@@ -239,6 +204,13 @@
 
         if (panelId === 'eventsPanel') {
           loadEvents();
+        }
+
+        if (panelId === 'galleryPanel') {
+          window.AAVAN?.gallery?.loadAdmin?.({
+            user: currentUser,
+            profile: currentProfile
+          });
         }
 
         if (
@@ -303,28 +275,32 @@
     }
 
     if (isAdmin()) {
-      membershipsTab.hidden = false;
-      accessTab.hidden = false;
-      settingsTab.hidden = false;
+      if (membershipsTab) membershipsTab.hidden = false;
+      if (accessTab) accessTab.hidden = false;
+      if (settingsTab) settingsTab.hidden = false;
 
-      permissionSummary.textContent =
-        'You have full Admin access: events, memberships, committee access, membership plans and payment settings.';
-    } else if (
-      profile.role === 'editor'
-    ) {
-      membershipsTab.hidden = true;
-      accessTab.hidden = true;
-      settingsTab.hidden = true;
+      if (permissionSummary) {
+        permissionSummary.textContent =
+          'You have full Admin access: events, gallery, memberships, committee access, membership plans and payment settings.';
+      }
+    } else if (profile.role === 'editor') {
+      if (membershipsTab) membershipsTab.hidden = true;
+      if (accessTab) accessTab.hidden = true;
+      if (settingsTab) settingsTab.hidden = true;
 
-      permissionSummary.textContent =
-        'You can create, edit, publish and manage events. Membership records and user access remain Admin-only.';
+      if (permissionSummary) {
+        permissionSummary.textContent =
+          'You can create, edit, publish and manage events and gallery content. Membership records and user access remain Admin-only.';
+      }
     } else {
-      membershipsTab.hidden = true;
-      accessTab.hidden = true;
-      settingsTab.hidden = true;
+      if (membershipsTab) membershipsTab.hidden = true;
+      if (accessTab) accessTab.hidden = true;
+      if (settingsTab) settingsTab.hidden = true;
 
-      permissionSummary.textContent =
-        'Your Viewer role is read-only. Contact an Admin if you need editing access.';
+      if (permissionSummary) {
+        permissionSummary.textContent =
+          'Your Viewer role is read-only. Contact an Admin if you need editing access.';
+      }
     }
 
     if (newEventBtn) {
@@ -335,6 +311,11 @@
       loadDashboardMetrics(),
       loadEvents()
     ]);
+
+    window.AAVAN?.gallery?.setAdminContext?.({
+      user: currentUser,
+      profile: currentProfile
+    });
   };
 
   /* =========================================================
@@ -343,31 +324,42 @@
 
   const loadDashboardMetrics = async () => {
     try {
-      const today =
-        new Date().toISOString().slice(0, 10);
+      const today = getLocalDateString();
 
-      const eventQuery = supabase
-        .from('events')
-        .select('id', {
-          count: 'exact',
-          head: true
+      const { data: eventRows, error: eventError } =
+        await supabase
+          .from('events')
+          .select('id,event_date,end_date');
+
+      if (eventError) throw eventError;
+
+      const upcomingEventCount = (eventRows || [])
+        .filter((event) => {
+          const finalDate =
+            event.end_date || event.event_date;
+
+          return finalDate && finalDate >= today;
         })
-        .gte('event_date', today);
+        .length;
 
-      const requests = [eventQuery];
+      if (metricEvents) {
+        metricEvents.textContent =
+          upcomingEventCount;
+      }
 
       if (isAdmin()) {
-        requests.push(
+        const [
+          accessResult,
+          membershipsResult
+        ] = await Promise.all([
           supabase
             .from('profiles')
             .select('id', {
               count: 'exact',
               head: true
             })
-            .eq('status', 'pending')
-        );
+            .eq('status', 'pending'),
 
-        requests.push(
           supabase
             .from('membership_applications')
             .select('id', {
@@ -378,37 +370,24 @@
               'payment_status',
               'pending_payment'
             )
-        );
-      }
+        ]);
 
-      const results =
-        await Promise.all(requests);
-
-      if (metricEvents) {
-        metricEvents.textContent =
-          results[0]?.count ?? 0;
-      }
-
-      if (isAdmin()) {
         if (metricAccess) {
           metricAccess.textContent =
-            results[1]?.count ?? 0;
+            accessResult.count ?? 0;
         }
 
         if (metricMemberships) {
           metricMemberships.textContent =
-            results[2]?.count ?? 0;
+            membershipsResult.count ?? 0;
         }
       } else {
         document
-          .querySelectorAll(
-            '.admin-only-metric'
-          )
+          .querySelectorAll('.admin-only-metric')
           .forEach((item) => {
             item.hidden = true;
           });
       }
-
     } catch (error) {
       console.error(
         'Dashboard metric error:',
@@ -426,6 +405,11 @@
 
     if (eventId) eventId.value = '';
 
+    if (eventEndDate) {
+      eventEndDate.value = '';
+      eventEndDate.min = '';
+    }
+
     if (eventPublished) {
       eventPublished.checked = true;
     }
@@ -437,16 +421,32 @@
     setMessage(eventMessage);
   };
 
+  eventDate?.addEventListener('change', () => {
+    if (!eventEndDate) return;
+
+    eventEndDate.min =
+      eventDate.value || '';
+
+    if (
+      eventEndDate.value &&
+      eventDate.value &&
+      eventEndDate.value < eventDate.value
+    ) {
+      eventEndDate.value = eventDate.value;
+    }
+  });
+
   newEventBtn?.addEventListener(
     'click',
     () => {
       resetEventForm();
-      eventFormPanel.hidden = false;
-
-      eventFormPanel.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
+      if (eventFormPanel) {
+        eventFormPanel.hidden = false;
+        eventFormPanel.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
     }
   );
 
@@ -454,7 +454,9 @@
     'click',
     () => {
       resetEventForm();
-      eventFormPanel.hidden = true;
+      if (eventFormPanel) {
+        eventFormPanel.hidden = true;
+      }
     }
   );
 
@@ -490,9 +492,7 @@
       throw uploadError;
     }
 
-    const {
-      data
-    } = supabase.storage
+    const { data } = supabase.storage
       .from('event-images')
       .getPublicUrl(path);
 
@@ -529,76 +529,98 @@
             No events have been created yet.
           </div>
         `;
-
         return;
       }
 
+      const today = getLocalDateString();
+
       eventsList.innerHTML =
-        events.map((event) => `
-          <article class="admin-row">
+        events.map((event) => {
+          const finalDate =
+            event.end_date ||
+            event.event_date;
 
-            <div class="admin-row-main">
-              <strong>
-                ${escapeHtml(event.title)}
-              </strong>
+          const past =
+            finalDate &&
+            finalDate < today;
 
-              <span>
-                ${escapeHtml(
-                  event.venue || 'Venue not set'
-                )}
-              </span>
-            </div>
+          return `
+            <article class="admin-row">
 
-            <div class="admin-row-meta">
-              <span>Date</span>
-              <strong>
-                ${formatDate(event.event_date)}
-              </strong>
-            </div>
+              <div class="admin-row-main">
+                <strong>
+                  ${escapeHtml(event.title || (event.image_url ? 'Image-only event' : 'Untitled event'))}
+                </strong>
 
-            <div class="admin-row-meta">
-              <span>Status</span>
+                <span>
+                  ${escapeHtml(
+                    event.venue ||
+                    'Venue not set'
+                  )}
+                </span>
+              </div>
 
-              <span class="status-pill ${
-                event.published
-                  ? 'published'
-                  : ''
-              }">
+              <div class="admin-row-meta">
+                <span>
+                  ${event.end_date &&
+                  event.end_date !== event.event_date
+                    ? 'Dates'
+                    : 'Date'}
+                </span>
+
+                <strong>
+                  ${escapeHtml(
+                    formatEventDateRange(event)
+                  )}
+                </strong>
+              </div>
+
+              <div class="admin-row-meta">
+                <span>Status</span>
+
+                <span class="status-pill ${
+                  past
+                    ? 'disabled'
+                    : event.published
+                      ? 'published'
+                      : ''
+                }">
+                  ${
+                    past
+                      ? 'Past'
+                      : event.published
+                        ? 'Published'
+                        : 'Draft'
+                  }
+                </span>
+              </div>
+
+              <div class="admin-row-actions">
                 ${
-                  event.published
-                    ? 'Published'
-                    : 'Draft'
+                  canEdit()
+                    ? `
+                      <button
+                        type="button"
+                        data-event-edit="${event.id}"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        type="button"
+                        class="danger"
+                        data-event-delete="${event.id}"
+                      >
+                        Delete
+                      </button>
+                    `
+                    : ''
                 }
-              </span>
-            </div>
+              </div>
 
-            <div class="admin-row-actions">
-
-              ${
-                canEdit()
-                  ? `
-                    <button
-                      type="button"
-                      data-event-edit="${event.id}"
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      type="button"
-                      class="danger"
-                      data-event-delete="${event.id}"
-                    >
-                      Delete
-                    </button>
-                  `
-                  : ''
-              }
-
-            </div>
-
-          </article>
-        `).join('');
+            </article>
+          `;
+        }).join('');
 
       attachEventActions(events);
 
@@ -636,42 +658,71 @@
 
             if (!event) return;
 
-            eventId.value =
-              event.id || '';
+            if (eventId) {
+              eventId.value =
+                event.id || '';
+            }
 
-            eventTitle.value =
-              event.title || '';
+            if (eventTitle) {
+              eventTitle.value =
+                event.title || '';
+            }
 
-            eventDate.value =
-              event.event_date || '';
+            if (eventDate) {
+              eventDate.value =
+                event.event_date || '';
+            }
 
-            eventTime.value =
-              event.start_time || '';
+            if (eventEndDate) {
+              eventEndDate.value =
+                event.end_date || '';
+              eventEndDate.min =
+                event.event_date || '';
+            }
 
-            eventVenue.value =
-              event.venue || '';
+            if (eventTime) {
+              eventTime.value =
+                event.start_time || '';
+            }
 
-            eventSummary.value =
-              event.description || '';
+            if (eventVenue) {
+              eventVenue.value =
+                event.venue || '';
+            }
 
-            eventRegistration.value =
-              event.registration_url || '';
+            if (eventSummary) {
+              eventSummary.value =
+                event.description || '';
+            }
 
-            eventFeatured.checked =
-              Boolean(event.featured);
+            if (eventRegistration) {
+              eventRegistration.value =
+                event.registration_url || '';
+            }
 
-            eventPublished.checked =
-              Boolean(event.published);
+            if (eventFeatured) {
+              eventFeatured.checked =
+                Boolean(event.featured);
+            }
 
-            formTitle.textContent =
-              'Edit event';
+            if (eventPublished) {
+              eventPublished.checked =
+                Boolean(event.published);
+            }
 
-            eventFormPanel.hidden = false;
+            if (formTitle) {
+              formTitle.textContent =
+                'Edit event';
+            }
 
-            eventFormPanel.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
+            if (eventFormPanel) {
+              eventFormPanel.hidden = false;
+
+              eventFormPanel.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
           }
         );
       });
@@ -693,21 +744,17 @@
 
             if (!confirmed) return;
 
-            const {
-              error
-            } = await supabase
-              .from('events')
-              .delete()
-              .eq(
-                'id',
-                button.dataset.eventDelete
-              );
+            const { error } =
+              await supabase
+                .from('events')
+                .delete()
+                .eq(
+                  'id',
+                  button.dataset.eventDelete
+                );
 
             if (error) {
-              window.alert(
-                error.message
-              );
-
+              window.alert(error.message);
               return;
             }
 
@@ -731,7 +778,49 @@
           'Your role does not allow event editing.',
           true
         );
+        return;
+      }
 
+      const startDate =
+        eventDate?.value || '';
+
+      const endDate =
+        eventEndDate?.value || '';
+
+      const hasImage =
+        Boolean(eventImage?.files?.[0]);
+
+      const hasAnyContent =
+        Boolean(
+          eventTitle?.value.trim() ||
+          startDate ||
+          endDate ||
+          eventTime?.value ||
+          eventVenue?.value.trim() ||
+          eventSummary?.value.trim() ||
+          eventRegistration?.value.trim() ||
+          hasImage
+        );
+
+      if (!hasAnyContent) {
+        setMessage(
+          eventMessage,
+          'Add at least one event detail or upload an event image.',
+          true
+        );
+        return;
+      }
+
+      if (
+        endDate &&
+        startDate &&
+        endDate < startDate
+      ) {
+        setMessage(
+          eventMessage,
+          'End date cannot be before the start date.',
+          true
+        );
         return;
       }
 
@@ -743,9 +832,7 @@
 
         let imageUrl = null;
 
-        if (
-          eventImage?.files?.[0]
-        ) {
+        if (eventImage?.files?.[0]) {
           imageUrl =
             await uploadEventImage(
               eventImage.files[0]
@@ -754,19 +841,22 @@
 
         const payload = {
           title:
-            eventTitle.value.trim(),
+            eventTitle.value.trim() || null,
 
           event_date:
-            eventDate.value,
+            startDate || null,
+
+          end_date:
+            endDate || null,
 
           start_time:
             eventTime.value || null,
 
           venue:
-            eventVenue.value.trim(),
+            eventVenue.value.trim() || null,
 
           description:
-            eventSummary.value.trim(),
+            eventSummary.value.trim() || null,
 
           registration_url:
             eventRegistration.value.trim() ||
@@ -810,13 +900,11 @@
           throw result.error;
         }
 
-        setMessage(
-          eventMessage,
-          'Event saved successfully.'
-        );
-
         resetEventForm();
-        eventFormPanel.hidden = true;
+
+        if (eventFormPanel) {
+          eventFormPanel.hidden = true;
+        }
 
         await loadEvents();
         await loadDashboardMetrics();
@@ -916,7 +1004,6 @@
               No membership applications match this view.
             </div>
           `;
-
           return;
         }
 
@@ -976,7 +1063,6 @@
                 </div>
 
                 <div class="admin-row-actions">
-
                   ${
                     application.payment_status !==
                     'paid'
@@ -1005,7 +1091,6 @@
                       `
                       : ''
                   }
-
                 </div>
 
               </article>
@@ -1047,36 +1132,32 @@
 
               if (!confirmed) return;
 
-              const {
-                error
-              } = await supabase
-                .from(
-                  'membership_applications'
-                )
-                .update({
-                  payment_status:
-                    'paid',
+              const { error } =
+                await supabase
+                  .from(
+                    'membership_applications'
+                  )
+                  .update({
+                    payment_status:
+                      'paid',
 
-                  membership_status:
-                    'active',
+                    membership_status:
+                      'active',
 
-                  payment_verified_at:
-                    new Date().toISOString(),
+                    payment_verified_at:
+                      new Date().toISOString(),
 
-                  payment_verified_by:
-                    currentUser.id
-                })
-                .eq(
-                  'id',
-                  button.dataset
-                    .paymentReceived
-                );
+                    payment_verified_by:
+                      currentUser.id
+                  })
+                  .eq(
+                    'id',
+                    button.dataset
+                      .paymentReceived
+                  );
 
               if (error) {
-                window.alert(
-                  error.message
-                );
-
+                window.alert(error.message);
                 return;
               }
 
@@ -1103,27 +1184,23 @@
 
               if (!confirmed) return;
 
-              const {
-                error
-              } = await supabase
-                .from(
-                  'membership_applications'
-                )
-                .update({
-                  membership_status:
-                    'declined'
-                })
-                .eq(
-                  'id',
-                  button.dataset
-                    .membershipDecline
-                );
+              const { error } =
+                await supabase
+                  .from(
+                    'membership_applications'
+                  )
+                  .update({
+                    membership_status:
+                      'declined'
+                  })
+                  .eq(
+                    'id',
+                    button.dataset
+                      .membershipDecline
+                  );
 
               if (error) {
-                window.alert(
-                  error.message
-                );
-
+                window.alert(error.message);
                 return;
               }
 
@@ -1150,6 +1227,236 @@
      COMMITTEE ACCESS MANAGEMENT
      ========================================================= */
 
+  const renderPendingProfiles = (
+    profiles
+  ) => {
+    if (!pendingMembersList) return;
+
+    if (pendingRequestCount) {
+      pendingRequestCount.textContent =
+        profiles.length
+          ? `${profiles.length} pending`
+          : 'No pending requests';
+    }
+
+    if (!profiles.length) {
+      pendingMembersList.innerHTML = `
+        <div class="admin-empty">
+          No committee access requests are waiting for approval.
+        </div>
+      `;
+      return;
+    }
+
+    pendingMembersList.innerHTML =
+      profiles.map((profile) => `
+        <article class="member-row">
+
+          <div class="member-identity">
+            <strong>
+              ${escapeHtml(
+                profile.full_name ||
+                'Unnamed user'
+              )}
+            </strong>
+
+            <span>
+              ${escapeHtml(profile.email)}
+            </span>
+          </div>
+
+          <select
+            data-pending-role="${profile.id}"
+          >
+            <option
+              value="viewer"
+              ${
+                profile.role === 'viewer'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Viewer
+            </option>
+
+            <option
+              value="editor"
+              ${
+                profile.role === 'editor'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Editor
+            </option>
+
+            <option
+              value="admin"
+              ${
+                profile.role === 'admin'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Admin
+            </option>
+          </select>
+
+          <span class="status-pill pending">
+            Pending
+          </span>
+
+          <div class="member-actions">
+            <button
+              type="button"
+              data-user-approve="${profile.id}"
+            >
+              Approve
+            </button>
+
+            <button
+              type="button"
+              class="danger"
+              data-user-decline="${profile.id}"
+            >
+              Decline
+            </button>
+          </div>
+
+        </article>
+      `).join('');
+  };
+
+  const renderActiveProfiles = (
+    profiles
+  ) => {
+    if (!membersList) return;
+
+    if (!profiles.length) {
+      membersList.innerHTML = `
+        <div class="admin-empty">
+          No committee users found.
+        </div>
+      `;
+      return;
+    }
+
+    membersList.innerHTML =
+      profiles.map((profile) => {
+        const isCurrentUser =
+          profile.id === currentUser?.id;
+
+        return `
+          <article class="member-row">
+
+            <div class="member-identity">
+              <strong>
+                ${escapeHtml(
+                  profile.full_name ||
+                  'Unnamed user'
+                )}
+              </strong>
+
+              <span>
+                ${escapeHtml(profile.email)}
+              </span>
+            </div>
+
+            <select
+              data-user-role="${profile.id}"
+              ${isCurrentUser ? 'disabled' : ''}
+            >
+              <option
+                value="viewer"
+                ${
+                  profile.role === 'viewer'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                Viewer
+              </option>
+
+              <option
+                value="editor"
+                ${
+                  profile.role === 'editor'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                Editor
+              </option>
+
+              <option
+                value="admin"
+                ${
+                  profile.role === 'admin'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                Admin
+              </option>
+            </select>
+
+            <span class="status-pill ${
+              profile.status === 'active'
+                ? 'active'
+                : 'disabled'
+            }">
+              ${
+                profile.status === 'active'
+                  ? 'Active'
+                  : 'Revoked'
+              }
+            </span>
+
+            <div class="member-actions">
+              ${
+                isCurrentUser
+                  ? `
+                    <span class="status-pill active">
+                      Current Admin
+                    </span>
+                  `
+                  : `
+                    <button
+                      type="button"
+                      data-user-role-save="${profile.id}"
+                    >
+                      Save Role
+                    </button>
+
+                    ${
+                      profile.status === 'active'
+                        ? `
+                          <button
+                            type="button"
+                            class="danger"
+                            data-user-revoke="${profile.id}"
+                          >
+                            Revoke Access
+                          </button>
+                        `
+                        : `
+                          <button
+                            type="button"
+                            data-user-reactivate="${profile.id}"
+                          >
+                            Reactivate
+                          </button>
+                        `
+                    }
+                  `
+              }
+            </div>
+
+          </article>
+        `;
+      }).join('');
+  };
+
   const loadCommitteeUsers =
     async () => {
       if (
@@ -1157,6 +1464,11 @@
         !isAdmin()
       ) {
         return;
+      }
+
+      if (pendingMembersList) {
+        pendingMembersList.innerHTML =
+          '<div class="admin-loading">Loading pending requests…</div>';
       }
 
       membersList.innerHTML =
@@ -1180,141 +1492,25 @@
             ? data
             : [];
 
-        membersList.innerHTML =
-          profiles.map((profile) => `
-            <article class="member-row">
+        const pendingProfiles =
+          profiles.filter(
+            (profile) =>
+              profile.status === 'pending'
+          );
 
-              <div class="member-identity">
-                <strong>
-                  ${escapeHtml(
-                    profile.full_name ||
-                    'Unnamed user'
-                  )}
-                </strong>
+        const activeProfiles =
+          profiles.filter(
+            (profile) =>
+              profile.status !== 'pending'
+          );
 
-                <span>
-                  ${escapeHtml(
-                    profile.email
-                  )}
-                </span>
-              </div>
+        renderPendingProfiles(
+          pendingProfiles
+        );
 
-              <select
-                data-user-role="${profile.id}"
-                ${
-                  profile.id ===
-                  currentUser.id
-                    ? 'disabled'
-                    : ''
-                }
-              >
-                <option
-                  value="viewer"
-                  ${
-                    profile.role ===
-                    'viewer'
-                      ? 'selected'
-                      : ''
-                  }
-                >
-                  Viewer
-                </option>
-
-                <option
-                  value="editor"
-                  ${
-                    profile.role ===
-                    'editor'
-                      ? 'selected'
-                      : ''
-                  }
-                >
-                  Editor
-                </option>
-
-                <option
-                  value="admin"
-                  ${
-                    profile.role ===
-                    'admin'
-                      ? 'selected'
-                      : ''
-                  }
-                >
-                  Admin
-                </option>
-              </select>
-
-              <select
-                data-user-status="${profile.id}"
-                ${
-                  profile.id ===
-                  currentUser.id
-                    ? 'disabled'
-                    : ''
-                }
-              >
-                <option
-                  value="pending"
-                  ${
-                    profile.status ===
-                    'pending'
-                      ? 'selected'
-                      : ''
-                  }
-                >
-                  Pending
-                </option>
-
-                <option
-                  value="active"
-                  ${
-                    profile.status ===
-                    'active'
-                      ? 'selected'
-                      : ''
-                  }
-                >
-                  Active
-                </option>
-
-                <option
-                  value="disabled"
-                  ${
-                    profile.status ===
-                    'disabled'
-                      ? 'selected'
-                      : ''
-                  }
-                >
-                  Disabled
-                </option>
-              </select>
-
-              <div class="member-actions">
-
-                ${
-                  profile.id !==
-                  currentUser.id
-                    ? `
-                      <button
-                        type="button"
-                        data-user-save="${profile.id}"
-                      >
-                        Save
-                      </button>
-                    `
-                    : `
-                      <span class="status-pill active">
-                        Current Admin
-                      </span>
-                    `
-                }
-
-              </div>
-
-            </article>
-          `).join('');
+        renderActiveProfiles(
+          activeProfiles
+        );
 
         attachCommitteeUserActions();
 
@@ -1324,6 +1520,14 @@
           error
         );
 
+        if (pendingMembersList) {
+          pendingMembersList.innerHTML = `
+            <div class="admin-empty">
+              Unable to load pending requests.
+            </div>
+          `;
+        }
+
         membersList.innerHTML = `
           <div class="admin-empty">
             Unable to load committee users.
@@ -1332,76 +1536,329 @@
       }
     };
 
+  const updateProfileAccess = async (
+    userId,
+    updates,
+    successMessage
+  ) => {
+    if (!isAdmin()) return;
+
+    if (
+      userId === currentUser?.id &&
+      updates.status &&
+      updates.status !== 'active'
+    ) {
+      window.alert(
+        'You cannot revoke your own Admin access.'
+      );
+      return;
+    }
+
+    setMessage(
+      membersMessage,
+      'Saving access…'
+    );
+
+    const { error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', userId);
+
+    if (error) {
+      setMessage(
+        membersMessage,
+        error.message ||
+        'Unable to update access.',
+        true
+      );
+      return;
+    }
+
+    setMessage(
+      membersMessage,
+      successMessage
+    );
+
+    await loadCommitteeUsers();
+    await loadDashboardMetrics();
+  };
+
   const attachCommitteeUserActions =
     () => {
       document
         .querySelectorAll(
-          '[data-user-save]'
+          '[data-user-approve]'
         )
         .forEach((button) => {
           button.addEventListener(
             'click',
             async () => {
-              if (!isAdmin()) return;
-
               const userId =
-                button.dataset.userSave;
+                button.dataset.userApprove;
+
+              const role =
+                document.querySelector(
+                  `[data-pending-role="${userId}"]`
+                )?.value || 'viewer';
+
+              const confirmed =
+                window.confirm(
+                  `Approve this committee request as ${role}?`
+                );
+
+              if (!confirmed) return;
+
+              await updateProfileAccess(
+                userId,
+                {
+                  role,
+                  status: 'active'
+                },
+                'Committee access approved.'
+              );
+            }
+          );
+        });
+
+      document
+        .querySelectorAll(
+          '[data-user-decline]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              const confirmed =
+                window.confirm(
+                  'Decline this committee access request?'
+                );
+
+              if (!confirmed) return;
+
+              await updateProfileAccess(
+                button.dataset.userDecline,
+                {
+                  status: 'disabled'
+                },
+                'Committee access request declined.'
+              );
+            }
+          );
+        });
+
+      document
+        .querySelectorAll(
+          '[data-user-role-save]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              const userId =
+                button.dataset.userRoleSave;
 
               const role =
                 document.querySelector(
                   `[data-user-role="${userId}"]`
                 )?.value;
 
-              const status =
-                document.querySelector(
-                  `[data-user-status="${userId}"]`
-                )?.value;
+              if (!role) return;
 
-              if (!role || !status) return;
+              await updateProfileAccess(
+                userId,
+                { role },
+                'Committee role updated.'
+              );
+            }
+          );
+        });
 
-              try {
-                setMessage(
-                  membersMessage,
-                  'Saving access…'
+      document
+        .querySelectorAll(
+          '[data-user-revoke]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              const confirmed =
+                window.confirm(
+                  'Revoke this committee member’s access? They will no longer be able to enter the dashboard.'
                 );
 
-                const {
-                  error
-                } = await supabase
-                  .from('profiles')
-                  .update({
-                    role,
-                    status
-                  })
-                  .eq(
-                    'id',
-                    userId
-                  );
+              if (!confirmed) return;
 
-                if (error) {
-                  throw error;
-                }
+              await updateProfileAccess(
+                button.dataset.userRevoke,
+                {
+                  status: 'disabled'
+                },
+                'Committee access revoked.'
+              );
+            }
+          );
+        });
 
-                setMessage(
-                  membersMessage,
-                  'Committee access updated.'
+      document
+        .querySelectorAll(
+          '[data-user-reactivate]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              const confirmed =
+                window.confirm(
+                  'Reactivate this committee member’s access?'
                 );
 
-                await loadCommitteeUsers();
-                await loadDashboardMetrics();
+              if (!confirmed) return;
 
-              } catch (error) {
-                setMessage(
-                  membersMessage,
-                  error.message ||
-                  'Unable to update access.',
-                  true
-                );
-              }
+              await updateProfileAccess(
+                button.dataset.userReactivate,
+                {
+                  status: 'active'
+                },
+                'Committee access reactivated.'
+              );
             }
           );
         });
     };
+
+  addCommitteeUserBtn?.addEventListener(
+    'click',
+    () => {
+      if (!isAdmin()) return;
+
+      if (committeeInviteForm) {
+        committeeInviteForm.reset();
+      }
+
+      if (inviteRole) {
+        inviteRole.value = 'editor';
+      }
+
+      setMessage(inviteMessage);
+
+      if (addCommitteeUserPanel) {
+        addCommitteeUserPanel.hidden = false;
+        addCommitteeUserPanel.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  );
+
+  cancelAddCommitteeUserBtn
+    ?.addEventListener(
+      'click',
+      () => {
+        committeeInviteForm?.reset();
+        setMessage(inviteMessage);
+
+        if (addCommitteeUserPanel) {
+          addCommitteeUserPanel.hidden = true;
+        }
+      }
+    );
+
+  committeeInviteForm?.addEventListener(
+    'submit',
+    async (event) => {
+      event.preventDefault();
+
+      if (!isAdmin()) return;
+
+      const email =
+        inviteEmail.value
+          .trim()
+          .toLowerCase();
+
+      const fullName =
+        inviteFullName.value.trim();
+
+      const role =
+        inviteRole.value;
+
+      if (!email || !fullName || !role) {
+        setMessage(
+          inviteMessage,
+          'Name, email and role are required.',
+          true
+        );
+        return;
+      }
+
+      try {
+        setMessage(
+          inviteMessage,
+          'Adding authorized user…'
+        );
+
+        const {
+          data: existingProfile,
+          error: profileLookupError
+        } = await supabase
+          .from('profiles')
+          .select('id,email,status')
+          .eq('email', email)
+          .maybeSingle();
+
+        if (profileLookupError) {
+          throw profileLookupError;
+        }
+
+        if (existingProfile) {
+          setMessage(
+            inviteMessage,
+            'This email already has a committee account. Manage it in the lists below.',
+            true
+          );
+          return;
+        }
+
+        const {
+          error
+        } = await supabase
+          .from('committee_invites')
+          .upsert(
+            {
+              email,
+              full_name: fullName,
+              role,
+              status: 'pending',
+              invited_by: currentUser.id
+            },
+            {
+              onConflict: 'email'
+            }
+          );
+
+        if (error) throw error;
+
+        committeeInviteForm.reset();
+
+        if (inviteRole) {
+          inviteRole.value = 'editor';
+        }
+
+        setMessage(
+          inviteMessage,
+          'User pre-authorized. Ask them to use Request Access with this same email address.'
+        );
+
+      } catch (error) {
+        setMessage(
+          inviteMessage,
+          error.message ||
+          'Unable to add authorized user.',
+          true
+        );
+      }
+    }
+  );
 
   /* =========================================================
      MEMBERSHIP PLAN SETTINGS
@@ -1446,7 +1903,6 @@
               No membership plans exist yet.
             </div>
           `;
-
           return;
         }
 
@@ -1560,7 +2016,6 @@
                 window.alert(
                   'Plan name cannot be empty.'
                 );
-
                 return;
               }
 
@@ -1579,10 +2034,7 @@
                 );
 
               if (error) {
-                window.alert(
-                  error.message
-                );
-
+                window.alert(error.message);
                 return;
               }
 
@@ -1620,7 +2072,6 @@
         window.alert(
           'Please enter a valid price.'
         );
-
         return;
       }
 
@@ -1672,10 +2123,7 @@
         });
 
       if (error) {
-        window.alert(
-          error.message
-        );
-
+        window.alert(error.message);
         return;
       }
 
@@ -1775,17 +2223,16 @@
         ];
 
         for (const row of rows) {
-          const {
-            error
-          } = await supabase
-            .from('site_settings')
-            .upsert(
-              row,
-              {
-                onConflict:
-                  'setting_key'
-              }
-            );
+          const { error } =
+            await supabase
+              .from('site_settings')
+              .upsert(
+                row,
+                {
+                  onConflict:
+                    'setting_key'
+                }
+              );
 
           if (error) {
             throw error;
