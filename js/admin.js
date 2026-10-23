@@ -1,1461 +1,2275 @@
-:root{
-  --portal-ink:#171717;
-  --portal-muted:#6e6a64;
-  --portal-paper:#fbfaf7;
-  --portal-paper-2:#f4f0e9;
-  --portal-line:#e3dbd1;
-  --portal-red:#c81f2a;
-  --portal-red-dark:#951720;
-  --portal-orange:#ec7620;
-  --portal-green:#173f35;
-  --portal-white:#ffffff;
-  --portal-shadow:0 28px 80px rgba(15,15,15,.18);
-}
+(() => {
+  const supabase = window.AAVAN?.supabase;
 
-/* =========================================================
-   GLOBAL VISIBILITY CONTROL
-   ========================================================= */
+  if (!supabase) {
+    console.warn('AAVAN admin: Supabase is not available.');
+    return;
+  }
 
-[hidden]{
-  display:none !important;
-}
+  let currentUser = null;
+  let currentProfile = null;
 
-/* =========================================================
-   COMMITTEE PORTAL SHELL
-   ========================================================= */
+  /* =========================================================
+     DOM REFERENCES
+     ========================================================= */
 
-.committee-portal{
-  position:fixed;
-  inset:0;
-  z-index:10000;
-  display:grid;
-  place-items:center;
-  padding:22px;
-}
+  const dashboard = document.getElementById('dashboard');
+  const dashboardUserName = document.getElementById('dashboardUserName');
+  const dashboardAvatar = document.getElementById('dashboardAvatar');
+  const roleSummary = document.getElementById('roleSummary');
 
-.committee-portal-backdrop{
-  position:absolute;
-  inset:0;
-  background:rgba(10,10,10,.72);
-  backdrop-filter:blur(12px);
-}
+  const metricEvents = document.getElementById('metricEvents');
+  const metricAccess = document.getElementById('metricAccess');
+  const metricMemberships = document.getElementById('metricMemberships');
+  const metricRole = document.getElementById('metricRole');
+  const permissionSummary = document.getElementById('permissionSummary');
 
-.committee-portal-shell{
-  position:relative;
-  width:min(1240px,100%);
-  max-height:calc(100vh - 44px);
-  overflow:hidden;
-  background:var(--portal-paper);
-  border-radius:30px;
-  box-shadow:var(--portal-shadow);
-  border:1px solid rgba(255,255,255,.2);
-}
+  const membershipsTab = document.getElementById('membershipsTab');
+  const accessTab = document.getElementById('accessTab');
+  const settingsTab = document.getElementById('settingsTab');
 
-.committee-portal-topbar{
-  min-height:74px;
-  padding:0 22px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-  border-bottom:1px solid var(--portal-line);
-  background:rgba(255,255,255,.96);
-  backdrop-filter:blur(14px);
-}
+  /* Events */
+  const eventsList = document.getElementById('eventsList');
+  const eventFormPanel = document.getElementById('eventFormPanel');
+  const newEventBtn = document.getElementById('newEventBtn');
+  const cancelEditBtn = document.getElementById('cancelEditBtn');
+  const eventForm = document.getElementById('eventForm');
+  const eventId = document.getElementById('eventId');
+  const eventTitle = document.getElementById('eventTitle');
+  const eventDate = document.getElementById('eventDate');
+  const eventEndDate = document.getElementById('eventEndDate');
+  const eventTime = document.getElementById('eventTime');
+  const eventVenue = document.getElementById('eventVenue');
+  const eventSummary = document.getElementById('eventSummary');
+  const eventRegistration = document.getElementById('eventRegistration');
+  const eventImage = document.getElementById('eventImage');
+  const eventFeatured = document.getElementById('eventFeatured');
+  const eventPublished = document.getElementById('eventPublished');
+  const eventMessage = document.getElementById('eventMessage');
+  const formTitle = document.getElementById('formTitle');
 
-.committee-portal-brand{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  min-width:0;
-}
+  /* Access */
+  const membersList = document.getElementById('membersList');
+  const pendingMembersList = document.getElementById('pendingMembersList');
+  const pendingRequestCount = document.getElementById('pendingRequestCount');
+  const membersMessage = document.getElementById('membersMessage');
 
-.committee-portal-brand img{
-  width:58px;
-  height:48px;
-  object-fit:contain;
-  flex:0 0 auto;
-}
+  const addCommitteeUserBtn = document.getElementById('addCommitteeUserBtn');
+  const addCommitteeUserPanel = document.getElementById('addCommitteeUserPanel');
+  const cancelAddCommitteeUserBtn = document.getElementById('cancelAddCommitteeUserBtn');
+  const committeeInviteForm = document.getElementById('committeeInviteForm');
+  const inviteFullName = document.getElementById('inviteFullName');
+  const inviteEmail = document.getElementById('inviteEmail');
+  const inviteRole = document.getElementById('inviteRole');
+  const inviteMessage = document.getElementById('inviteMessage');
 
-.committee-portal-brand>div{
-  display:grid;
-  gap:2px;
-  min-width:0;
-}
+  /* Memberships */
+  const membershipApplicationsList =
+    document.getElementById('membershipApplicationsList');
+  const membershipStatusFilter =
+    document.getElementById('membershipStatusFilter');
+  const membershipSearch =
+    document.getElementById('membershipSearch');
 
-.committee-portal-brand strong{
-  font-size:.98rem;
-  color:var(--portal-ink);
-}
+  /* Settings */
+  const planSettingsList = document.getElementById('planSettingsList');
+  const addPlanBtn = document.getElementById('addPlanBtn');
+  const paymentSettingsForm = document.getElementById('paymentSettingsForm');
+  const settingInteracEmail = document.getElementById('settingInteracEmail');
+  const settingPaymentInstructions =
+    document.getElementById('settingPaymentInstructions');
+  const settingsMessage = document.getElementById('settingsMessage');
 
-.committee-portal-brand span{
-  font-size:.73rem;
-  color:var(--portal-muted);
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
+  /* =========================================================
+     HELPERS
+     ========================================================= */
 
-.committee-portal-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
+  const escapeHtml = (value = '') =>
+    String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
 
-.portal-signout,
-.portal-close{
-  cursor:pointer;
-}
+  const money = (value) =>
+    new Intl.NumberFormat('en-CA', {
+      style: 'currency',
+      currency: 'CAD'
+    }).format(Number(value || 0));
 
-.portal-signout{
-  min-height:40px;
-  padding:0 16px;
-  border-radius:999px;
-  border:1px solid #d5ccc1;
-  background:#fff;
-  color:var(--portal-ink);
-  font-size:.8rem;
-  font-weight:700;
-}
+  const getLocalDateString = (date = new Date()) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
-.portal-close{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  border:1px solid #d8cfc4;
-  background:#fff;
-  color:var(--portal-ink);
-  font-size:22px;
-  line-height:1;
-}
+  const formatDate = (value) => {
+    if (!value) return '—';
 
-.portal-signout:hover,
-.portal-close:hover{
-  border-color:#bfb4a8;
-  background:#f7f4ef;
-}
+    const [year, month, day] = String(value).split('-').map(Number);
 
-.committee-portal-content{
-  min-height:620px;
-  max-height:calc(100vh - 118px);
-  overflow:auto;
-  background:var(--portal-paper);
-}
+    if (!year || !month || !day) return value;
 
-/* =========================================================
-   LOGIN / REQUEST ACCESS
-   ========================================================= */
+    const date = new Date(year, month - 1, day);
 
-.committee-auth{
-  display:grid;
-  grid-template-columns:minmax(0,1.05fr) minmax(420px,.95fr);
-  min-height:620px;
-}
+    return new Intl.DateTimeFormat('en-CA', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
+  };
 
-.committee-auth-brand-panel{
-  position:relative;
-  overflow:hidden;
-  min-height:620px;
-}
+  const formatEventDateRange = (event) => {
+    const start = event.event_date;
+    const end = event.end_date;
 
-.committee-auth-brand-panel>img{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
+    if (!start && !end) return 'No date';
+    if (!start && end) return `Through ${formatDate(end)}`;
+    if (!end || end === start) return formatDate(start);
 
-.auth-brand-overlay{
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(12,12,12,.2),
-      rgba(12,12,12,.82)
-    ),
-    linear-gradient(
-      90deg,
-      rgba(118,18,25,.24),
-      transparent 70%
+    return `${formatDate(start)} – ${formatDate(end)}`;
+  };
+
+  const setMessage = (
+    element,
+    text = '',
+    isError = false
+  ) => {
+    if (!element) return;
+
+    element.textContent = text;
+    element.classList.toggle('error', Boolean(isError));
+  };
+
+  const getInitials = (name = '') => {
+    const parts = name
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2);
+
+    return parts
+      .map((part) => part[0]?.toUpperCase())
+      .join('') || 'A';
+  };
+
+  const isAdmin = () =>
+    currentProfile?.role === 'admin' &&
+    currentProfile?.status === 'active';
+
+  const canEdit = () =>
+    ['admin', 'editor'].includes(currentProfile?.role) &&
+    currentProfile?.status === 'active';
+
+  const refreshPublicData = () => {
+    window.AAVAN?.events?.reload?.();
+    window.AAVAN?.membership?.reloadPlans?.();
+    window.AAVAN?.gallery?.reload?.();
+  };
+
+  /* =========================================================
+     DASHBOARD NAVIGATION
+     ========================================================= */
+
+  document
+    .querySelectorAll('.dashboard-nav')
+    .forEach((button) => {
+      button.addEventListener('click', () => {
+        const panelId = button.dataset.panel;
+        if (!panelId) return;
+
+        document
+          .querySelectorAll('.dashboard-nav')
+          .forEach((navButton) => {
+            navButton.classList.remove('active');
+          });
+
+        button.classList.add('active');
+
+        document
+          .querySelectorAll('.dashboard-panel')
+          .forEach((panel) => {
+            panel.hidden = true;
+            panel.classList.remove('active');
+          });
+
+        const panel = document.getElementById(panelId);
+
+        if (panel) {
+          panel.hidden = false;
+          panel.classList.add('active');
+        }
+
+        if (panelId === 'eventsPanel') {
+          loadEvents();
+        }
+
+        if (panelId === 'galleryPanel') {
+          window.AAVAN?.gallery?.loadAdmin?.({
+            user: currentUser,
+            profile: currentProfile
+          });
+        }
+
+        if (
+          panelId === 'membershipsPanel' &&
+          isAdmin()
+        ) {
+          loadMembershipApplications();
+        }
+
+        if (
+          panelId === 'accessPanel' &&
+          isAdmin()
+        ) {
+          loadCommitteeUsers();
+        }
+
+        if (
+          panelId === 'settingsPanel' &&
+          isAdmin()
+        ) {
+          loadMembershipPlans();
+          loadPaymentSettings();
+        }
+      });
+    });
+
+  /* =========================================================
+     PROFILE / DASHBOARD SETUP
+     ========================================================= */
+
+  const configureDashboard = async (
+    user,
+    profile
+  ) => {
+    currentUser = user;
+    currentProfile = profile;
+
+    if (dashboardUserName) {
+      dashboardUserName.textContent =
+        profile.full_name ||
+        user.email ||
+        'Committee Member';
+    }
+
+    if (dashboardAvatar) {
+      dashboardAvatar.textContent =
+        getInitials(
+          profile.full_name ||
+          user.email ||
+          'A'
+        );
+    }
+
+    if (roleSummary) {
+      roleSummary.textContent =
+        `${profile.role} • ${profile.status}`;
+    }
+
+    if (metricRole) {
+      metricRole.textContent =
+        profile.role || '—';
+    }
+
+    if (isAdmin()) {
+      if (membershipsTab) membershipsTab.hidden = false;
+      if (accessTab) accessTab.hidden = false;
+      if (settingsTab) settingsTab.hidden = false;
+
+      if (permissionSummary) {
+        permissionSummary.textContent =
+          'You have full Admin access: events, gallery, memberships, committee access, membership plans and payment settings.';
+      }
+    } else if (profile.role === 'editor') {
+      if (membershipsTab) membershipsTab.hidden = true;
+      if (accessTab) accessTab.hidden = true;
+      if (settingsTab) settingsTab.hidden = true;
+
+      if (permissionSummary) {
+        permissionSummary.textContent =
+          'You can create, edit, publish and manage events and gallery content. Membership records and user access remain Admin-only.';
+      }
+    } else {
+      if (membershipsTab) membershipsTab.hidden = true;
+      if (accessTab) accessTab.hidden = true;
+      if (settingsTab) settingsTab.hidden = true;
+
+      if (permissionSummary) {
+        permissionSummary.textContent =
+          'Your Viewer role is read-only. Contact an Admin if you need editing access.';
+      }
+    }
+
+    if (newEventBtn) {
+      newEventBtn.hidden = !canEdit();
+    }
+
+    await Promise.all([
+      loadDashboardMetrics(),
+      loadEvents()
+    ]);
+
+    window.AAVAN?.gallery?.setAdminContext?.({
+      user: currentUser,
+      profile: currentProfile
+    });
+  };
+
+  /* =========================================================
+     DASHBOARD METRICS
+     ========================================================= */
+
+  const loadDashboardMetrics = async () => {
+    try {
+      const today = getLocalDateString();
+
+      const { data: eventRows, error: eventError } =
+        await supabase
+          .from('events')
+          .select('id,event_date,end_date');
+
+      if (eventError) throw eventError;
+
+      const upcomingEventCount = (eventRows || [])
+        .filter((event) => {
+          const finalDate =
+            event.end_date || event.event_date;
+
+          return finalDate && finalDate >= today;
+        })
+        .length;
+
+      if (metricEvents) {
+        metricEvents.textContent =
+          upcomingEventCount;
+      }
+
+      if (isAdmin()) {
+        const [
+          accessResult,
+          membershipsResult
+        ] = await Promise.all([
+          supabase
+            .from('profiles')
+            .select('id', {
+              count: 'exact',
+              head: true
+            })
+            .eq('status', 'pending'),
+
+          supabase
+            .from('membership_applications')
+            .select('id', {
+              count: 'exact',
+              head: true
+            })
+            .eq(
+              'payment_status',
+              'pending_payment'
+            )
+        ]);
+
+        if (metricAccess) {
+          metricAccess.textContent =
+            accessResult.count ?? 0;
+        }
+
+        if (metricMemberships) {
+          metricMemberships.textContent =
+            membershipsResult.count ?? 0;
+        }
+      } else {
+        document
+          .querySelectorAll('.admin-only-metric')
+          .forEach((item) => {
+            item.hidden = true;
+          });
+      }
+    } catch (error) {
+      console.error(
+        'Dashboard metric error:',
+        error
+      );
+    }
+  };
+
+  /* =========================================================
+     EVENT MANAGEMENT
+     ========================================================= */
+
+  const resetEventForm = () => {
+    eventForm?.reset();
+
+    if (eventId) eventId.value = '';
+
+    if (eventEndDate) {
+      eventEndDate.value = '';
+      eventEndDate.min = '';
+    }
+
+    if (eventPublished) {
+      eventPublished.checked = true;
+    }
+
+    if (formTitle) {
+      formTitle.textContent = 'Add event';
+    }
+
+    setMessage(eventMessage);
+  };
+
+  eventDate?.addEventListener('change', () => {
+    if (!eventEndDate) return;
+
+    eventEndDate.min =
+      eventDate.value || '';
+
+    if (
+      eventEndDate.value &&
+      eventDate.value &&
+      eventEndDate.value < eventDate.value
+    ) {
+      eventEndDate.value = eventDate.value;
+    }
+  });
+
+  newEventBtn?.addEventListener(
+    'click',
+    () => {
+      resetEventForm();
+      if (eventFormPanel) {
+        eventFormPanel.hidden = false;
+        eventFormPanel.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  );
+
+  cancelEditBtn?.addEventListener(
+    'click',
+    () => {
+      resetEventForm();
+      if (eventFormPanel) {
+        eventFormPanel.hidden = true;
+      }
+    }
+  );
+
+  const uploadEventImage = async (
+    file
+  ) => {
+    if (!file) return null;
+
+    const extension =
+      file.name.split('.').pop()?.toLowerCase() ||
+      'jpg';
+
+    const filename =
+      `${crypto.randomUUID()}.${extension}`;
+
+    const path =
+      `events/${filename}`;
+
+    const {
+      error: uploadError
+    } = await supabase.storage
+      .from('event-images')
+      .upload(
+        path,
+        file,
+        {
+          cacheControl: '3600',
+          upsert: false
+        }
+      );
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const { data } = supabase.storage
+      .from('event-images')
+      .getPublicUrl(path);
+
+    return data?.publicUrl || null;
+  };
+
+  const loadEvents = async () => {
+    if (!eventsList) return;
+
+    eventsList.innerHTML =
+      '<div class="admin-loading">Loading events…</div>';
+
+    try {
+      const {
+        data,
+        error
+      } = await supabase
+        .from('events')
+        .select('*')
+        .order('event_date', {
+          ascending: true
+        });
+
+      if (error) throw error;
+
+      const events =
+        Array.isArray(data)
+          ? data
+          : [];
+
+      if (!events.length) {
+        eventsList.innerHTML = `
+          <div class="admin-empty">
+            No events have been created yet.
+          </div>
+        `;
+        return;
+      }
+
+      const today = getLocalDateString();
+
+      eventsList.innerHTML =
+        events.map((event) => {
+          const finalDate =
+            event.end_date ||
+            event.event_date;
+
+          const past =
+            finalDate &&
+            finalDate < today;
+
+          return `
+            <article class="admin-row">
+
+              <div class="admin-row-main">
+                <strong>
+                  ${escapeHtml(event.title || (event.image_url ? 'Image-only event' : 'Untitled event'))}
+                </strong>
+
+                <span>
+                  ${escapeHtml(
+                    event.venue ||
+                    'Venue not set'
+                  )}
+                </span>
+              </div>
+
+              <div class="admin-row-meta">
+                <span>
+                  ${event.end_date &&
+                  event.end_date !== event.event_date
+                    ? 'Dates'
+                    : 'Date'}
+                </span>
+
+                <strong>
+                  ${escapeHtml(
+                    formatEventDateRange(event)
+                  )}
+                </strong>
+              </div>
+
+              <div class="admin-row-meta">
+                <span>Status</span>
+
+                <span class="status-pill ${
+                  past
+                    ? 'disabled'
+                    : event.published
+                      ? 'published'
+                      : ''
+                }">
+                  ${
+                    past
+                      ? 'Past'
+                      : event.published
+                        ? 'Published'
+                        : 'Draft'
+                  }
+                </span>
+              </div>
+
+              <div class="admin-row-actions">
+                ${
+                  canEdit()
+                    ? `
+                      <button
+                        type="button"
+                        data-event-edit="${event.id}"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        type="button"
+                        class="danger"
+                        data-event-delete="${event.id}"
+                      >
+                        Delete
+                      </button>
+                    `
+                    : ''
+                }
+              </div>
+
+            </article>
+          `;
+        }).join('');
+
+      attachEventActions(events);
+
+    } catch (error) {
+      console.error(
+        'Load events error:',
+        error
+      );
+
+      eventsList.innerHTML = `
+        <div class="admin-empty">
+          Unable to load events.
+        </div>
+      `;
+    }
+  };
+
+  const attachEventActions = (
+    events
+  ) => {
+    document
+      .querySelectorAll('[data-event-edit]')
+      .forEach((button) => {
+        button.addEventListener(
+          'click',
+          () => {
+            const event =
+              events.find(
+                (item) =>
+                  String(item.id) ===
+                  String(
+                    button.dataset.eventEdit
+                  )
+              );
+
+            if (!event) return;
+
+            if (eventId) {
+              eventId.value =
+                event.id || '';
+            }
+
+            if (eventTitle) {
+              eventTitle.value =
+                event.title || '';
+            }
+
+            if (eventDate) {
+              eventDate.value =
+                event.event_date || '';
+            }
+
+            if (eventEndDate) {
+              eventEndDate.value =
+                event.end_date || '';
+              eventEndDate.min =
+                event.event_date || '';
+            }
+
+            if (eventTime) {
+              eventTime.value =
+                event.start_time || '';
+            }
+
+            if (eventVenue) {
+              eventVenue.value =
+                event.venue || '';
+            }
+
+            if (eventSummary) {
+              eventSummary.value =
+                event.description || '';
+            }
+
+            if (eventRegistration) {
+              eventRegistration.value =
+                event.registration_url || '';
+            }
+
+            if (eventFeatured) {
+              eventFeatured.checked =
+                Boolean(event.featured);
+            }
+
+            if (eventPublished) {
+              eventPublished.checked =
+                Boolean(event.published);
+            }
+
+            if (formTitle) {
+              formTitle.textContent =
+                'Edit event';
+            }
+
+            if (eventFormPanel) {
+              eventFormPanel.hidden = false;
+
+              eventFormPanel.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          }
+        );
+      });
+
+    document
+      .querySelectorAll(
+        '[data-event-delete]'
+      )
+      .forEach((button) => {
+        button.addEventListener(
+          'click',
+          async () => {
+            if (!canEdit()) return;
+
+            const confirmed =
+              window.confirm(
+                'Delete this event permanently?'
+              );
+
+            if (!confirmed) return;
+
+            const { error } =
+              await supabase
+                .from('events')
+                .delete()
+                .eq(
+                  'id',
+                  button.dataset.eventDelete
+                );
+
+            if (error) {
+              window.alert(error.message);
+              return;
+            }
+
+            await loadEvents();
+            await loadDashboardMetrics();
+
+            refreshPublicData();
+          }
+        );
+      });
+  };
+
+  eventForm?.addEventListener(
+    'submit',
+    async (event) => {
+      event.preventDefault();
+
+      if (!canEdit()) {
+        setMessage(
+          eventMessage,
+          'Your role does not allow event editing.',
+          true
+        );
+        return;
+      }
+
+      const startDate =
+        eventDate?.value || '';
+
+      const endDate =
+        eventEndDate?.value || '';
+
+      const hasImage =
+        Boolean(eventImage?.files?.[0]);
+
+      const hasAnyContent =
+        Boolean(
+          eventTitle?.value.trim() ||
+          startDate ||
+          endDate ||
+          eventTime?.value ||
+          eventVenue?.value.trim() ||
+          eventSummary?.value.trim() ||
+          eventRegistration?.value.trim() ||
+          hasImage
+        );
+
+      if (!hasAnyContent) {
+        setMessage(
+          eventMessage,
+          'Add at least one event detail or upload an event image.',
+          true
+        );
+        return;
+      }
+
+      if (
+        endDate &&
+        startDate &&
+        endDate < startDate
+      ) {
+        setMessage(
+          eventMessage,
+          'End date cannot be before the start date.',
+          true
+        );
+        return;
+      }
+
+      try {
+        setMessage(
+          eventMessage,
+          'Saving event…'
+        );
+
+        let imageUrl = null;
+
+        if (eventImage?.files?.[0]) {
+          imageUrl =
+            await uploadEventImage(
+              eventImage.files[0]
+            );
+        }
+
+        const payload = {
+          title:
+            eventTitle.value.trim() || null,
+
+          event_date:
+            startDate || null,
+
+          end_date:
+            endDate || null,
+
+          start_time:
+            eventTime.value || null,
+
+          venue:
+            eventVenue.value.trim() || null,
+
+          description:
+            eventSummary.value.trim() || null,
+
+          registration_url:
+            eventRegistration.value.trim() ||
+            null,
+
+          featured:
+            eventFeatured.checked,
+
+          published:
+            eventPublished.checked,
+
+          updated_by:
+            currentUser.id
+        };
+
+        if (imageUrl) {
+          payload.image_url =
+            imageUrl;
+        }
+
+        let result;
+
+        if (eventId.value) {
+          result = await supabase
+            .from('events')
+            .update(payload)
+            .eq(
+              'id',
+              eventId.value
+            );
+        } else {
+          payload.created_by =
+            currentUser.id;
+
+          result = await supabase
+            .from('events')
+            .insert(payload);
+        }
+
+        if (result.error) {
+          throw result.error;
+        }
+
+        resetEventForm();
+
+        if (eventFormPanel) {
+          eventFormPanel.hidden = true;
+        }
+
+        await loadEvents();
+        await loadDashboardMetrics();
+
+        refreshPublicData();
+
+      } catch (error) {
+        console.error(
+          'Save event error:',
+          error
+        );
+
+        setMessage(
+          eventMessage,
+          error.message ||
+          'Unable to save event.',
+          true
+        );
+      }
+    }
+  );
+
+  /* =========================================================
+     MEMBERSHIP APPLICATIONS
+     ========================================================= */
+
+  const loadMembershipApplications =
+    async () => {
+      if (
+        !membershipApplicationsList ||
+        !isAdmin()
+      ) {
+        return;
+      }
+
+      membershipApplicationsList.innerHTML =
+        '<div class="admin-loading">Loading applications…</div>';
+
+      try {
+        let query = supabase
+          .from('membership_applications')
+          .select('*')
+          .order('created_at', {
+            ascending: false
+          });
+
+        const status =
+          membershipStatusFilter?.value;
+
+        if (
+          status &&
+          status !== 'all'
+        ) {
+          query = query.eq(
+            'membership_status',
+            status
+          );
+        }
+
+        const {
+          data,
+          error
+        } = await query;
+
+        if (error) throw error;
+
+        let applications =
+          Array.isArray(data)
+            ? data
+            : [];
+
+        const search =
+          membershipSearch?.value
+            .trim()
+            .toLowerCase();
+
+        if (search) {
+          applications =
+            applications.filter(
+              (application) =>
+                String(
+                  application.full_name || ''
+                )
+                  .toLowerCase()
+                  .includes(search) ||
+                String(
+                  application.email || ''
+                )
+                  .toLowerCase()
+                  .includes(search)
+            );
+        }
+
+        if (!applications.length) {
+          membershipApplicationsList.innerHTML = `
+            <div class="admin-empty">
+              No membership applications match this view.
+            </div>
+          `;
+          return;
+        }
+
+        membershipApplicationsList.innerHTML =
+          applications.map(
+            (application) => `
+              <article class="admin-row">
+
+                <div class="admin-row-main">
+                  <strong>
+                    ${escapeHtml(
+                      application.full_name
+                    )}
+                  </strong>
+
+                  <span>
+                    ${escapeHtml(
+                      application.email
+                    )}
+                  </span>
+
+                  <span>
+                    ${escapeHtml(
+                      application.application_reference ||
+                      ''
+                    )}
+                  </span>
+                </div>
+
+                <div class="admin-row-meta">
+                  <span>Plan</span>
+                  <strong>
+                    ${escapeHtml(
+                      application.membership_plan_name ||
+                      '—'
+                    )}
+                  </strong>
+                </div>
+
+                <div class="admin-row-meta">
+                  <span>Payment</span>
+
+                  <strong>
+                    ${money(
+                      application.membership_amount
+                    )}
+                  </strong>
+
+                  <span class="status-pill ${
+                    application.payment_status
+                  }">
+                    ${escapeHtml(
+                      application.payment_status ||
+                      'pending'
+                    )}
+                  </span>
+                </div>
+
+                <div class="admin-row-actions">
+                  ${
+                    application.payment_status !==
+                    'paid'
+                      ? `
+                        <button
+                          type="button"
+                          data-payment-received="${application.id}"
+                        >
+                          Mark Payment Received
+                        </button>
+                      `
+                      : ''
+                  }
+
+                  ${
+                    application.membership_status !==
+                    'declined'
+                      ? `
+                        <button
+                          type="button"
+                          class="danger"
+                          data-membership-decline="${application.id}"
+                        >
+                          Decline
+                        </button>
+                      `
+                      : ''
+                  }
+                </div>
+
+              </article>
+            `
+          ).join('');
+
+        attachMembershipActions();
+
+      } catch (error) {
+        console.error(
+          'Membership application error:',
+          error
+        );
+
+        membershipApplicationsList.innerHTML = `
+          <div class="admin-empty">
+            Unable to load membership applications.
+          </div>
+        `;
+      }
+    };
+
+  const attachMembershipActions =
+    () => {
+      document
+        .querySelectorAll(
+          '[data-payment-received]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              if (!isAdmin()) return;
+
+              const confirmed =
+                window.confirm(
+                  'Confirm that the Interac payment has been received?'
+                );
+
+              if (!confirmed) return;
+
+              const { error } =
+                await supabase
+                  .from(
+                    'membership_applications'
+                  )
+                  .update({
+                    payment_status:
+                      'paid',
+
+                    membership_status:
+                      'active',
+
+                    payment_verified_at:
+                      new Date().toISOString(),
+
+                    payment_verified_by:
+                      currentUser.id
+                  })
+                  .eq(
+                    'id',
+                    button.dataset
+                      .paymentReceived
+                  );
+
+              if (error) {
+                window.alert(error.message);
+                return;
+              }
+
+              await loadMembershipApplications();
+              await loadDashboardMetrics();
+            }
+          );
+        });
+
+      document
+        .querySelectorAll(
+          '[data-membership-decline]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              if (!isAdmin()) return;
+
+              const confirmed =
+                window.confirm(
+                  'Decline this membership application?'
+                );
+
+              if (!confirmed) return;
+
+              const { error } =
+                await supabase
+                  .from(
+                    'membership_applications'
+                  )
+                  .update({
+                    membership_status:
+                      'declined'
+                  })
+                  .eq(
+                    'id',
+                    button.dataset
+                      .membershipDecline
+                  );
+
+              if (error) {
+                window.alert(error.message);
+                return;
+              }
+
+              await loadMembershipApplications();
+              await loadDashboardMetrics();
+            }
+          );
+        });
+    };
+
+  membershipStatusFilter
+    ?.addEventListener(
+      'change',
+      loadMembershipApplications
     );
-}
 
-.auth-brand-copy{
-  position:absolute;
-  left:46px;
-  right:46px;
-  bottom:46px;
-  z-index:2;
-  color:#fff;
-}
+  membershipSearch
+    ?.addEventListener(
+      'input',
+      loadMembershipApplications
+    );
 
-.auth-brand-copy>span{
-  display:block;
-  margin-bottom:14px;
-  font-size:.68rem;
-  letter-spacing:.18em;
-  font-weight:800;
-  color:#ffd6cc;
-}
+  /* =========================================================
+     COMMITTEE ACCESS MANAGEMENT
+     ========================================================= */
 
-.auth-brand-copy h2{
-  margin:0 0 18px;
-  font-family:'Playfair Display',serif;
-  font-size:clamp(3.5rem,5.5vw,6rem);
-  line-height:.88;
-  letter-spacing:-.045em;
-}
+  const renderPendingProfiles = (
+    profiles
+  ) => {
+    if (!pendingMembersList) return;
 
-.auth-brand-copy p{
-  max-width:520px;
-  margin:0;
-  color:#e9e3dc;
-  font-size:1rem;
-}
+    if (pendingRequestCount) {
+      pendingRequestCount.textContent =
+        profiles.length
+          ? `${profiles.length} pending`
+          : 'No pending requests';
+    }
 
-.committee-auth-form-panel{
-  padding:54px 54px 42px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  background:#fff;
-}
+    if (!profiles.length) {
+      pendingMembersList.innerHTML = `
+        <div class="admin-empty">
+          No committee access requests are waiting for approval.
+        </div>
+      `;
+      return;
+    }
 
-.auth-panel-head{
-  max-width:500px;
-}
+    pendingMembersList.innerHTML =
+      profiles.map((profile) => `
+        <article class="member-row">
 
-.auth-panel-head h2{
-  margin:0 0 10px;
-  font-family:'Playfair Display',serif;
-  font-size:3.4rem;
-  line-height:.95;
-  letter-spacing:-.04em;
-}
+          <div class="member-identity">
+            <strong>
+              ${escapeHtml(
+                profile.full_name ||
+                'Unnamed user'
+              )}
+            </strong>
 
-.auth-panel-head>p:last-child{
-  margin-bottom:26px;
-  color:var(--portal-muted);
-}
+            <span>
+              ${escapeHtml(profile.email)}
+            </span>
+          </div>
 
-.auth-switch{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:4px;
-  padding:4px;
-  margin-bottom:24px;
-  border-radius:14px;
-  background:#f0ece6;
-}
+          <select
+            data-pending-role="${profile.id}"
+          >
+            <option
+              value="viewer"
+              ${
+                profile.role === 'viewer'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Viewer
+            </option>
 
-.auth-switch button{
-  min-height:42px;
-  border:0;
-  border-radius:11px;
-  background:transparent;
-  color:#7a736b;
-  font-size:.8rem;
-  font-weight:700;
-  cursor:pointer;
-  transition:.2s ease;
-}
+            <option
+              value="editor"
+              ${
+                profile.role === 'editor'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Editor
+            </option>
 
-.auth-switch button.active{
-  background:#fff;
-  color:var(--portal-ink);
-  box-shadow:0 4px 16px rgba(0,0,0,.06);
-}
+            <option
+              value="admin"
+              ${
+                profile.role === 'admin'
+                  ? 'selected'
+                  : ''
+              }
+            >
+              Admin
+            </option>
+          </select>
 
-.portal-form{
-  display:grid;
-  gap:15px;
-}
+          <span class="status-pill pending">
+            Pending
+          </span>
 
-.portal-form label{
-  display:grid;
-  gap:7px;
-  font-size:.8rem;
-  font-weight:700;
-  color:#39342f;
-}
+          <div class="member-actions">
+            <button
+              type="button"
+              data-user-approve="${profile.id}"
+            >
+              Approve
+            </button>
 
-.portal-form input{
-  width:100%;
-  min-height:50px;
-  padding:12px 14px;
-  border:1px solid #d8cfc4;
-  border-radius:13px;
-  background:#fcfbf9;
-  color:var(--portal-ink);
-}
+            <button
+              type="button"
+              class="danger"
+              data-user-decline="${profile.id}"
+            >
+              Decline
+            </button>
+          </div>
 
-.portal-form input:focus{
-  outline:0;
-  border-color:var(--portal-red);
-  background:#fff;
-  box-shadow:0 0 0 4px rgba(200,31,42,.08);
-}
+        </article>
+      `).join('');
+  };
 
-.portal-primary{
-  min-height:50px;
-  border:0;
-  border-radius:999px;
-  margin-top:3px;
-  background:linear-gradient(
-    135deg,
-    var(--portal-red-dark),
-    var(--portal-red) 62%,
-    var(--portal-orange)
+  const renderActiveProfiles = (
+    profiles
+  ) => {
+    if (!membersList) return;
+
+    if (!profiles.length) {
+      membersList.innerHTML = `
+        <div class="admin-empty">
+          No committee users found.
+        </div>
+      `;
+      return;
+    }
+
+    membersList.innerHTML =
+      profiles.map((profile) => {
+        const isCurrentUser =
+          profile.id === currentUser?.id;
+
+        return `
+          <article class="member-row">
+
+            <div class="member-identity">
+              <strong>
+                ${escapeHtml(
+                  profile.full_name ||
+                  'Unnamed user'
+                )}
+              </strong>
+
+              <span>
+                ${escapeHtml(profile.email)}
+              </span>
+            </div>
+
+            <select
+              data-user-role="${profile.id}"
+              ${isCurrentUser ? 'disabled' : ''}
+            >
+              <option
+                value="viewer"
+                ${
+                  profile.role === 'viewer'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                Viewer
+              </option>
+
+              <option
+                value="editor"
+                ${
+                  profile.role === 'editor'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                Editor
+              </option>
+
+              <option
+                value="admin"
+                ${
+                  profile.role === 'admin'
+                    ? 'selected'
+                    : ''
+                }
+              >
+                Admin
+              </option>
+            </select>
+
+            <span class="status-pill ${
+              profile.status === 'active'
+                ? 'active'
+                : 'disabled'
+            }">
+              ${
+                profile.status === 'active'
+                  ? 'Active'
+                  : 'Revoked'
+              }
+            </span>
+
+            <div class="member-actions">
+              ${
+                isCurrentUser
+                  ? `
+                    <span class="status-pill active">
+                      Current Admin
+                    </span>
+                  `
+                  : `
+                    <button
+                      type="button"
+                      data-user-role-save="${profile.id}"
+                    >
+                      Save Role
+                    </button>
+
+                    ${
+                      profile.status === 'active'
+                        ? `
+                          <button
+                            type="button"
+                            class="danger"
+                            data-user-revoke="${profile.id}"
+                          >
+                            Revoke Access
+                          </button>
+                        `
+                        : `
+                          <button
+                            type="button"
+                            data-user-reactivate="${profile.id}"
+                          >
+                            Reactivate
+                          </button>
+                        `
+                    }
+                  `
+              }
+            </div>
+
+          </article>
+        `;
+      }).join('');
+  };
+
+  const loadCommitteeUsers =
+    async () => {
+      if (
+        !membersList ||
+        !isAdmin()
+      ) {
+        return;
+      }
+
+      if (pendingMembersList) {
+        pendingMembersList.innerHTML =
+          '<div class="admin-loading">Loading pending requests…</div>';
+      }
+
+      membersList.innerHTML =
+        '<div class="admin-loading">Loading committee users…</div>';
+
+      try {
+        const {
+          data,
+          error
+        } = await supabase
+          .from('profiles')
+          .select('*')
+          .order('created_at', {
+            ascending: true
+          });
+
+        if (error) throw error;
+
+        const profiles =
+          Array.isArray(data)
+            ? data
+            : [];
+
+        const pendingProfiles =
+          profiles.filter(
+            (profile) =>
+              profile.status === 'pending'
+          );
+
+        const activeProfiles =
+          profiles.filter(
+            (profile) =>
+              profile.status !== 'pending'
+          );
+
+        renderPendingProfiles(
+          pendingProfiles
+        );
+
+        renderActiveProfiles(
+          activeProfiles
+        );
+
+        attachCommitteeUserActions();
+
+      } catch (error) {
+        console.error(
+          'Committee users error:',
+          error
+        );
+
+        if (pendingMembersList) {
+          pendingMembersList.innerHTML = `
+            <div class="admin-empty">
+              Unable to load pending requests.
+            </div>
+          `;
+        }
+
+        membersList.innerHTML = `
+          <div class="admin-empty">
+            Unable to load committee users.
+          </div>
+        `;
+      }
+    };
+
+  const updateProfileAccess = async (
+    userId,
+    updates,
+    successMessage
+  ) => {
+    if (!isAdmin()) return;
+
+    if (
+      userId === currentUser?.id &&
+      updates.status &&
+      updates.status !== 'active'
+    ) {
+      window.alert(
+        'You cannot revoke your own Admin access.'
+      );
+      return;
+    }
+
+    setMessage(
+      membersMessage,
+      'Saving access…'
+    );
+
+    const { error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', userId);
+
+    if (error) {
+      setMessage(
+        membersMessage,
+        error.message ||
+        'Unable to update access.',
+        true
+      );
+      return;
+    }
+
+    setMessage(
+      membersMessage,
+      successMessage
+    );
+
+    await loadCommitteeUsers();
+    await loadDashboardMetrics();
+  };
+
+  const attachCommitteeUserActions =
+    () => {
+      document
+        .querySelectorAll(
+          '[data-user-approve]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              const userId =
+                button.dataset.userApprove;
+
+              const role =
+                document.querySelector(
+                  `[data-pending-role="${userId}"]`
+                )?.value || 'viewer';
+
+              const confirmed =
+                window.confirm(
+                  `Approve this committee request as ${role}?`
+                );
+
+              if (!confirmed) return;
+
+              await updateProfileAccess(
+                userId,
+                {
+                  role,
+                  status: 'active'
+                },
+                'Committee access approved.'
+              );
+            }
+          );
+        });
+
+      document
+        .querySelectorAll(
+          '[data-user-decline]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              const confirmed =
+                window.confirm(
+                  'Decline this committee access request?'
+                );
+
+              if (!confirmed) return;
+
+              await updateProfileAccess(
+                button.dataset.userDecline,
+                {
+                  status: 'disabled'
+                },
+                'Committee access request declined.'
+              );
+            }
+          );
+        });
+
+      document
+        .querySelectorAll(
+          '[data-user-role-save]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              const userId =
+                button.dataset.userRoleSave;
+
+              const role =
+                document.querySelector(
+                  `[data-user-role="${userId}"]`
+                )?.value;
+
+              if (!role) return;
+
+              await updateProfileAccess(
+                userId,
+                { role },
+                'Committee role updated.'
+              );
+            }
+          );
+        });
+
+      document
+        .querySelectorAll(
+          '[data-user-revoke]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              const confirmed =
+                window.confirm(
+                  'Revoke this committee member’s access? They will no longer be able to enter the dashboard.'
+                );
+
+              if (!confirmed) return;
+
+              await updateProfileAccess(
+                button.dataset.userRevoke,
+                {
+                  status: 'disabled'
+                },
+                'Committee access revoked.'
+              );
+            }
+          );
+        });
+
+      document
+        .querySelectorAll(
+          '[data-user-reactivate]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              const confirmed =
+                window.confirm(
+                  'Reactivate this committee member’s access?'
+                );
+
+              if (!confirmed) return;
+
+              await updateProfileAccess(
+                button.dataset.userReactivate,
+                {
+                  status: 'active'
+                },
+                'Committee access reactivated.'
+              );
+            }
+          );
+        });
+    };
+
+  addCommitteeUserBtn?.addEventListener(
+    'click',
+    () => {
+      if (!isAdmin()) return;
+
+      if (committeeInviteForm) {
+        committeeInviteForm.reset();
+      }
+
+      if (inviteRole) {
+        inviteRole.value = 'editor';
+      }
+
+      setMessage(inviteMessage);
+
+      if (addCommitteeUserPanel) {
+        addCommitteeUserPanel.hidden = false;
+        addCommitteeUserPanel.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
   );
-  color:#fff;
-  font-weight:800;
-  cursor:pointer;
-  box-shadow:0 12px 24px rgba(200,31,42,.16);
-  transition:.2s ease;
-}
 
-.portal-primary:hover{
-  transform:translateY(-1px);
-  box-shadow:0 15px 30px rgba(200,31,42,.22);
-}
+  cancelAddCommitteeUserBtn
+    ?.addEventListener(
+      'click',
+      () => {
+        committeeInviteForm?.reset();
+        setMessage(inviteMessage);
 
-.portal-primary:disabled{
-  opacity:.65;
-  cursor:not-allowed;
-  transform:none;
-}
+        if (addCommitteeUserPanel) {
+          addCommitteeUserPanel.hidden = true;
+        }
+      }
+    );
 
-.portal-link{
-  justify-self:start;
-  border:0;
-  padding:2px 0;
-  background:none;
-  color:var(--portal-red-dark);
-  font-size:.8rem;
-  font-weight:700;
-  cursor:pointer;
-}
+  committeeInviteForm?.addEventListener(
+    'submit',
+    async (event) => {
+      event.preventDefault();
 
-.portal-note{
-  display:grid;
-  gap:4px;
-  padding:14px 15px;
-  border:1px solid #e5ddd2;
-  border-radius:14px;
-  background:#f8f5f0;
-  color:#5f5851;
-}
+      if (!isAdmin()) return;
 
-.portal-note strong{
-  color:#3a3530;
-  font-size:.78rem;
-}
+      const email =
+        inviteEmail.value
+          .trim()
+          .toLowerCase();
 
-.portal-note span{
-  font-size:.77rem;
-  line-height:1.5;
-}
+      const fullName =
+        inviteFullName.value.trim();
 
-/* =========================================================
-   STATE PANELS
-   ========================================================= */
+      const role =
+        inviteRole.value;
 
-.portal-state{
-  max-width:660px;
-  margin:0 auto;
-  padding:90px 36px;
-  text-align:center;
-}
+      if (!email || !fullName || !role) {
+        setMessage(
+          inviteMessage,
+          'Name, email and role are required.',
+          true
+        );
+        return;
+      }
 
-.portal-state h2{
-  margin:0 0 16px;
-  font-family:'Playfair Display',serif;
-  font-size:3.6rem;
-  line-height:.98;
-}
+      try {
+        setMessage(
+          inviteMessage,
+          'Adding authorized user…'
+        );
 
-.portal-state>p:last-of-type{
-  max-width:520px;
-  margin:0 auto 24px;
-  color:var(--portal-muted);
-}
+        const {
+          data: existingProfile,
+          error: profileLookupError
+        } = await supabase
+          .from('profiles')
+          .select('id,email,status')
+          .eq('email', email)
+          .maybeSingle();
 
-/* =========================================================
-   DASHBOARD LAYOUT
-   ========================================================= */
+        if (profileLookupError) {
+          throw profileLookupError;
+        }
 
-.committee-dashboard{
-  display:grid;
-  grid-template-columns:250px minmax(0,1fr);
-  min-height:640px;
-}
+        if (existingProfile) {
+          setMessage(
+            inviteMessage,
+            'This email already has a committee account. Manage it in the lists below.',
+            true
+          );
+          return;
+        }
 
-.dashboard-sidebar{
-  padding:26px 18px;
-  background:#111;
-  color:#fff;
-  border-right:1px solid #242424;
-}
+        const {
+          error
+        } = await supabase
+          .from('committee_invites')
+          .upsert(
+            {
+              email,
+              full_name: fullName,
+              role,
+              status: 'pending',
+              invited_by: currentUser.id
+            },
+            {
+              onConflict: 'email'
+            }
+          );
 
-.dashboard-user{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:0 8px 24px;
-  margin-bottom:18px;
-  border-bottom:1px solid #2b2b2b;
-}
+        if (error) throw error;
 
-.avatar{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  flex:0 0 auto;
-  background:linear-gradient(
-    135deg,
-    var(--portal-red),
-    var(--portal-orange)
+        committeeInviteForm.reset();
+
+        if (inviteRole) {
+          inviteRole.value = 'editor';
+        }
+
+        setMessage(
+          inviteMessage,
+          'User pre-authorized. Ask them to use Request Access with this same email address.'
+        );
+
+      } catch (error) {
+        setMessage(
+          inviteMessage,
+          error.message ||
+          'Unable to add authorized user.',
+          true
+        );
+      }
+    }
   );
-  color:#fff;
-  font-weight:800;
-}
-
-.dashboard-user>div{
-  display:grid;
-  gap:2px;
-  min-width:0;
-}
-
-.dashboard-user strong{
-  font-size:.84rem;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.dashboard-user span:last-child{
-  font-size:.7rem;
-  color:#aaa39c;
-  text-transform:capitalize;
-}
-
-.dashboard-sidebar nav{
-  display:grid;
-  gap:5px;
-}
-
-.dashboard-nav{
-  width:100%;
-  min-height:43px;
-  padding:0 12px;
-  border:0;
-  border-radius:11px;
-  background:transparent;
-  color:#aaa39c;
-  text-align:left;
-  font-size:.82rem;
-  font-weight:700;
-  cursor:pointer;
-  transition:.18s ease;
-}
-
-.dashboard-nav:hover{
-  background:#1b1b1b;
-  color:#fff;
-}
-
-.dashboard-nav.active{
-  background:#fff;
-  color:#161616;
-}
-
-.dashboard-main{
-  padding:34px;
-  overflow:auto;
-  background:#f7f4ef;
-}
-
-.dashboard-panel{
-  display:grid;
-  gap:22px;
-}
-
-.dashboard-heading{
-  display:flex;
-  align-items:end;
-  justify-content:space-between;
-  gap:30px;
-}
-
-.dashboard-heading h2{
-  margin:0;
-  font-family:'Playfair Display',serif;
-  font-size:2.8rem;
-  line-height:1;
-}
-
-.dashboard-heading>p{
-  max-width:420px;
-  margin:0;
-  color:var(--portal-muted);
-  font-size:.85rem;
-}
-
-.metric-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-}
-
-.metric-grid article{
-  min-height:130px;
-  padding:20px;
-  border:1px solid var(--portal-line);
-  border-radius:18px;
-  background:#fff;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  box-shadow:0 7px 24px rgba(0,0,0,.025);
-}
-
-.metric-grid span{
-  font-size:.74rem;
-  color:var(--portal-muted);
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  font-weight:700;
-}
-
-.metric-grid strong{
-  font-family:'Playfair Display',serif;
-  font-size:2.8rem;
-  line-height:1;
-}
-
-.dashboard-card{
-  padding:22px;
-  border:1px solid var(--portal-line);
-  border-radius:20px;
-  background:#fff;
-  box-shadow:0 8px 30px rgba(0,0,0,.025);
-}
-
-.dashboard-card h3{
-  margin:0 0 8px;
-  font-size:1rem;
-}
-
-.dashboard-card p{
-  margin:0;
-  color:var(--portal-muted);
-  font-size:.86rem;
-}
-
-.card-heading{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:22px;
-  margin-bottom:18px;
-}
-
-.card-heading h3{
-  margin-bottom:3px;
-}
-
-.text-button{
-  border:0;
-  background:none;
-  color:var(--portal-red-dark);
-  font-weight:700;
-  cursor:pointer;
-}
-
-/* =========================================================
-   ADMIN FORMS
-   ========================================================= */
-
-.admin-form{
-  display:grid;
-  gap:17px;
-}
-
-.admin-form label{
-  display:grid;
-  gap:7px;
-  font-size:.78rem;
-  font-weight:700;
-  color:#39342f;
-}
-
-.admin-form input,
-.admin-form textarea,
-.admin-form select,
-.dashboard-toolbar input,
-.dashboard-toolbar select{
-  width:100%;
-  min-height:47px;
-  padding:11px 13px;
-  border:1px solid #d8cfc4;
-  border-radius:12px;
-  background:#fbfaf8;
-  color:var(--portal-ink);
-}
-
-.admin-form input:focus,
-.admin-form textarea:focus,
-.admin-form select:focus,
-.dashboard-toolbar input:focus,
-.dashboard-toolbar select:focus{
-  outline:0;
-  border-color:var(--portal-red);
-  background:#fff;
-  box-shadow:0 0 0 4px rgba(200,31,42,.07);
-}
-
-.admin-form textarea{
-  resize:vertical;
-}
-
-.form-grid-2{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-
-.check-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:18px;
-}
-
-.check-row label{
-  grid-template-columns:auto 1fr;
-  align-items:center;
-}
-
-.check-row input{
-  width:18px;
-  min-height:auto;
-}
-
-.form-message{
-  margin:0;
-  font-size:.8rem;
-  color:#327344;
-}
-
-.form-message.error{
-  color:#b3262f;
-}
-
-/* =========================================================
-   LISTS / ROWS
-   ========================================================= */
-
-.admin-list{
-  display:grid;
-  gap:10px;
-}
-
-.admin-row{
-  display:grid;
-  grid-template-columns:minmax(0,1.6fr) .9fr .8fr auto;
-  gap:14px;
-  align-items:center;
-  padding:16px 18px;
-  border:1px solid var(--portal-line);
-  border-radius:15px;
-  background:#fff;
-}
-
-.admin-row-main{
-  min-width:0;
-}
-
-.admin-row-main strong{
-  display:block;
-  margin-bottom:3px;
-  font-size:.9rem;
-}
-
-.admin-row-main span{
-  display:block;
-  color:var(--portal-muted);
-  font-size:.75rem;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.admin-row-meta{
-  display:grid;
-  gap:2px;
-  font-size:.74rem;
-}
-
-.admin-row-meta span:first-child{
-  color:var(--portal-muted);
-}
-
-.admin-row-actions{
-  display:flex;
-  gap:7px;
-  justify-content:flex-end;
-  flex-wrap:wrap;
-}
-
-.admin-row-actions button{
-  min-height:34px;
-  padding:0 10px;
-  border:1px solid #d6cdc2;
-  border-radius:999px;
-  background:#fff;
-  color:#3e3934;
-  font-size:.7rem;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.admin-row-actions button:hover{
-  border-color:#bfb4a8;
-}
-
-.admin-row-actions .danger,
-.member-actions .danger{
-  color:#a8242d;
-  background:#fff8f8;
-  border-color:#efcfd2;
-}
-
-.status-pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:max-content;
-  min-height:26px;
-  padding:0 9px;
-  border-radius:999px;
-  background:#efede9;
-  color:#625c55;
-  font-size:.68rem;
-  font-weight:800;
-  text-transform:capitalize;
-}
-
-.status-pill.active,
-.status-pill.published,
-.status-pill.paid{
-  background:#eaf6ed;
-  color:#2c7141;
-}
-
-.status-pill.pending,
-.status-pill.pending_payment{
-  background:#fff4dd;
-  color:#91601d;
-}
-
-.status-pill.disabled,
-.status-pill.declined{
-  background:#fbe8ea;
-  color:#9a2630;
-}
-
-.dashboard-toolbar{
-  display:grid;
-  grid-template-columns:220px minmax(0,1fr);
-  gap:12px;
-}
-
-/* =========================================================
-   ACCESS MANAGEMENT
-   ========================================================= */
-
-.access-section{
-  display:grid;
-  gap:12px;
-}
-
-.access-section+.access-section{
-  margin-top:8px;
-}
-
-.access-section-heading{
-  display:flex;
-  align-items:end;
-  justify-content:space-between;
-  gap:18px;
-}
-
-.access-section-heading h3{
-  margin:3px 0 0;
-  font-size:1.15rem;
-}
-
-.access-section-heading>span{
-  color:var(--portal-muted);
-  font-size:.75rem;
-  font-weight:700;
-}
-
-.members-list{
-  display:grid;
-  gap:10px;
-}
-
-.member-row{
-  display:grid;
-  grid-template-columns:minmax(0,1.5fr) 140px 120px auto;
-  gap:12px;
-  align-items:center;
-  padding:16px;
-  border:1px solid var(--portal-line);
-  border-radius:15px;
-  background:#fff;
-}
-
-.member-identity{
-  min-width:0;
-}
-
-.member-identity strong{
-  display:block;
-  margin-bottom:3px;
-  font-size:.88rem;
-}
-
-.member-identity span{
-  display:block;
-  color:var(--portal-muted);
-  font-size:.74rem;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.member-row select{
-  min-height:40px;
-  border:1px solid #d8cfc4;
-  border-radius:11px;
-  background:#fbfaf8;
-  padding:0 10px;
-  font-size:.75rem;
-}
-
-.member-actions{
-  display:flex;
-  gap:7px;
-  justify-content:flex-end;
-  flex-wrap:wrap;
-}
-
-.member-actions button{
-  min-height:34px;
-  border:1px solid #d8cfc4;
-  border-radius:999px;
-  padding:0 10px;
-  background:#fff;
-  font-size:.69rem;
-  font-weight:700;
-  cursor:pointer;
-}
-
-/* =========================================================
-   GALLERY ADMIN
-   ========================================================= */
-
-.gallery-upload-box{
-  display:grid;
-  gap:6px;
-  padding:22px;
-  border:1px dashed #cfc4b8;
-  border-radius:16px;
-  background:#fbfaf8;
-  cursor:pointer;
-}
-
-.gallery-upload-box span{
-  font-weight:800;
-  color:var(--portal-ink);
-}
-
-.gallery-upload-box small{
-  color:var(--portal-muted);
-}
-
-.gallery-upload-box input{
-  margin-top:8px;
-}
-
-.admin-gallery-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:14px;
-  margin-top:18px;
-}
-
-.admin-gallery-photo{
-  overflow:hidden;
-  border:1px solid var(--portal-line);
-  border-radius:16px;
-  background:#fff;
-}
-
-.admin-gallery-photo>img{
-  display:block;
-  width:100%;
-  aspect-ratio:4/3;
-  object-fit:cover;
-}
-
-.admin-gallery-photo>div{
-  display:grid;
-  gap:10px;
-  padding:12px;
-}
-
-.admin-gallery-photo p{
-  margin:0;
-  color:var(--portal-muted);
-  font-size:.78rem;
-}
-
-/* =========================================================
-   PUBLIC GALLERY ALBUMS
-   ========================================================= */
-
-.gallery-browser{
-  display:grid;
-  gap:22px;
-  margin-bottom:28px;
-}
-
-.gallery-browser-controls{
-  display:flex;
-  justify-content:flex-end;
-}
-
-.gallery-browser-controls label{
-  display:grid;
-  gap:6px;
-  min-width:170px;
-  color:#5d5750;
-  font-size:.75rem;
-  font-weight:700;
-}
-
-.gallery-browser-controls select{
-  min-height:44px;
-  border:1px solid #d8cfc4;
-  border-radius:999px;
-  padding:0 16px;
-  background:#fff;
-  color:#171717;
-}
-
-.gallery-albums-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:20px;
-}
-
-.gallery-album-card{
-  padding:0;
-  overflow:hidden;
-  border:1px solid #e2d9cf;
-  border-radius:18px;
-  background:#fff;
-  text-align:left;
-  cursor:pointer;
-  box-shadow:0 10px 30px rgba(0,0,0,.04);
-  transition:transform .2s ease,box-shadow .2s ease;
-}
-
-.gallery-album-card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 16px 36px rgba(0,0,0,.08);
-}
-
-.gallery-album-card>img{
-  display:block;
-  width:100%;
-  aspect-ratio:4/3;
-  object-fit:cover;
-}
-
-.gallery-album-card-copy{
-  display:grid;
-  gap:7px;
-  padding:16px;
-}
-
-.gallery-album-card-copy small{
-  color:#8b4a38;
-  font-size:.68rem;
-  font-weight:800;
-  letter-spacing:.07em;
-  text-transform:uppercase;
-}
-
-.gallery-album-card-copy strong{
-  color:#171717;
-  font-family:'Playfair Display',serif;
-  font-size:1.28rem;
-}
-
-.gallery-album-card-copy>span{
-  color:#6e6a64;
-  font-size:.82rem;
-  line-height:1.5;
-}
-
-/* =========================================================
-   PUBLIC GALLERY VIEWER
-   ========================================================= */
-
-.gallery-viewer{
-  position:fixed;
-  inset:0;
-  z-index:12000;
-  display:grid;
-  place-items:center;
-  padding:24px;
-}
-
-.gallery-viewer-backdrop{
-  position:absolute;
-  inset:0;
-  background:rgba(10,10,10,.82);
-  backdrop-filter:blur(10px);
-}
-
-.gallery-viewer-shell{
-  position:relative;
-  width:min(1100px,100%);
-  max-height:calc(100vh - 48px);
-  overflow:auto;
-  border-radius:24px;
-  background:#fbfaf7;
-  box-shadow:0 30px 90px rgba(0,0,0,.35);
-}
-
-.gallery-viewer-header{
-  position:sticky;
-  top:0;
-  z-index:2;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-  padding:20px 22px;
-  border-bottom:1px solid #e3dbd1;
-  background:rgba(251,250,247,.96);
-  backdrop-filter:blur(12px);
-}
-
-.gallery-viewer-header span{
-  color:#8b4a38;
-  font-size:.68rem;
-  font-weight:800;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-}
-
-.gallery-viewer-header h2{
-  margin:3px 0 0;
-  font-family:'Playfair Display',serif;
-  font-size:2rem;
-}
-
-.gallery-viewer-header button{
-  width:42px;
-  height:42px;
-  flex:0 0 auto;
-  border:1px solid #d8cfc4;
-  border-radius:50%;
-  background:#fff;
-  font-size:24px;
-  cursor:pointer;
-}
-
-.gallery-viewer-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:14px;
-  padding:20px;
-}
-
-.gallery-viewer-grid figure{
-  margin:0;
-  overflow:hidden;
-  border-radius:14px;
-  background:#fff;
-  border:1px solid #e3dbd1;
-}
-
-.gallery-viewer-grid img{
-  display:block;
-  width:100%;
-  aspect-ratio:4/3;
-  object-fit:cover;
-}
-
-.gallery-viewer-grid figcaption{
-  padding:10px 12px;
-  color:#6e6a64;
-  font-size:.78rem;
-}
-
-/* =========================================================
-   SETTINGS
-   ========================================================= */
-
-.settings-grid{
-  display:grid;
-  grid-template-columns:1.1fr .9fr;
-  gap:16px;
-}
-
-.settings-list{
-  display:grid;
-  gap:10px;
-}
-
-.setting-row{
-  display:grid;
-  grid-template-columns:minmax(0,1.2fr) 110px 110px auto;
-  gap:10px;
-  align-items:center;
-  padding:14px;
-  border:1px solid var(--portal-line);
-  border-radius:14px;
-  background:#fbfaf8;
-}
-
-.setting-row input,
-.setting-row select{
-  min-height:40px;
-  border:1px solid #d8cfc4;
-  border-radius:10px;
-  padding:0 10px;
-  background:#fff;
-  font-size:.76rem;
-}
-
-.setting-row button{
-  min-height:34px;
-  border:1px solid #d6cdc2;
-  border-radius:999px;
-  background:#fff;
-  font-size:.69rem;
-  font-weight:700;
-  padding:0 10px;
-  cursor:pointer;
-}
-
-/* =========================================================
-   EMPTY / LOADING STATES
-   ========================================================= */
-
-.admin-empty{
-  padding:28px;
-  border:1px dashed #d8cfc4;
-  border-radius:16px;
-  background:#fcfbf9;
-  color:var(--portal-muted);
-  text-align:center;
-  font-size:.82rem;
-}
-
-.admin-loading{
-  padding:28px;
-  color:var(--portal-muted);
-  text-align:center;
-  font-size:.8rem;
-}
-
-/* =========================================================
-   RESPONSIVE — TABLET
-   ========================================================= */
-
-@media(max-width:980px){
-
-  .committee-auth{
-    grid-template-columns:1fr;
-  }
-
-  .committee-auth-brand-panel{
-    min-height:270px;
-  }
-
-  .auth-brand-copy{
-    left:28px;
-    right:28px;
-    bottom:28px;
-  }
-
-  .auth-brand-copy h2{
-    font-size:3.5rem;
-  }
-
-  .committee-auth-form-panel{
-    padding:40px 34px;
-  }
-
-  .committee-dashboard{
-    grid-template-columns:210px minmax(0,1fr);
-  }
-
-  .metric-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .settings-grid{
-    grid-template-columns:1fr;
-  }
-
-  .admin-row{
-    grid-template-columns:minmax(0,1fr) .8fr auto;
-  }
-
-  .admin-row .admin-row-meta:nth-of-type(2){
-    display:none;
-  }
-
-  .member-row{
-    grid-template-columns:minmax(0,1fr) 120px auto;
-  }
-
-  .member-row .status-pill{
-    display:none;
-  }
-
-  .admin-gallery-grid,
-  .gallery-albums-grid,
-  .gallery-viewer-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-}
-
-/* =========================================================
-   RESPONSIVE — MOBILE
-   ========================================================= */
-
-@media(max-width:760px){
-
-  .committee-portal{
-    padding:0;
-  }
-
-  .committee-portal-shell{
-    width:100%;
-    max-height:100vh;
-    border-radius:0;
-  }
-
-  .committee-portal-content{
-    max-height:calc(100vh - 68px);
-  }
-
-  .committee-portal-topbar{
-    min-height:68px;
-    padding:0 14px;
-  }
-
-  .committee-portal-brand img{
-    width:48px;
-    height:40px;
-  }
-
-  .committee-portal-brand span{
-    display:none;
-  }
-
-  .portal-signout{
-    padding:0 12px;
-  }
-
-  .committee-auth-brand-panel{
-    min-height:230px;
-  }
-
-  .auth-brand-copy h2{
-    font-size:2.9rem;
-  }
-
-  .committee-auth-form-panel{
-    padding:32px 20px 36px;
-  }
-
-  .auth-panel-head h2{
-    font-size:2.8rem;
-  }
-
-  .committee-dashboard{
-    grid-template-columns:1fr;
-  }
-
-  .dashboard-sidebar{
-    padding:12px;
-    border-right:0;
-    border-bottom:1px solid #242424;
-  }
-
-  .dashboard-user{
-    padding-bottom:12px;
-    margin-bottom:10px;
-  }
-
-  .dashboard-sidebar nav{
-    display:flex;
-    gap:6px;
-    overflow:auto;
-  }
-
-  .dashboard-nav{
-    width:auto;
-    flex:0 0 auto;
-    padding:0 12px;
-  }
-
-  .dashboard-main{
-    padding:22px 16px 28px;
-  }
-
-  .dashboard-heading{
-    align-items:flex-start;
-    flex-direction:column;
-    gap:12px;
-  }
-
-  .dashboard-heading h2{
-    font-size:2.35rem;
-  }
-
-  .dashboard-heading .btn{
-    width:100%;
-  }
-
-  .metric-grid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .form-grid-2{
-    grid-template-columns:1fr;
-  }
-
-  .dashboard-toolbar{
-    grid-template-columns:1fr;
-  }
-
-  .admin-row,
-  .member-row,
-  .setting-row{
-    grid-template-columns:1fr;
-  }
-
-  .member-row .status-pill{
-    display:inline-flex;
-  }
-
-  .admin-row-actions,
-  .member-actions{
-    justify-content:flex-start;
-  }
-
-  .access-section-heading{
-    align-items:flex-start;
-    flex-direction:column;
-    gap:6px;
-  }
-
-  .gallery-browser-controls{
-    justify-content:stretch;
-  }
-
-  .gallery-browser-controls label{
-    width:100%;
-  }
-
-  .admin-gallery-grid,
-  .gallery-albums-grid,
-  .gallery-viewer-grid{
-    grid-template-columns:1fr;
-  }
-
-  .gallery-viewer{
-    padding:0;
-  }
-
-  .gallery-viewer-shell{
-    width:100%;
-    max-height:100vh;
-    border-radius:0;
-  }
-
-  .gallery-viewer-grid{
-    padding:14px;
-  }
-}
-
-/* =========================================================
-   RESPONSIVE — SMALL MOBILE
-   ========================================================= */
-
-@media(max-width:520px){
-
-  .committee-auth-brand-panel{
-    min-height:200px;
-  }
-
-  .auth-brand-copy{
-    left:20px;
-    right:20px;
-    bottom:20px;
-  }
-
-  .auth-brand-copy h2{
-    font-size:2.5rem;
-  }
-
-  .auth-brand-copy p{
-    font-size:.86rem;
-  }
-
-  .metric-grid{
-    grid-template-columns:1fr;
-  }
-
-  .portal-state{
-    padding:60px 20px;
-  }
-
-  .portal-state h2{
-    font-size:2.7rem;
-  }
-}
-
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media(prefers-reduced-motion:reduce){
-
-  .portal-primary,
-  .auth-switch button,
-  .dashboard-nav,
-  .gallery-album-card{
-    transition:none;
-  }
-
-  .portal-primary:hover,
-  .gallery-album-card:hover{
-    transform:none;
-  }
-}
+
+  /* =========================================================
+     MEMBERSHIP PLAN SETTINGS
+     ========================================================= */
+
+  const loadMembershipPlans =
+    async () => {
+      if (
+        !planSettingsList ||
+        !isAdmin()
+      ) {
+        return;
+      }
+
+      planSettingsList.innerHTML =
+        '<div class="admin-loading">Loading plans…</div>';
+
+      try {
+        const {
+          data,
+          error
+        } = await supabase
+          .from('membership_plans')
+          .select('*')
+          .order(
+            'display_order',
+            {
+              ascending: true
+            }
+          );
+
+        if (error) throw error;
+
+        const plans =
+          Array.isArray(data)
+            ? data
+            : [];
+
+        if (!plans.length) {
+          planSettingsList.innerHTML = `
+            <div class="admin-empty">
+              No membership plans exist yet.
+            </div>
+          `;
+          return;
+        }
+
+        planSettingsList.innerHTML =
+          plans.map((plan) => `
+            <div class="setting-row">
+
+              <input
+                type="text"
+                data-plan-name="${plan.id}"
+                value="${escapeHtml(
+                  plan.name
+                )}"
+              >
+
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                data-plan-price="${plan.id}"
+                value="${Number(
+                  plan.price || 0
+                )}"
+              >
+
+              <select
+                data-plan-active="${plan.id}"
+              >
+                <option
+                  value="true"
+                  ${
+                    plan.active
+                      ? 'selected'
+                      : ''
+                  }
+                >
+                  Active
+                </option>
+
+                <option
+                  value="false"
+                  ${
+                    !plan.active
+                      ? 'selected'
+                      : ''
+                  }
+                >
+                  Inactive
+                </option>
+              </select>
+
+              <button
+                type="button"
+                data-plan-save="${plan.id}"
+              >
+                Save
+              </button>
+
+            </div>
+          `).join('');
+
+        attachPlanActions();
+
+      } catch (error) {
+        console.error(
+          'Membership plan error:',
+          error
+        );
+
+        planSettingsList.innerHTML = `
+          <div class="admin-empty">
+            Unable to load membership plans.
+          </div>
+        `;
+      }
+    };
+
+  const attachPlanActions =
+    () => {
+      document
+        .querySelectorAll(
+          '[data-plan-save]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            async () => {
+              if (!isAdmin()) return;
+
+              const id =
+                button.dataset.planSave;
+
+              const name =
+                document.querySelector(
+                  `[data-plan-name="${id}"]`
+                )?.value.trim();
+
+              const price =
+                Number(
+                  document.querySelector(
+                    `[data-plan-price="${id}"]`
+                  )?.value || 0
+                );
+
+              const active =
+                document.querySelector(
+                  `[data-plan-active="${id}"]`
+                )?.value === 'true';
+
+              if (!name) {
+                window.alert(
+                  'Plan name cannot be empty.'
+                );
+                return;
+              }
+
+              const {
+                error
+              } = await supabase
+                .from('membership_plans')
+                .update({
+                  name,
+                  price,
+                  active
+                })
+                .eq(
+                  'id',
+                  id
+                );
+
+              if (error) {
+                window.alert(error.message);
+                return;
+              }
+
+              refreshPublicData();
+              await loadMembershipPlans();
+            }
+          );
+        });
+    };
+
+  addPlanBtn?.addEventListener(
+    'click',
+    async () => {
+      if (!isAdmin()) return;
+
+      const name =
+        window.prompt(
+          'Membership plan name'
+        );
+
+      if (!name?.trim()) return;
+
+      const priceText =
+        window.prompt(
+          'Annual price in CAD'
+        );
+
+      const price =
+        Number(priceText);
+
+      if (
+        Number.isNaN(price) ||
+        price < 0
+      ) {
+        window.alert(
+          'Please enter a valid price.'
+        );
+        return;
+      }
+
+      const {
+        data: existingPlans
+      } = await supabase
+        .from('membership_plans')
+        .select('display_order');
+
+      const maxOrder =
+        Math.max(
+          0,
+          ...(existingPlans || [])
+            .map(
+              (plan) =>
+                Number(
+                  plan.display_order || 0
+                )
+            )
+        );
+
+      const {
+        error
+      } = await supabase
+        .from('membership_plans')
+        .insert({
+          name:
+            name.trim(),
+
+          price,
+
+          billing_type:
+            'annual',
+
+          audience_type:
+            'individual',
+
+          active:
+            true,
+
+          visible:
+            true,
+
+          display_order:
+            maxOrder + 1,
+
+          description:
+            'Annual AAVAN membership'
+        });
+
+      if (error) {
+        window.alert(error.message);
+        return;
+      }
+
+      refreshPublicData();
+      await loadMembershipPlans();
+    }
+  );
+
+  /* =========================================================
+     PAYMENT SETTINGS
+     ========================================================= */
+
+  const loadPaymentSettings =
+    async () => {
+      if (!isAdmin()) return;
+
+      try {
+        const {
+          data,
+          error
+        } = await supabase
+          .from('site_settings')
+          .select(
+            'setting_key, setting_value'
+          )
+          .in(
+            'setting_key',
+            [
+              'interac_email',
+              'payment_instructions'
+            ]
+          );
+
+        if (error) throw error;
+
+        const settings = {};
+
+        (data || []).forEach((row) => {
+          settings[row.setting_key] =
+            row.setting_value;
+        });
+
+        if (settingInteracEmail) {
+          settingInteracEmail.value =
+            settings.interac_email ||
+            'aavanmembers@gmail.com';
+        }
+
+        if (
+          settingPaymentInstructions
+        ) {
+          settingPaymentInstructions.value =
+            settings.payment_instructions ||
+            'Send the exact membership amount by Interac e-Transfer.';
+        }
+
+      } catch (error) {
+        console.error(
+          'Payment settings error:',
+          error
+        );
+      }
+    };
+
+  paymentSettingsForm?.addEventListener(
+    'submit',
+    async (event) => {
+      event.preventDefault();
+
+      if (!isAdmin()) return;
+
+      try {
+        setMessage(
+          settingsMessage,
+          'Saving settings…'
+        );
+
+        const rows = [
+          {
+            setting_key:
+              'interac_email',
+
+            setting_value:
+              settingInteracEmail
+                .value
+                .trim()
+          },
+          {
+            setting_key:
+              'payment_instructions',
+
+            setting_value:
+              settingPaymentInstructions
+                .value
+                .trim()
+          }
+        ];
+
+        for (const row of rows) {
+          const { error } =
+            await supabase
+              .from('site_settings')
+              .upsert(
+                row,
+                {
+                  onConflict:
+                    'setting_key'
+                }
+              );
+
+          if (error) {
+            throw error;
+          }
+        }
+
+        setMessage(
+          settingsMessage,
+          'Payment settings saved.'
+        );
+
+        refreshPublicData();
+
+      } catch (error) {
+        setMessage(
+          settingsMessage,
+          error.message ||
+          'Unable to save settings.',
+          true
+        );
+      }
+    }
+  );
+
+  /* =========================================================
+     PUBLIC API FOR COMMITTEE PORTAL
+     ========================================================= */
+
+  window.AAVAN = window.AAVAN || {};
+
+  window.AAVAN.admin = {
+    configureDashboard,
+    loadDashboardMetrics,
+    loadEvents,
+    loadMembershipApplications,
+    loadCommitteeUsers,
+    loadMembershipPlans,
+    loadPaymentSettings
+  };
+})();
