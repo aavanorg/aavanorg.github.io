@@ -62,6 +62,12 @@
   const albumPublished =
     document.getElementById('albumPublished');
 
+  const albumPhotoUpload =
+    document.getElementById('albumPhotoUpload');
+
+  const albumSelectedPhotos =
+    document.getElementById('albumSelectedPhotos');
+
   const albumMessage =
     document.getElementById('albumMessage');
 
@@ -490,6 +496,15 @@
       albumPublished.checked = false;
     }
 
+    if (albumPhotoUpload) {
+      albumPhotoUpload.value = '';
+    }
+
+    if (albumSelectedPhotos) {
+      albumSelectedPhotos.hidden = true;
+      albumSelectedPhotos.innerHTML = '';
+    }
+
     if (albumFormTitle) {
       albumFormTitle.textContent =
         'Create album';
@@ -625,7 +640,7 @@
               type="button"
               data-album-photos="${album.id}"
             >
-              Photos
+              Manage Photos
             </button>
 
             ${
@@ -766,6 +781,43 @@
     }
   );
 
+  albumPhotoUpload?.addEventListener(
+    'change',
+    () => {
+      if (!albumSelectedPhotos) return;
+
+      const files =
+        Array.from(
+          albumPhotoUpload.files || []
+        );
+
+      if (!files.length) {
+        albumSelectedPhotos.hidden = true;
+        albumSelectedPhotos.innerHTML = '';
+        return;
+      }
+
+      albumSelectedPhotos.hidden = false;
+      albumSelectedPhotos.innerHTML = `
+        <strong>
+          ${files.length} photo${files.length === 1 ? '' : 's'} selected
+        </strong>
+
+        <div class="album-selected-photos__list">
+          ${files
+            .map(
+              (file, index) => `
+                <span>
+                  ${index + 1}. ${escapeHtml(file.name)}
+                </span>
+              `
+            )
+            .join('')}
+        </div>
+      `;
+    }
+  );
+
   albumForm?.addEventListener(
     'submit',
     async (event) => {
@@ -779,6 +831,11 @@
       const year =
         Number(albumYear.value);
 
+      const selectedFiles =
+        Array.from(
+          albumPhotoUpload?.files || []
+        );
+
       if (!title || !year) {
         setMessage(
           albumMessage,
@@ -791,7 +848,9 @@
       try {
         setMessage(
           albumMessage,
-          'Saving album…'
+          selectedFiles.length
+            ? `Saving album and uploading ${selectedFiles.length} photo${selectedFiles.length === 1 ? '' : 's'}…`
+            : 'Saving album…'
         );
 
         const payload = {
@@ -812,24 +871,58 @@
             currentUser.id
         };
 
-        let result;
+        let savedAlbumId =
+          albumId.value || null;
 
-        if (albumId.value) {
-          result = await supabase
+        if (savedAlbumId) {
+          const {
+            error: updateError
+          } = await supabase
             .from('gallery_albums')
             .update(payload)
-            .eq('id', albumId.value);
+            .eq('id', savedAlbumId);
+
+          if (updateError) {
+            throw updateError;
+          }
         } else {
           payload.created_by =
             currentUser.id;
 
-          result = await supabase
+          const {
+            data: insertedAlbum,
+            error: insertError
+          } = await supabase
             .from('gallery_albums')
-            .insert(payload);
+            .insert(payload)
+            .select('id')
+            .single();
+
+          if (insertError) {
+            throw insertError;
+          }
+
+          savedAlbumId =
+            insertedAlbum?.id;
+
+          if (!savedAlbumId) {
+            throw new Error(
+              'Album was created but its ID could not be read.'
+            );
+          }
         }
 
-        if (result.error) {
-          throw result.error;
+        if (selectedFiles.length) {
+          await uploadFilesToAlbum(
+            savedAlbumId,
+            selectedFiles,
+            (message) => {
+              setMessage(
+                albumMessage,
+                message
+              );
+            }
+          );
         }
 
         resetAlbumForm();
@@ -842,6 +935,11 @@
         await loadPublicGallery();
 
       } catch (error) {
+        console.error(
+          'Save album error:',
+          error
+        );
+
         setMessage(
           albumMessage,
           error.message ||
@@ -1034,6 +1132,119 @@
     };
   };
 
+  const uploadFilesToAlbum = async (
+    albumIdValue,
+    files,
+    onProgress = null
+  ) => {
+    const selectedFiles =
+      Array.from(files || []);
+
+    if (!selectedFiles.length) {
+      return;
+    }
+
+    const {
+      data: existingPhotos,
+      error: existingPhotosError
+    } = await supabase
+      .from('gallery_photos')
+      .select('id')
+      .eq('album_id', albumIdValue)
+      .limit(1);
+
+    if (existingPhotosError) {
+      throw existingPhotosError;
+    }
+
+    const albumHasNoPhotos =
+      !existingPhotos?.length;
+
+    for (
+      let index = 0;
+      index < selectedFiles.length;
+      index += 1
+    ) {
+      const file =
+        selectedFiles[index];
+
+      if (onProgress) {
+        onProgress(
+          `Uploading photo ${index + 1} of ${selectedFiles.length}…`
+        );
+      }
+
+      const uploaded =
+        await uploadGalleryPhoto(
+          file,
+          albumIdValue
+        );
+
+      if (!uploaded.publicUrl) {
+        throw new Error(
+          `Unable to create public URL for ${file.name}.`
+        );
+      }
+
+      const isCover =
+        albumHasNoPhotos &&
+        index === 0;
+
+      const {
+        error: insertError
+      } = await supabase
+        .from('gallery_photos')
+        .insert({
+          album_id:
+            albumIdValue,
+
+          image_url:
+            uploaded.publicUrl,
+
+          alt_text:
+            file.name
+              .replace(/\.[^.]+$/, '')
+              .replaceAll('-', ' ')
+              .replaceAll('_', ' '),
+
+          featured:
+            isCover,
+
+          display_order:
+            index,
+
+          uploaded_by:
+            currentUser.id
+        });
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      if (isCover) {
+        const {
+          error: coverError
+        } = await supabase
+          .from('gallery_albums')
+          .update({
+            cover_image_url:
+              uploaded.publicUrl,
+
+            updated_by:
+              currentUser.id
+          })
+          .eq(
+            'id',
+            albumIdValue
+          );
+
+        if (coverError) {
+          throw coverError;
+        }
+      }
+    }
+  };
+
   const loadAlbumPhotos = async () => {
     if (
       !activeAlbumId ||
@@ -1176,95 +1387,16 @@
       if (!files.length) return;
 
       try {
-        setMessage(
-          galleryUploadMessage,
-          `Uploading ${files.length} photo${files.length === 1 ? '' : 's'}…`
+        await uploadFilesToAlbum(
+          activeAlbumId,
+          files,
+          (message) => {
+            setMessage(
+              galleryUploadMessage,
+              message
+            );
+          }
         );
-
-        const {
-          data: existingPhotos
-        } = await supabase
-          .from('gallery_photos')
-          .select('id')
-          .eq(
-            'album_id',
-            activeAlbumId
-          )
-          .limit(1);
-
-        let firstPhoto =
-          !existingPhotos?.length;
-
-        for (let index = 0; index < files.length; index += 1) {
-          const file = files[index];
-
-          const uploaded =
-            await uploadGalleryPhoto(
-              file,
-              activeAlbumId
-            );
-
-          if (!uploaded.publicUrl) {
-            throw new Error(
-              `Unable to create public URL for ${file.name}.`
-            );
-          }
-
-          const isCover =
-            firstPhoto && index === 0;
-
-          const {
-            error: insertError
-          } = await supabase
-            .from('gallery_photos')
-            .insert({
-              album_id:
-                activeAlbumId,
-
-              image_url:
-                uploaded.publicUrl,
-
-              alt_text:
-                file.name
-                  .replace(/\.[^.]+$/, '')
-                  .replaceAll('-', ' ')
-                  .replaceAll('_', ' '),
-
-              featured:
-                isCover,
-
-              display_order:
-                index,
-
-              uploaded_by:
-                currentUser.id
-            });
-
-          if (insertError) {
-            throw insertError;
-          }
-
-          if (isCover) {
-            const {
-              error: coverError
-            } = await supabase
-              .from('gallery_albums')
-              .update({
-                cover_image_url:
-                  uploaded.publicUrl,
-                updated_by:
-                  currentUser.id
-              })
-              .eq(
-                'id',
-                activeAlbumId
-              );
-
-            if (coverError) {
-              throw coverError;
-            }
-          }
-        }
 
         galleryPhotoUpload.value = '';
 
