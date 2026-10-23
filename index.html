@@ -1623,19 +1623,19 @@
 
                     <label>
                       Event title
+                      <span class="optional">optional</span>
                       <input
                         id="eventTitle"
-                        required
                         maxlength="120"
                       >
                     </label>
 
                     <label>
                       Start date
+                      <span class="optional">optional</span>
                       <input
                         id="eventDate"
                         type="date"
-                        required
                       >
                     </label>
 
@@ -1650,6 +1650,7 @@
 
                     <label>
                       Start time
+                      <span class="optional">optional</span>
                       <input
                         id="eventTime"
                         type="time"
@@ -1658,6 +1659,7 @@
 
                     <label>
                       Venue
+                      <span class="optional">optional</span>
                       <input
                         id="eventVenue"
                         placeholder="Burnaby, BC"
@@ -1668,16 +1670,17 @@
 
                   <label>
                     Description
+                    <span class="optional">optional</span>
                     <textarea
                       id="eventSummary"
                       rows="4"
                       maxlength="700"
-                      required
                     ></textarea>
                   </label>
 
                   <label>
                     Registration / details URL
+                    <span class="optional">optional</span>
                     <input
                       id="eventRegistration"
                       type="url"
@@ -1687,6 +1690,7 @@
 
                   <label>
                     Event image
+                    <span class="optional">optional</span>
                     <input
                       id="eventImage"
                       type="file"
@@ -1713,6 +1717,14 @@
                       Published
                     </label>
 
+                  </div>
+
+                  <div class="portal-note">
+                    <strong>Flexible event posting</strong>
+                    <span>
+                      All event fields are optional. For a poster-only event,
+                      simply upload the event image, choose Published, and save.
+                    </span>
                   </div>
 
                   <button
@@ -1840,6 +1852,7 @@
 
                   <label>
                     Description
+                    <span class="optional">optional</span>
                     <textarea
                       id="albumDescription"
                       rows="4"
