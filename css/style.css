@@ -652,7 +652,12 @@ h2{
 @keyframes eventPosterReveal{
   0%{
     opacity:0;
-    transform:translateY(18px) scale(.975);
+    transform:translateY(28px) scale(.95);
+  }
+
+  65%{
+    opacity:1;
+    transform:translateY(-4px) scale(1.015);
   }
 
   100%{
@@ -661,11 +666,50 @@ h2{
   }
 }
 
+@keyframes eventPosterAttention{
+  0%,100%{
+    transform:translateY(0) scale(1);
+    box-shadow:
+      0 14px 34px rgba(23,23,23,.08),
+      0 0 0 rgba(200,31,42,0);
+  }
+
+  50%{
+    transform:translateY(-7px) scale(1.018);
+    box-shadow:
+      0 30px 64px rgba(23,23,23,.16),
+      0 0 34px rgba(200,31,42,.12);
+  }
+}
+
+@keyframes eventPosterImageBreath{
+  0%,100%{
+    transform:scale(1);
+    filter:saturate(1) brightness(1);
+  }
+
+  50%{
+    transform:scale(1.04);
+    filter:saturate(1.05) brightness(1.015);
+  }
+}
+
 .event-feature-image-only{
-  animation:eventPosterReveal .9s cubic-bezier(.22,.61,.36,1) both;
-  transition:
-    transform .55s cubic-bezier(.22,.61,.36,1),
-    box-shadow .55s ease;
+  animation:
+    eventPosterReveal 1.25s cubic-bezier(.22,.61,.36,1) both,
+    eventPosterAttention 5.2s ease-in-out 1.25s infinite;
+  transform-origin:center;
+  will-change:transform,box-shadow;
+  position:relative;
+}
+
+.event-feature-image-only::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:inherit;
+  box-shadow:inset 0 0 0 1px rgba(200,31,42,.08);
 }
 
 .event-feature-image-only .event-feature-media{
@@ -673,52 +717,38 @@ h2{
 }
 
 .event-feature-image-only .event-feature-media img{
-  transition:
-    transform 1.2s cubic-bezier(.22,.61,.36,1),
-    filter .8s ease;
+  animation:
+    eventPosterImageBreath 5.2s ease-in-out 1.25s infinite;
   transform-origin:center;
-  will-change:transform;
+  will-change:transform,filter;
 }
 
 .event-feature-image-only:hover{
-  transform:translateY(-6px) scale(1.01);
-  box-shadow:0 24px 54px rgba(23,23,23,.13);
+  animation-play-state:paused;
+  transform:translateY(-10px) scale(1.03);
+  box-shadow:
+    0 34px 74px rgba(23,23,23,.22),
+    0 0 42px rgba(200,31,42,.16);
 }
 
 .event-feature-image-only:hover .event-feature-media img{
-  transform:scale(1.045);
-  filter:saturate(1.04) contrast(1.015);
+  animation-play-state:paused;
+  transform:scale(1.065);
 }
 
 .event-mini-image-only{
-  animation:eventPosterReveal .75s cubic-bezier(.22,.61,.36,1) both;
+  animation:eventPosterReveal 1s cubic-bezier(.22,.61,.36,1) both;
 }
 
 .event-mini-image-only img{
-  transition:transform 1s cubic-bezier(.22,.61,.36,1);
+  animation:eventPosterImageBreath 5.6s ease-in-out 1s infinite;
+  transform-origin:center;
+  will-change:transform,filter;
 }
 
 .event-mini-image-only:hover img{
-  transform:scale(1.04);
-}
-
-@media(prefers-reduced-motion:reduce){
-  .event-feature-image-only,
-  .event-mini-image-only{
-    animation:none;
-  }
-
-  .event-feature-image-only,
-  .event-feature-image-only .event-feature-media img,
-  .event-mini-image-only img{
-    transition:none;
-  }
-
-  .event-feature-image-only:hover,
-  .event-feature-image-only:hover .event-feature-media img,
-  .event-mini-image-only:hover img{
-    transform:none;
-  }
+  animation-play-state:paused;
+  transform:scale(1.06);
 }
 
 /* DISCOVER ASSAM */
