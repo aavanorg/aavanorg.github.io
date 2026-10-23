@@ -555,6 +555,26 @@ h2{
   color:#4d4944;
 }
 
+/* Image-only event: remove empty text column and show poster cleanly */
+.event-feature-image-only{
+  display:block;
+  width:min(760px,100%);
+  margin:0 auto;
+  background:#fff;
+}
+
+.event-feature-image-only .event-feature-media{
+  min-height:0;
+}
+
+.event-feature-image-only .event-feature-media img{
+  width:100%;
+  height:auto;
+  max-height:none;
+  object-fit:contain;
+  background:#fff;
+}
+
 .event-list-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -603,6 +623,13 @@ h2{
   margin:0;
   color:var(--muted);
   font-size:.9rem;
+}
+
+.event-mini-image-only img{
+  height:auto;
+  aspect-ratio:auto;
+  object-fit:contain;
+  background:#fff;
 }
 
 /* DISCOVER ASSAM */
@@ -1520,6 +1547,14 @@ h2{
     min-height:380px;
   }
 
+  .event-feature-image-only{
+    width:min(680px,100%);
+  }
+
+  .event-feature-image-only .event-feature-media{
+    min-height:0;
+  }
+
   .event-list-grid{
     grid-template-columns:1fr 1fr;
   }
@@ -1628,6 +1663,11 @@ h2{
   .gallery-bento,
   .footer-main{
     grid-template-columns:1fr;
+  }
+
+  .event-feature-image-only{
+    width:100%;
+    border-radius:22px;
   }
 
   .assam-card-tall{
