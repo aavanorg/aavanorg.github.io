@@ -1249,6 +1249,41 @@
   overflow-wrap:anywhere;
 }
 
+
+
+/* =========================================================
+   GALLERY HEADER ACTIONS / QUICK UPLOAD
+   ========================================================= */
+
+.gallery-header-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.quick-photo-upload-panel{
+  display:grid;
+  gap:16px;
+}
+
+.quick-photo-upload-panel .admin-form{
+  max-width:860px;
+}
+
+@media(max-width:760px){
+  .gallery-header-actions{
+    width:100%;
+    justify-content:stretch;
+  }
+
+  .gallery-header-actions .btn{
+    flex:1 1 100%;
+    width:100%;
+  }
+}
+
 /* =========================================================
    RESPONSIVE — TABLET
    ========================================================= */
