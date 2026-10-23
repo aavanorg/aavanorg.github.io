@@ -26,6 +26,27 @@
   const newAlbumBtn =
     document.getElementById('newAlbumBtn');
 
+  const uploadPhotosBtn =
+    document.getElementById('uploadPhotosBtn');
+
+  const quickPhotoUploadPanel =
+    document.getElementById('quickPhotoUploadPanel');
+
+  const cancelQuickPhotoUploadBtn =
+    document.getElementById('cancelQuickPhotoUploadBtn');
+
+  const quickPhotoUploadForm =
+    document.getElementById('quickPhotoUploadForm');
+
+  const quickPhotoAlbumSelect =
+    document.getElementById('quickPhotoAlbumSelect');
+
+  const quickPhotoFiles =
+    document.getElementById('quickPhotoFiles');
+
+  const quickPhotoUploadMessage =
+    document.getElementById('quickPhotoUploadMessage');
+
   const galleryYearFilter =
     document.getElementById('galleryYearFilter');
 
@@ -477,6 +498,10 @@
     if (newAlbumBtn) {
       newAlbumBtn.hidden = !canEdit();
     }
+
+    if (uploadPhotosBtn) {
+      uploadPhotosBtn.hidden = !canEdit();
+    }
   };
 
   /* =========================================================
@@ -557,6 +582,37 @@
     `;
 
     albumEventId.value = current;
+  };
+
+  const populateQuickPhotoAlbumSelect = () => {
+    if (!quickPhotoAlbumSelect) return;
+
+    const currentValue =
+      quickPhotoAlbumSelect.value || '';
+
+    quickPhotoAlbumSelect.innerHTML = `
+      <option value="">Select an album</option>
+      ${adminAlbums
+        .map((album) => `
+          <option value="${album.id}">
+            ${escapeHtml(album.title)}
+            ${album.album_year ? ` — ${escapeHtml(album.album_year)}` : ''}
+          </option>
+        `)
+        .join('')}
+    `;
+
+    if (
+      currentValue &&
+      adminAlbums.some(
+        (album) =>
+          String(album.id) ===
+          String(currentValue)
+      )
+    ) {
+      quickPhotoAlbumSelect.value =
+        currentValue;
+    }
   };
 
   const renderAdminAlbums = () => {
@@ -718,8 +774,53 @@
       'All years'
     );
 
+    populateQuickPhotoAlbumSelect();
     renderAdminAlbums();
   };
+
+  uploadPhotosBtn?.addEventListener(
+    'click',
+    async () => {
+      if (!canEdit()) return;
+
+      setMessage(
+        quickPhotoUploadMessage
+      );
+
+      if (quickPhotoUploadForm) {
+        quickPhotoUploadForm.reset();
+      }
+
+      if (!adminAlbums.length) {
+        await loadAlbums();
+      }
+
+      populateQuickPhotoAlbumSelect();
+
+      if (quickPhotoUploadPanel) {
+        quickPhotoUploadPanel.hidden = false;
+        quickPhotoUploadPanel.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  );
+
+  cancelQuickPhotoUploadBtn?.addEventListener(
+    'click',
+    () => {
+      quickPhotoUploadForm?.reset();
+
+      setMessage(
+        quickPhotoUploadMessage
+      );
+
+      if (quickPhotoUploadPanel) {
+        quickPhotoUploadPanel.hidden = true;
+      }
+    }
+  );
 
   newAlbumBtn?.addEventListener(
     'click',
@@ -1244,6 +1345,77 @@
       }
     }
   };
+
+  quickPhotoUploadForm?.addEventListener(
+    'submit',
+    async (event) => {
+      event.preventDefault();
+
+      if (!canEdit()) return;
+
+      const targetAlbumId =
+        quickPhotoAlbumSelect?.value || '';
+
+      const files =
+        Array.from(
+          quickPhotoFiles?.files || []
+        );
+
+      if (!targetAlbumId) {
+        setMessage(
+          quickPhotoUploadMessage,
+          'Please choose an album.',
+          true
+        );
+        return;
+      }
+
+      if (!files.length) {
+        setMessage(
+          quickPhotoUploadMessage,
+          'Please choose at least one photo.',
+          true
+        );
+        return;
+      }
+
+      try {
+        await uploadFilesToAlbum(
+          targetAlbumId,
+          files,
+          (message) => {
+            setMessage(
+              quickPhotoUploadMessage,
+              message
+            );
+          }
+        );
+
+        setMessage(
+          quickPhotoUploadMessage,
+          'Photos uploaded successfully.'
+        );
+
+        quickPhotoUploadForm?.reset();
+
+        await loadAlbums();
+        await loadPublicGallery();
+
+      } catch (error) {
+        console.error(
+          'Quick gallery upload error:',
+          error
+        );
+
+        setMessage(
+          quickPhotoUploadMessage,
+          error.message ||
+          'Unable to upload photos.',
+          true
+        );
+      }
+    }
+  );
 
   const loadAlbumPhotos = async () => {
     if (
