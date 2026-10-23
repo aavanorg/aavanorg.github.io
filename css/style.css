@@ -481,6 +481,20 @@ h2{
   margin-bottom:6px;
 }
 
+
+/* EVENTS HEADER — keep supporting copy aligned with the title */
+.events-premium .section-header{
+  grid-template-columns:1fr;
+  gap:12px;
+  align-items:start;
+}
+
+.events-premium .section-header>p{
+  max-width:620px;
+  margin:0;
+  color:var(--muted);
+}
+
 /* EVENTS */
 .events-premium{
   background:var(--paper-2);
