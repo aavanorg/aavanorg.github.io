@@ -1870,11 +1870,42 @@
                     </label>
                   </div>
 
+                  <div class="album-create-upload">
+                    <div class="album-create-upload__heading">
+                      <div>
+                        <strong>Upload photos</strong>
+                        <span>
+                          Select one or multiple JPEG, PNG or WebP images.
+                          The first uploaded photo becomes the album cover automatically.
+                        </span>
+                      </div>
+                    </div>
+
+                    <label class="gallery-upload-box gallery-upload-box--create">
+                      <span>Choose photos</span>
+                      <small>
+                        You can select multiple images before saving the album.
+                      </small>
+                      <input
+                        id="albumPhotoUpload"
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        multiple
+                      >
+                    </label>
+
+                    <div
+                      id="albumSelectedPhotos"
+                      class="album-selected-photos"
+                      hidden
+                    ></div>
+                  </div>
+
                   <button
                     class="btn btn-primary"
                     type="submit"
                   >
-                    Save Album
+                    Save Album & Photos
                   </button>
 
                   <p
