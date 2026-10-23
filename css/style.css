@@ -1919,3 +1919,275 @@ h2{
     transform:none;
   }
 }
+
+
+
+/* =========================================================
+   DISCOVER ASSAM — DEDICATED PAGE
+   ========================================================= */
+
+.assam-explore-btn{
+  margin-top:10px;
+  gap:10px;
+}
+
+.discover-page{
+  background:#f7f3ec;
+}
+
+.discover-hero{
+  position:relative;
+  overflow:hidden;
+  padding:92px 0 84px;
+  background:
+    linear-gradient(180deg,rgba(23,63,53,.92),rgba(23,63,53,.82)),
+    url('../assets/images/tea-garden.jpg') center/cover no-repeat;
+  color:#fff;
+}
+
+.discover-hero::after{
+  content:"";
+  position:absolute;
+  inset:auto -80px -160px auto;
+  width:360px;
+  height:360px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:
+    0 0 0 50px rgba(255,255,255,.025),
+    0 0 0 100px rgba(255,255,255,.018);
+}
+
+.discover-hero .container{
+  position:relative;
+  z-index:2;
+}
+
+.discover-hero-copy{
+  max-width:760px;
+}
+
+.discover-hero .eyebrow{
+  color:#ffd8c5;
+}
+
+.discover-hero h1{
+  margin:0 0 22px;
+  font-family:'Playfair Display',serif;
+  font-size:clamp(4rem,8vw,7.2rem);
+  line-height:.92;
+  letter-spacing:-.05em;
+}
+
+.discover-hero p{
+  max-width:680px;
+  margin:0;
+  color:#e6efeb;
+  font-size:1.08rem;
+}
+
+.discover-back{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  margin-top:30px;
+  font-weight:700;
+  color:#fff;
+}
+
+.discover-back span{
+  transition:.2s ease;
+}
+
+.discover-back:hover span{
+  transform:translateX(-4px);
+}
+
+.discover-intro{
+  background:#fff;
+}
+
+.discover-intro-grid{
+  display:grid;
+  grid-template-columns:180px minmax(0,1fr);
+  gap:54px;
+  align-items:start;
+}
+
+.discover-intro-copy{
+  max-width:760px;
+}
+
+.discover-intro-copy h2{
+  margin-bottom:18px;
+}
+
+.discover-intro-copy p{
+  color:var(--muted);
+  font-size:1.02rem;
+}
+
+.discover-placeholder-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px;
+}
+
+.discover-placeholder-card{
+  position:relative;
+  min-height:330px;
+  overflow:hidden;
+  border-radius:24px;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:var(--shadow-sm);
+}
+
+.discover-placeholder-card img{
+  width:100%;
+  height:190px;
+  object-fit:cover;
+}
+
+.discover-placeholder-card__body{
+  padding:24px;
+}
+
+.discover-placeholder-card span{
+  display:block;
+  margin-bottom:8px;
+  color:var(--red);
+  font-size:.67rem;
+  letter-spacing:.14em;
+  font-weight:800;
+}
+
+.discover-placeholder-card h3{
+  margin:0 0 8px;
+  font-family:'Playfair Display',serif;
+  font-size:1.75rem;
+  line-height:1.05;
+}
+
+.discover-placeholder-card p{
+  margin:0;
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+.discover-feature-band{
+  background:#173f35;
+  color:#fff;
+}
+
+.discover-feature-shell{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  border-radius:28px;
+  overflow:hidden;
+  background:#12382f;
+  box-shadow:var(--shadow-md);
+}
+
+.discover-feature-shell img{
+  width:100%;
+  height:100%;
+  min-height:430px;
+  object-fit:cover;
+}
+
+.discover-feature-copy{
+  padding:52px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.discover-feature-copy .eyebrow{
+  color:#ffd8c5;
+}
+
+.discover-feature-copy h2{
+  margin-bottom:18px;
+}
+
+.discover-feature-copy p{
+  color:#d5e3de;
+}
+
+.discover-content-notice{
+  padding:18px 20px;
+  margin-top:22px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:16px;
+  background:rgba(255,255,255,.06);
+  color:#dce8e4;
+  font-size:.88rem;
+}
+
+.discover-page-footer-note{
+  background:#fff;
+}
+
+.discover-page-footer-note .container{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:30px;
+}
+
+.discover-page-footer-note p{
+  max-width:720px;
+  margin:0;
+  color:var(--muted);
+}
+
+@media(max-width:860px){
+  .discover-hero{
+    padding:72px 0 66px;
+  }
+
+  .discover-intro-grid,
+  .discover-feature-shell{
+    grid-template-columns:1fr;
+  }
+
+  .discover-placeholder-grid{
+    grid-template-columns:1fr;
+  }
+
+  .discover-feature-shell img{
+    min-height:320px;
+  }
+
+  .discover-feature-copy{
+    padding:38px 30px;
+  }
+
+  .discover-page-footer-note .container{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
+
+@media(max-width:620px){
+  .discover-hero{
+    padding:56px 0 52px;
+  }
+
+  .discover-hero h1{
+    font-size:3.7rem;
+  }
+
+  .discover-intro-grid{
+    gap:24px;
+  }
+
+  .discover-placeholder-card{
+    min-height:0;
+  }
+
+  .discover-feature-copy{
+    padding:30px 22px;
+  }
+}
