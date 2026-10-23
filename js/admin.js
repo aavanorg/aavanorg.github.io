@@ -97,10 +97,9 @@
     const email = $('signupEmail').value.trim();
     const password = $('signupPassword').value;
     const fullName = $('signupName').value.trim();
-    const redirectTo = `${window.location.origin}${window.location.pathname}`;
     const { data, error } = await client.auth.signUp({
       email, password,
-      options: { data: { full_name: fullName }, emailRedirectTo: redirectTo }
+      options: { data: { full_name: fullName } }
     });
     if (error) { message('signupMessage', error.message, true); return; }
     $('signupForm').reset();
@@ -112,8 +111,7 @@
   $('forgotPasswordBtn').addEventListener('click', async () => {
     const email = $('loginEmail').value.trim();
     if (!email) { message('loginMessage', 'Enter your email first, then click Forgot password.', true); return; }
-    const redirectTo = `${window.location.origin}${window.location.pathname}`;
-    const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo });
+    const { error } = await client.auth.resetPasswordForEmail(email);
     message('loginMessage', error ? error.message : 'Password reset email sent.', !!error);
   });
 
