@@ -646,6 +646,81 @@ h2{
   background:#fff;
 }
 
+
+
+/* EVENT IMAGE MOTION */
+@keyframes eventPosterReveal{
+  0%{
+    opacity:0;
+    transform:translateY(18px) scale(.975);
+  }
+
+  100%{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+.event-feature-image-only{
+  animation:eventPosterReveal .9s cubic-bezier(.22,.61,.36,1) both;
+  transition:
+    transform .55s cubic-bezier(.22,.61,.36,1),
+    box-shadow .55s ease;
+}
+
+.event-feature-image-only .event-feature-media{
+  overflow:hidden;
+}
+
+.event-feature-image-only .event-feature-media img{
+  transition:
+    transform 1.2s cubic-bezier(.22,.61,.36,1),
+    filter .8s ease;
+  transform-origin:center;
+  will-change:transform;
+}
+
+.event-feature-image-only:hover{
+  transform:translateY(-6px) scale(1.01);
+  box-shadow:0 24px 54px rgba(23,23,23,.13);
+}
+
+.event-feature-image-only:hover .event-feature-media img{
+  transform:scale(1.045);
+  filter:saturate(1.04) contrast(1.015);
+}
+
+.event-mini-image-only{
+  animation:eventPosterReveal .75s cubic-bezier(.22,.61,.36,1) both;
+}
+
+.event-mini-image-only img{
+  transition:transform 1s cubic-bezier(.22,.61,.36,1);
+}
+
+.event-mini-image-only:hover img{
+  transform:scale(1.04);
+}
+
+@media(prefers-reduced-motion:reduce){
+  .event-feature-image-only,
+  .event-mini-image-only{
+    animation:none;
+  }
+
+  .event-feature-image-only,
+  .event-feature-image-only .event-feature-media img,
+  .event-mini-image-only img{
+    transition:none;
+  }
+
+  .event-feature-image-only:hover,
+  .event-feature-image-only:hover .event-feature-media img,
+  .event-mini-image-only:hover img{
+    transform:none;
+  }
+}
+
 /* DISCOVER ASSAM */
 .assam-editorial{
   background:var(--green);
