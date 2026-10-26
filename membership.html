@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Apply for Assam Association Vancouver membership.">
+  <meta name="theme-color" content="#fbfaf7">
+  <title>Membership | Assam Association Vancouver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body.membership-page{background:linear-gradient(180deg,#f7f2ea 0,#fbfaf7 45%,#f2eee7 100%);min-height:100vh}
+    .membership-page-header{padding:22px 0;border-bottom:1px solid rgba(23,23,23,.08);background:rgba(255,255,255,.88);backdrop-filter:blur(12px)}
+    .membership-page-header .container{display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .membership-page-logo img{width:150px;height:auto;display:block}
+    .membership-page-home{font-weight:700;color:#173f35;text-decoration:none}
+    .membership-page-intro{padding:58px 0 28px}
+    .membership-page-intro .container{display:grid;grid-template-columns:1fr .7fr;gap:54px;align-items:end}
+    .membership-page-intro h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,6vw,5.6rem);line-height:.94;letter-spacing:-.045em;margin:0 0 16px;color:#171717}
+    .membership-page-intro p{max-width:680px;margin:0;color:#6f6962;font-size:1.02rem}
+    .membership-page-badge{justify-self:end;padding:18px 20px;border:1px solid #e2d8ca;border-radius:18px;background:#fff;box-shadow:0 12px 30px rgba(23,23,23,.05)}
+    .membership-page-badge span{display:block;font-size:.7rem;letter-spacing:.14em;font-weight:800;color:#c81f2a}
+    .membership-page-badge strong{display:block;margin-top:5px;color:#173f35}
+    #membershipModal.modal-layer{position:static!important;inset:auto!important;display:block!important;min-height:auto!important;background:transparent!important;padding:18px 0 82px!important;overflow:visible!important;z-index:auto!important}
+    #membershipModal .membership-modal{position:relative!important;inset:auto!important;transform:none!important;width:min(980px,calc(100% - 48px))!important;max-width:980px!important;max-height:none!important;margin:0 auto!important;overflow:visible!important;border-radius:28px!important;box-shadow:0 24px 70px rgba(23,23,23,.12)!important;border:1px solid rgba(23,23,23,.08)!important}
+    #membershipModal .modal-header{position:sticky;top:0;z-index:5;border-radius:28px 28px 0 0;background:#fff}
+    .membership-page-back{display:inline-flex;align-items:center;justify-content:center;padding:10px 15px;border-radius:999px;border:1px solid #ddd3c6;color:#173f35;font-weight:700;text-decoration:none}
+    @media(max-width:760px){
+      .membership-page-header .container{width:min(100% - 28px,1080px)}
+      .membership-page-intro{padding:38px 0 20px}
+      .membership-page-intro .container{grid-template-columns:1fr;gap:20px;width:min(100% - 28px,1080px)}
+      .membership-page-badge{justify-self:start}
+      #membershipModal .membership-modal{width:calc(100% - 20px)!important;border-radius:20px!important}
+      #membershipModal .modal-header{border-radius:20px 20px 0 0}
+    }
+  </style>
+</head>
+<body class="membership-page">
+  <header class="membership-page-header">
+    <div class="container">
+      <a class="membership-page-logo" href="index.html" aria-label="AAVAN home"><img src="assets/images/logo.png" alt="Assam Association Vancouver"></a>
+      <a class="membership-page-home" href="index.html">← Back to AAVAN</a>
+    </div>
+  </header>
+  <main>
+    <section class="membership-page-intro">
+      <div class="container">
+        <div>
+          <p class="eyebrow">JOIN AAVAN</p>
+          <h1>Become part of the community.</h1>
+          <p>Complete the application below. Your membership details and payment information are handled through the existing AAVAN membership system.</p>
+        </div>
+        <div class="membership-page-badge"><span>ANNUAL MEMBERSHIP</span><strong>Family • Working Adult • Student</strong></div>
+      </div>
+    </section>
+    <div aria-hidden="false" class="modal-layer" id="membershipModal">
+
+<section aria-labelledby="membershipModalTitle" aria-modal="true" class="membership-modal" role="dialog">
+<header class="modal-header">
+<div>
+<span class="modal-kicker">
+            JOIN AAVAN
+          </span>
+<strong id="membershipModalTitle">
+            Membership Application
+          </strong>
+</div>
+<a class="membership-page-back" href="index.html">Back to Home</a>
+</header>
+<div aria-label="Application progress" class="membership-progress">
+<button class="progress-step active" data-step-jump="1" type="button">
+<span>1</span>
+          About you
+        </button>
+<button class="progress-step" data-step-jump="2" type="button">
+<span>2</span>
+          Household
+        </button>
+<button class="progress-step" data-step-jump="3" type="button">
+<span>3</span>
+          Interests
+        </button>
+<button class="progress-step" data-step-jump="4" type="button">
+<span>4</span>
+          Membership
+        </button>
+<button class="progress-step" data-step-jump="5" type="button">
+<span>5</span>
+          Payment
+        </button>
+</div>
+<form class="membership-form" id="membershipForm">
+<section class="membership-step active" data-membership-step="1">
+<div class="form-intro">
+<p class="eyebrow">STEP 01</p>
+<h2>Tell us about yourself.</h2>
+<p>
+              We use this information only to manage your membership and
+              communicate about AAVAN activities.
+            </p>
+</div>
+<div class="form-grid-2">
+<label class="full">
+              Full name
+              <input autocomplete="name" name="full_name" required=""/>
+</label>
+<label>
+              Email address
+              <input autocomplete="email" name="email" required="" type="email"/>
+</label>
+<label>
+              Phone number
+              <input autocomplete="tel" name="phone" required="" type="tel"/>
+</label>
+<label class="full">
+              Street address
+              <input autocomplete="street-address" name="address"/>
+</label>
+<label>
+              City
+              <input autocomplete="address-level2" name="city"/>
+</label>
+<label>
+              Province
+              <input autocomplete="address-level1" name="province" value="British Columbia"/>
+</label>
+<label>
+              Postal code
+              <input autocomplete="postal-code" name="postal_code"/>
+</label>
+<label>
+              Date of birth
+              <span class="optional">optional</span>
+<input name="date_of_birth" type="date"/>
+</label>
+</div>
+</section>
+<section class="membership-step" data-membership-step="2" hidden="">
+<div class="form-intro">
+<p class="eyebrow">STEP 02</p>
+<h2>Your household.</h2>
+<p>
+              Family details appear only when they are relevant to the
+              membership you choose.
+            </p>
+</div>
+<label>
+            Spouse / partner name
+            <span class="optional">optional</span>
+<input name="spouse_name"/>
+</label>
+<div class="family-builder">
+<div class="family-builder-head">
+<div>
+<strong>Family members</strong>
+<span>
+                  Add dependants or other household members included with your
+                  family membership.
+                </span>
+</div>
+<button class="small-action" id="addFamilyMemberBtn" type="button">
+                + Add family member
+              </button>
+</div>
+<div id="familyMembers"></div>
+</div>
+</section>
+<section class="membership-step" data-membership-step="3" hidden="">
+<div class="form-intro">
+<p class="eyebrow">STEP 03</p>
+<h2>How would you like to connect?</h2>
+<p>
+              Select anything that interests you. This helps the committee
+              plan programs and volunteer opportunities.
+            </p>
+</div>
+<div class="interest-grid">
+<label>
+<input name="interests" type="checkbox" value="Arts &amp; Crafts"/>
+<span>Arts &amp; Crafts</span>
+</label>
+<label>
+<input name="interests" type="checkbox" value="Games &amp; Sports"/>
+<span>Games &amp; Sports</span>
+</label>
+<label>
+<input name="interests" type="checkbox" value="Literature"/>
+<span>Literature</span>
+</label>
+<label>
+<input name="interests" type="checkbox" value="Music"/>
+<span>Music</span>
+</label>
+<label>
+<input name="interests" type="checkbox" value="Social &amp; Community Service"/>
+<span>Social &amp; Community Service</span>
+</label>
+<label>
+<input name="interests" type="checkbox" value="Dance"/>
+<span>Dance</span>
+</label>
+<label>
+<input name="interests" type="checkbox" value="Youth Programs"/>
+<span>Youth Programs</span>
+</label>
+<label>
+<input name="interests" type="checkbox" value="Volunteering"/>
+<span>Volunteering</span>
+</label>
+</div>
+<label>
+            Anything else?
+            <span class="optional">optional</span>
+<textarea maxlength="700" name="notes" rows="4"></textarea>
+</label>
+</section>
+<section class="membership-step" data-membership-step="4" hidden="">
+<div class="form-intro">
+<p class="eyebrow">STEP 04</p>
+<h2>Choose your membership.</h2>
+<p>
+              Membership rates are managed by the committee and can be
+              updated without changing the website code.
+            </p>
+</div>
+<div aria-live="polite" class="membership-plan-options" id="membershipPlanOptions"></div>
+</section>
+<section class="membership-step" data-membership-step="5" hidden="">
+<div class="form-intro">
+<p class="eyebrow">STEP 05</p>
+<h2>Review &amp; Interac payment.</h2>
+<p>
+              Review your application, then send the exact membership amount
+              by Interac e-Transfer.
+            </p>
+</div>
+<div class="payment-summary">
+<div>
+<span>Membership</span>
+<strong id="paymentPlanName">—</strong>
+</div>
+<div>
+<span>Amount due</span>
+<strong id="paymentAmount">—</strong>
+</div>
+<div>
+<span>Interac e-Transfer</span>
+<strong id="paymentEmail">
+                aavanmembers@gmail.com
+              </strong>
+</div>
+</div>
+<div class="payment-note">
+<strong>How payment verification works</strong>
+<p>
+              Send the Interac transfer to the email above. Your application
+              will remain <b>Pending payment verification</b> until an AAVAN
+              Admin confirms the transfer.
+            </p>
+</div>
+<label>
+            Interac confirmation / reference number
+            <span class="optional">optional but recommended</span>
+<input maxlength="120" name="interac_reference"/>
+</label>
+<label class="agreement">
+<input name="declaration" required="" type="checkbox"/>
+<span>
+              I confirm that the information in this application is accurate
+              and I agree to be contacted regarding my AAVAN membership.
+            </span>
+</label>
+</section>
+<div class="membership-form-footer">
+<button class="btn btn-secondary" hidden="" id="membershipBack" type="button">
+            Back
+          </button>
+<div class="membership-form-spacer"></div>
+<button class="btn btn-primary" id="membershipNext" type="button">
+            Continue
+          </button>
+<button class="btn btn-primary" hidden="" id="membershipSubmit" type="submit">
+            Submit Application
+          </button>
+</div>
+<p aria-live="polite" class="form-message" id="membershipMessage"></p>
+</form>
+<section class="membership-success" hidden="" id="membershipSuccess">
+<span class="success-mark">✓</span>
+<p class="eyebrow">
+          APPLICATION RECEIVED
+        </p>
+<h2>
+          Welcome to the next step.
+        </h2>
+<p>
+          Your AAVAN membership application has been submitted. Keep your
+          reference number for your records.
+        </p>
+<div>
+<span>Application reference</span>
+<strong id="membershipReference">—</strong>
+</div>
+<div>
+<span>Status</span>
+<strong>Pending payment verification</strong>
+</div>
+<button class="btn btn-primary" data-membership-close="" type="button">
+          Close
+        </button>
+</section>
+</section>
+</div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/membership.js"></script>
+</body>
+</html>
