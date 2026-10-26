@@ -1256,6 +1256,293 @@
       }
     }
 
+
+    /* =========================================================
+       PREMIUM HUMAN-SCALE FORM CARDS
+       Inspired by compact CRM / intake form layouts
+       ========================================================= */
+
+    /* Hard cap: forms never stretch with the monitor */
+    #committeePortal #eventFormPanel,
+    #committeePortal #albumFormPanel,
+    #committeePortal #quickPhotoUploadPanel,
+    #committeePortal #addCommitteeUserPanel{
+      width:calc(100% - 48px)!important;
+      max-width:780px!important;
+      min-width:0!important;
+      margin:22px auto 28px!important;
+      padding:24px!important;
+      box-sizing:border-box!important;
+      background:#fff!important;
+      border:1px solid #e3dbd1!important;
+      border-radius:16px!important;
+      box-shadow:
+        0 14px 34px rgba(23,23,23,.055),
+        0 2px 6px rgba(23,23,23,.025)!important;
+    }
+
+    #committeePortal #quickPhotoUploadPanel{
+      max-width:680px!important;
+    }
+
+    #committeePortal #addCommitteeUserPanel{
+      max-width:760px!important;
+    }
+
+    /* Settings use readable contained cards rather than viewport-wide forms */
+    #committeePortal #settingsPanel .settings-grid{
+      display:grid!important;
+      grid-template-columns:1fr!important;
+      gap:18px!important;
+      max-width:980px!important;
+      margin:0 auto!important;
+    }
+
+    #committeePortal #settingsPanel .settings-grid > .dashboard-card{
+      width:100%!important;
+      max-width:none!important;
+      margin:0!important;
+    }
+
+    /* Headings stay compact inside the card */
+    #committeePortal #eventFormPanel .card-heading,
+    #committeePortal #albumFormPanel .card-heading,
+    #committeePortal #quickPhotoUploadPanel .card-heading,
+    #committeePortal #addCommitteeUserPanel .card-heading{
+      display:flex!important;
+      align-items:flex-start!important;
+      justify-content:space-between!important;
+      gap:18px!important;
+      margin-bottom:18px!important;
+      padding-bottom:14px!important;
+      border-bottom:1px solid #eee7de!important;
+    }
+
+    #committeePortal .card-heading h3{
+      margin:0!important;
+      font-size:1.05rem!important;
+      line-height:1.2!important;
+    }
+
+    #committeePortal .card-heading p{
+      max-width:520px!important;
+      margin:4px 0 0!important;
+      color:#7d746b!important;
+      font-size:.76rem!important;
+      line-height:1.45!important;
+    }
+
+    /* Compact form rhythm */
+    #committeePortal #eventForm,
+    #committeePortal #albumForm,
+    #committeePortal #quickPhotoUploadForm,
+    #committeePortal #committeeInviteForm{
+      gap:14px!important;
+    }
+
+    #committeePortal #eventForm .form-grid-2,
+    #committeePortal #albumForm .form-grid-2,
+    #committeePortal #committeeInviteForm .form-grid-2{
+      display:grid!important;
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      gap:12px 14px!important;
+    }
+
+    /* Event title and venue get useful visual hierarchy */
+    #committeePortal #eventForm .form-grid-2 label:first-child{
+      grid-column:1 / -1!important;
+    }
+
+    /* Inputs: compact, crisp, obviously editable */
+    #committeePortal #eventForm input:not([type="checkbox"]):not([type="file"]),
+    #committeePortal #eventForm select,
+    #committeePortal #albumForm input:not([type="checkbox"]):not([type="file"]),
+    #committeePortal #albumForm select,
+    #committeePortal #quickPhotoUploadForm input:not([type="file"]),
+    #committeePortal #quickPhotoUploadForm select,
+    #committeePortal #committeeInviteForm input,
+    #committeePortal #committeeInviteForm select,
+    #committeePortal #paymentSettingsForm input,
+    #committeePortal #planSettingsList input,
+    #committeePortal #planSettingsList select{
+      min-height:40px!important;
+      height:40px!important;
+      padding:0 11px!important;
+      border:1px solid #cfc5b9!important;
+      border-radius:8px!important;
+      background:#fff!important;
+      box-shadow:inset 0 1px 2px rgba(23,23,23,.035)!important;
+      font-size:.8rem!important;
+      box-sizing:border-box!important;
+    }
+
+    #committeePortal #eventForm textarea,
+    #committeePortal #albumForm textarea,
+    #committeePortal #paymentSettingsForm textarea{
+      min-height:88px!important;
+      padding:10px 11px!important;
+      border:1px solid #cfc5b9!important;
+      border-radius:8px!important;
+      background:#fff!important;
+      box-shadow:inset 0 1px 2px rgba(23,23,23,.035)!important;
+      font-size:.8rem!important;
+      line-height:1.45!important;
+      box-sizing:border-box!important;
+    }
+
+    #committeePortal .admin-form label{
+      gap:5px!important;
+      color:#3e3833!important;
+      font-size:.75rem!important;
+      font-weight:700!important;
+    }
+
+    #committeePortal .optional{
+      font-size:.68rem!important;
+      font-weight:500!important;
+      color:#9a9188!important;
+    }
+
+    /* File upload feels like a compact upload control, not a full-width banner */
+    #committeePortal #eventImage,
+    #committeePortal #albumPhotoUpload,
+    #committeePortal #quickPhotoFiles,
+    #committeePortal #galleryPhotoUpload{
+      min-height:40px!important;
+      padding:7px 9px!important;
+      border:1px dashed #cfc5b9!important;
+      border-radius:8px!important;
+      background:#fcfaf7!important;
+      font-size:.76rem!important;
+    }
+
+    #committeePortal .gallery-upload-box,
+    #committeePortal .album-create-upload{
+      padding:12px!important;
+      border:1px dashed #d8cec2!important;
+      border-radius:10px!important;
+      background:#fcfaf7!important;
+    }
+
+    /* Notes become quiet helper blocks */
+    #committeePortal .portal-note{
+      padding:11px 13px!important;
+      border-radius:9px!important;
+      background:#f8f5ef!important;
+      border:1px solid #e8dfd4!important;
+      font-size:.73rem!important;
+    }
+
+    /* Bottom action rows */
+    .form-action-row{
+      display:flex!important;
+      align-items:center!important;
+      justify-content:flex-end!important;
+      gap:8px!important;
+      margin-top:4px!important;
+      padding-top:14px!important;
+      border-top:1px solid #eee7de!important;
+    }
+
+    .form-action-row .btn,
+    .form-action-row button{
+      width:auto!important;
+      min-width:104px!important;
+      height:38px!important;
+      min-height:38px!important;
+      padding:0 14px!important;
+      border-radius:9px!important;
+      font-size:.76rem!important;
+      font-weight:800!important;
+      box-shadow:none!important;
+    }
+
+    .form-action-row .form-cancel-btn{
+      border:1px solid #d7cec3!important;
+      background:#fff!important;
+      color:#5e554d!important;
+    }
+
+    .form-action-row .form-save-btn{
+      border:0!important;
+      background:linear-gradient(90deg,#b7131d,#ed6c1a)!important;
+      color:#fff!important;
+    }
+
+    /* Prevent inherited full-width primary button rules */
+    #committeePortal #eventForm > .btn,
+    #committeePortal #albumForm > .btn,
+    #committeePortal #quickPhotoUploadForm > .btn,
+    #committeePortal #committeeInviteForm > .btn{
+      width:auto!important;
+      align-self:auto!important;
+      margin:0!important;
+    }
+
+    /* Settings: cleaner rows, still practical */
+    #committeePortal #planSettingsList{
+      width:100%!important;
+      max-width:none!important;
+      margin:0!important;
+    }
+
+    #committeePortal #planSettingsList .setting-row{
+      display:grid!important;
+      grid-template-columns:minmax(220px,1fr) 88px 100px auto!important;
+      align-items:center!important;
+      gap:9px!important;
+      padding:11px 0!important;
+      border-radius:0!important;
+      border-bottom:1px solid #ece4da!important;
+      background:transparent!important;
+      box-shadow:none!important;
+    }
+
+    #committeePortal #planSettingsList .setting-row:last-child{
+      border-bottom:0!important;
+    }
+
+    #committeePortal #paymentSettingsForm{
+      width:100%!important;
+      max-width:none!important;
+      margin:0!important;
+    }
+
+    #committeePortal #paymentSettingsForm .btn{
+      width:auto!important;
+      min-width:150px!important;
+      height:38px!important;
+      align-self:flex-end!important;
+      margin-left:auto!important;
+      padding:0 16px!important;
+      border-radius:9px!important;
+    }
+
+    @media(max-width:900px){
+      #committeePortal #eventFormPanel,
+      #committeePortal #albumFormPanel,
+      #committeePortal #quickPhotoUploadPanel,
+      #committeePortal #addCommitteeUserPanel{
+        width:calc(100% - 24px)!important;
+        max-width:720px!important;
+        padding:18px!important;
+      }
+
+      #committeePortal #eventForm .form-grid-2,
+      #committeePortal #albumForm .form-grid-2,
+      #committeePortal #committeeInviteForm .form-grid-2{
+        grid-template-columns:1fr!important;
+      }
+
+      #committeePortal #eventForm .form-grid-2 label:first-child{
+        grid-column:auto!important;
+      }
+
+      #committeePortal #planSettingsList .setting-row{
+        grid-template-columns:1fr!important;
+      }
+    }
+
 </style>
 </head>
 <body class="committee-app-page">
@@ -2196,6 +2483,70 @@ document.addEventListener('DOMContentLoaded', () => {
       eventPanel.hidden = false;
       eventPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  });
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const buildActionRow = ({
+    formId,
+    cancelId,
+    submitSelector
+  }) => {
+    const form = document.getElementById(formId);
+    const cancel = document.getElementById(cancelId);
+    const submit = form?.querySelector(submitSelector);
+
+    if (!form || !submit) return;
+
+    let row = form.querySelector('.form-action-row');
+
+    if (!row) {
+      row = document.createElement('div');
+      row.className = 'form-action-row';
+
+      const message = form.querySelector('.form-message');
+
+      if (message) {
+        form.insertBefore(row, message);
+      } else {
+        form.appendChild(row);
+      }
+    }
+
+    if (cancel) {
+      cancel.classList.add('form-cancel-btn');
+      row.appendChild(cancel);
+    }
+
+    submit.classList.add('form-save-btn');
+    row.appendChild(submit);
+  };
+
+  buildActionRow({
+    formId: 'eventForm',
+    cancelId: 'cancelEditBtn',
+    submitSelector: 'button[type="submit"]'
+  });
+
+  buildActionRow({
+    formId: 'albumForm',
+    cancelId: 'cancelAlbumEditBtn',
+    submitSelector: 'button[type="submit"]'
+  });
+
+  buildActionRow({
+    formId: 'quickPhotoUploadForm',
+    cancelId: 'cancelQuickPhotoUploadBtn',
+    submitSelector: 'button[type="submit"]'
+  });
+
+  buildActionRow({
+    formId: 'committeeInviteForm',
+    cancelId: 'cancelAddCommitteeUserBtn',
+    submitSelector: 'button[type="submit"]'
   });
 });
 </script>
