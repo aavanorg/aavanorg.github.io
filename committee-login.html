@@ -12,209 +12,126 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/admin.css">
   <style>
-    html,body{
-      margin:0;
-      min-height:100%;
-      background:#f7f3ec;
-    }
+    html,body{margin:0;min-height:100%;background:#f4efe8}
+    body.committee-page{background:#f4efe8}
 
-    body.committee-page{
-      background:#f7f3ec;
-    }
-
-    .committee-page-hero{
-      padding:72px 0 58px;
-      background:
-        linear-gradient(135deg,#173f35 0%,#204f43 64%,#8c281f 130%);
+    .committee-page-heading{
+      background:#173f35;
       color:#fff;
+      padding:34px 0 30px;
+      border-top:1px solid rgba(255,255,255,.05);
     }
-
-    .committee-page-hero .eyebrow{
-      color:#ffd8c5;
-    }
-
-    .committee-page-hero h1{
-      max-width:760px;
-      margin:0 0 18px;
-      font-family:'Playfair Display',serif;
-      font-size:clamp(3.6rem,7vw,6.2rem);
-      line-height:.94;
-      letter-spacing:-.05em;
-    }
-
-    .committee-page-hero p{
-      max-width:720px;
-      margin:0;
-      color:#e2ece8;
-      font-size:1.02rem;
-    }
-
-    .committee-page-main{
-      padding:54px 0 84px;
-      background:#f7f3ec;
-    }
-
-    .committee-page-intro{
+    .committee-page-heading-inner{
       display:flex;
       align-items:end;
       justify-content:space-between;
-      gap:28px;
-      margin-bottom:24px;
+      gap:32px;
     }
-
-    .committee-page-intro h2{
+    .committee-page-heading .eyebrow{color:#ffd8c5;margin-bottom:7px}
+    .committee-page-heading h1{
       margin:0;
       font-family:'Playfair Display',serif;
-      font-size:clamp(2rem,4vw,3.25rem);
+      font-size:clamp(2.35rem,4vw,3.55rem);
+      line-height:.98;
       letter-spacing:-.035em;
     }
-
-    .committee-page-intro p{
-      max-width:520px;
-      margin:0;
-      color:var(--muted);
+    .committee-page-heading p:last-child{
+      max-width:430px;
+      margin:0 0 4px;
+      color:#d8e6e1;
+      text-align:right;
     }
 
-    /* The committee system now behaves like page content, not a modal. */
+    .committee-page-main{padding:36px 0 64px}
+    .committee-page-main>.container{width:min(1320px,calc(100% - 48px))}
+
     #committeePortal.committee-portal{
-      position:static!important;
-      inset:auto!important;
-      display:block!important;
-      width:100%!important;
-      min-height:0!important;
-      padding:0!important;
-      margin:0!important;
-      overflow:visible!important;
-      background:transparent!important;
-      z-index:auto!important;
+      position:static!important; inset:auto!important; display:block!important;
+      width:100%!important; min-height:0!important; padding:0!important; margin:0!important;
+      overflow:visible!important; background:transparent!important; z-index:auto!important;
     }
-
-    #committeePortal .committee-portal-backdrop{
-      display:none!important;
-    }
-
+    #committeePortal .committee-portal-backdrop{display:none!important}
     #committeePortal .committee-portal-shell{
-      position:static!important;
-      inset:auto!important;
-      transform:none!important;
-      width:100%!important;
-      max-width:none!important;
-      min-height:0!important;
-      max-height:none!important;
-      margin:0!important;
-      border:1px solid #e3dbd0!important;
-      border-radius:24px!important;
-      overflow:hidden!important;
-      box-shadow:0 22px 56px rgba(23,23,23,.09)!important;
-      background:#fff!important;
+      position:static!important; inset:auto!important; transform:none!important;
+      width:100%!important; max-width:none!important; min-height:0!important; max-height:none!important;
+      margin:0!important; border:1px solid #e2dad0!important; border-radius:18px!important;
+      overflow:hidden!important; box-shadow:0 18px 46px rgba(30,27,23,.09)!important; background:#fff!important;
     }
-
     #committeePortal .committee-portal-topbar{
-      position:static!important;
-      min-height:72px;
-      border-radius:0!important;
-      border-bottom:1px solid #e7dfd5;
-      background:#fff;
+      position:static!important; min-height:72px; padding:0 22px!important; border-radius:0!important;
+      border-bottom:1px solid #e8e1d8; background:#fff;
     }
-
     #committeePortal .committee-portal-content{
-      min-height:0!important;
-      max-height:none!important;
-      overflow:visible!important;
-      background:#fff;
+      min-height:0!important; max-height:none!important; overflow:visible!important; background:#f8f5f0;
     }
-
     #committeePortal #authPanel.committee-auth{
-      min-height:620px!important;
-      border-radius:0!important;
-      background:#fff;
+      min-height:620px!important; border-radius:0!important; background:#fff;
     }
-
     #committeePortal #dashboard.committee-dashboard{
-      min-height:650px!important;
-      width:100%!important;
-      max-width:none!important;
-      margin:0!important;
-      border-radius:0!important;
-      background:#f8f5f0;
+      display:grid!important; grid-template-columns:220px minmax(0,1fr)!important;
+      min-height:720px!important; width:100%!important; max-width:none!important; margin:0!important;
+      border-radius:0!important; background:#f8f5f0;
     }
-
     #committeePortal .dashboard-sidebar{
-      min-height:650px;
+      min-height:720px; padding:24px 16px 30px!important; background:#111!important;
     }
-
+    #committeePortal .dashboard-user{padding:0 4px 20px!important;margin-bottom:15px!important}
+    #committeePortal .dashboard-nav{padding:11px 12px!important;border-radius:9px!important;font-size:.86rem!important}
     #committeePortal .dashboard-main{
-      min-width:0;
-      padding-bottom:36px;
+      min-width:0; padding:32px 32px 42px!important;
+      background:linear-gradient(180deg,#f8f5f0,#fbfaf7);
     }
-
-    #committeePortalClose{
-      display:none!important;
+    #committeePortal .dashboard-heading{
+      display:grid!important;grid-template-columns:1fr auto!important;gap:24px!important;
+      align-items:end!important;margin-bottom:22px!important;
     }
-
-    .committee-home-link{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:9px 14px;
-      border:1px solid #ddd4c8;
-      border-radius:999px;
-      color:#171717;
-      text-decoration:none;
-      font-weight:700;
-      font-size:.83rem;
-      background:#fff;
-      transition:.2s ease;
+    #committeePortal .dashboard-heading h2{
+      margin-top:4px!important;font-size:clamp(2.5rem,4vw,3.6rem)!important;line-height:.96!important;
     }
-
-    .committee-home-link:hover{
-      transform:translateY(-1px);
-      border-color:#bdb2a5;
+    #committeePortal .dashboard-heading>p{
+      max-width:320px;margin:0 0 4px!important;text-align:right;color:#847b72!important;font-size:.88rem!important;
     }
-
-    @media(max-width:900px){
-      .committee-page-hero{
-        padding:58px 0 48px;
-      }
-
-      .committee-page-main{
-        padding:38px 0 64px;
-      }
-
-      .committee-page-intro{
-        align-items:flex-start;
-        flex-direction:column;
-      }
-
-      #committeePortal .committee-portal-shell{
-        border-radius:18px!important;
-      }
-
-      #committeePortal #authPanel.committee-auth{
-        min-height:0!important;
-      }
-
-      #committeePortal #dashboard.committee-dashboard{
-        min-height:0!important;
-      }
-
-      #committeePortal .dashboard-sidebar{
-        min-height:auto;
-      }
+    #committeePortal .metric-grid{
+      grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:16px!important;margin-bottom:18px!important;
     }
+    #committeePortal .metric-grid article{
+      min-height:122px!important;padding:19px!important;border:1px solid #e5ddd3!important;
+      border-radius:15px!important;box-shadow:0 7px 18px rgba(23,23,23,.025)!important;background:#fff!important;
+    }
+    #committeePortal .metric-grid article strong{margin-top:12px!important;font-size:2.55rem!important;line-height:.9!important}
+    #committeePortal .dashboard-card{
+      border:1px solid #e5ddd3!important;border-radius:15px!important;
+      box-shadow:0 7px 18px rgba(23,23,23,.025)!important;background:#fff!important;
+    }
+    #committeePortal #overviewPanel .dashboard-card{padding:20px 22px!important}
+    #committeePortalClose{display:none!important}
+    .committee-home-link,.portal-page-home{display:none!important}
+    #committeePortal .portal-signout{min-height:38px!important;padding:0 14px!important}
 
+    @media(max-width:1050px){
+      .committee-page-main>.container{width:min(100% - 32px,1320px)}
+      #committeePortal #dashboard.committee-dashboard{grid-template-columns:195px minmax(0,1fr)!important}
+      #committeePortal .dashboard-main{padding:28px 22px 36px!important}
+      #committeePortal .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+    }
+    @media(max-width:820px){
+      .committee-page-heading-inner{align-items:flex-start;flex-direction:column;gap:12px}
+      .committee-page-heading p:last-child{text-align:left}
+      .committee-page-main{padding:24px 0 50px}
+      #committeePortal #dashboard.committee-dashboard{grid-template-columns:1fr!important;min-height:0!important}
+      #committeePortal .dashboard-sidebar{min-height:auto}
+      #committeePortal .dashboard-sidebar nav{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+      #committeePortal .dashboard-heading{grid-template-columns:1fr!important}
+      #committeePortal .dashboard-heading>p{text-align:left}
+    }
     @media(max-width:620px){
-      .committee-page-hero h1{
-        font-size:3.5rem;
-      }
-
-      .committee-page-hero{
-        padding:48px 0 42px;
-      }
-
-      .committee-page-main{
-        padding:28px 0 52px;
-      }
+      .committee-page-heading{padding:28px 0 24px}
+      .committee-page-heading h1{font-size:2.45rem}
+      .committee-page-main>.container{width:min(100% - 20px,1320px)}
+      #committeePortal .committee-portal-topbar{padding:0 13px!important}
+      #committeePortal .dashboard-main{padding:22px 15px 28px!important}
+      #committeePortal .metric-grid{grid-template-columns:1fr!important}
+      #committeePortal .dashboard-sidebar nav{grid-template-columns:repeat(2,minmax(0,1fr))!important}
     }
   </style>
 </head>
@@ -258,14 +175,13 @@
   </header>
 
   <main id="main">
-    <section class="committee-page-hero">
-      <div class="container">
-        <p class="eyebrow">COMMITTEE PORTAL</p>
-        <h1>Manage AAVAN with clarity.</h1>
-        <p>
-          Secure access for approved committee members managing events,
-          gallery, memberships, access and site settings.
-        </p>
+    <section class="committee-page-heading">
+      <div class="container committee-page-heading-inner">
+        <div>
+          <p class="eyebrow">COMMITTEE PORTAL</p>
+          <h1>Committee administration</h1>
+        </div>
+        <p>Secure workspace for approved AAVAN committee members.</p>
       </div>
     </section>
 
@@ -298,11 +214,10 @@
 </div>
 </div>
 <div class="committee-portal-actions">
-          <a class="committee-home-link" href="index.html">Back to site</a>
 <button class="portal-signout" hidden="" id="logoutBtn" type="button">
             Sign out
           </button>
-<a class="portal-page-home" href="index.html">Back to site</a>
+
 </div>
 </header>
 <div class="committee-portal-content">
