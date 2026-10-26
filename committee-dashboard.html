@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
 
@@ -22,7 +21,7 @@
        ========================================================= */
 
     .app {
-      grid-template-columns: 238px minmax(0, 1fr);
+      grid-template-columns: 238px minmax(0,1fr);
     }
 
     .sidebar {
@@ -167,7 +166,7 @@
     }
 
     .dashboard-nav:hover {
-      background: rgba(255, 255, 255, .065);
+      background: rgba(255,255,255,.065);
       color: #fff;
     }
 
@@ -182,7 +181,7 @@
       font-weight: 650;
 
       box-shadow:
-        0 2px 7px rgba(0, 0, 0, .08);
+        0 2px 7px rgba(0,0,0,.08);
     }
 
     .dashboard-nav.active svg {
@@ -201,7 +200,7 @@
       padding-top: 18px;
 
       border-top:
-        1px solid rgba(255, 255, 255, .08);
+        1px solid rgba(255,255,255,.08);
     }
 
     .side-bottom a,
@@ -233,7 +232,6 @@
       font-size: 12.5px;
       font-weight: 500;
 
-      text-align: left;
       text-decoration: none;
 
       cursor: pointer;
@@ -245,7 +243,7 @@
 
     .side-bottom a:hover,
     .side-bottom button:hover {
-      background: rgba(255, 255, 255, .06);
+      background: rgba(255,255,255,.06);
       color: #fff;
     }
 
@@ -262,7 +260,7 @@
 
     @media (max-width: 1180px) {
       .app {
-        grid-template-columns: 218px minmax(0, 1fr);
+        grid-template-columns: 218px minmax(0,1fr);
       }
 
       .sidebar {
@@ -295,8 +293,7 @@
 
       .nav {
         grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-
+          repeat(2,minmax(0,1fr));
         gap: 5px;
       }
 
@@ -308,12 +305,11 @@
         margin-top: 18px;
 
         grid-template-columns:
-          repeat(2, minmax(0, 1fr));
+          repeat(2,minmax(0,1fr));
       }
     }
   </style>
 </head>
-
 
 <body>
 
@@ -336,15 +332,8 @@
       >
 
       <div class="brand-copy">
-
-        <strong>
-          AAVAN Admin
-        </strong>
-
-        <span>
-          Committee workspace
-        </span>
-
+        <strong>AAVAN Admin</strong>
+        <span>Committee workspace</span>
       </div>
 
     </div>
@@ -352,13 +341,10 @@
 
     <nav class="nav">
 
-      <!-- Overview -->
-
       <button
         class="dashboard-nav active"
         data-panel="overviewPanel"
       >
-
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -366,53 +352,20 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <rect
-            x="3"
-            y="3"
-            width="7"
-            height="7"
-            rx="1"
-          />
-
-          <rect
-            x="14"
-            y="3"
-            width="7"
-            height="7"
-            rx="1"
-          />
-
-          <rect
-            x="3"
-            y="14"
-            width="7"
-            height="7"
-            rx="1"
-          />
-
-          <rect
-            x="14"
-            y="14"
-            width="7"
-            height="7"
-            rx="1"
-          />
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
         </svg>
 
-        <span>
-          Overview
-        </span>
-
+        <span>Overview</span>
       </button>
 
-
-      <!-- Events -->
 
       <button
         class="dashboard-nav"
         data-panel="eventsPanel"
       >
-
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -420,31 +373,18 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <rect
-            x="3"
-            y="5"
-            width="18"
-            height="16"
-            rx="2"
-          />
-
+          <rect x="3" y="5" width="18" height="16" rx="2"/>
           <path d="M16 3v4M8 3v4M3 10h18"/>
         </svg>
 
-        <span>
-          Events
-        </span>
-
+        <span>Events</span>
       </button>
 
-
-      <!-- Gallery -->
 
       <button
         class="dashboard-nav"
         data-panel="galleryPanel"
       >
-
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -452,31 +392,14 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <rect
-            x="3"
-            y="3"
-            width="18"
-            height="18"
-            rx="2"
-          />
-
-          <circle
-            cx="8.5"
-            cy="8.5"
-            r="1.5"
-          />
-
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
           <path d="M21 15l-5-5L5 21"/>
         </svg>
 
-        <span>
-          Gallery
-        </span>
-
+        <span>Gallery</span>
       </button>
 
-
-      <!-- Memberships -->
 
       <button
         class="dashboard-nav"
@@ -484,7 +407,6 @@
         id="membershipsTab"
         hidden
       >
-
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -492,33 +414,15 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <path
-            d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
-          />
-
-          <circle
-            cx="9"
-            cy="7"
-            r="4"
-          />
-
-          <path
-            d="M22 21v-2a4 4 0 0 0-3-3.87"
-          />
-
-          <path
-            d="M16 3.13a4 4 0 0 1 0 7.75"
-          />
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
         </svg>
 
-        <span>
-          Memberships
-        </span>
-
+        <span>Memberships</span>
       </button>
 
-
-      <!-- Access -->
 
       <button
         class="dashboard-nav"
@@ -526,7 +430,6 @@
         id="accessTab"
         hidden
       >
-
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -534,28 +437,15 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <circle
-            cx="12"
-            cy="8"
-            r="4"
-          />
-
-          <path
-            d="M4 21v-2a8 8 0 0 1 16 0v2"
-          />
-
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 21v-2a8 8 0 0 1 16 0v2"/>
           <path d="M18 8h4"/>
           <path d="M20 6v4"/>
         </svg>
 
-        <span>
-          Access Management
-        </span>
-
+        <span>Access Management</span>
       </button>
 
-
-      <!-- Settings -->
 
       <button
         class="dashboard-nav"
@@ -563,7 +453,6 @@
         id="settingsTab"
         hidden
       >
-
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -571,28 +460,15 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-
-          <circle
-            cx="12"
-            cy="12"
-            r="3"
-          />
-
-          <path
-            d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.14.36.35.7.6 1 .29.3.67.5 1.1.6H21a2 2 0 1 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15z"
-          />
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.14.36.35.7.6 1 .29.3.67.5 1.1.6H21a2 2 0 1 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15z"/>
         </svg>
 
-        <span>
-          Settings
-        </span>
-
+        <span>Settings</span>
       </button>
 
     </nav>
 
-
-    <!-- Bottom navigation -->
 
     <div class="side-bottom">
 
@@ -607,14 +483,10 @@
         >
           <path d="M14 3h7v7"/>
           <path d="M10 14L21 3"/>
-          <path
-            d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"
-          />
+          <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/>
         </svg>
 
-        <span>
-          View Live Site
-        </span>
+        <span>View Live Site</span>
 
       </a>
 
@@ -628,17 +500,12 @@
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          <path
-            d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
-          />
-
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
           <path d="M16 17l5-5-5-5"/>
           <path d="M21 12H9"/>
         </svg>
 
-        <span>
-          Sign out
-        </span>
+        <span>Sign out</span>
 
       </button>
 
@@ -664,7 +531,6 @@
       <div class="page-head">
 
         <div>
-
           <p class="eyebrow">
             OVERVIEW
           </p>
@@ -677,7 +543,6 @@
             A clear view of community activity
             and administration.
           </p>
-
         </div>
 
       </div>
@@ -686,37 +551,22 @@
       <div class="metric-grid">
 
         <article class="metric">
-
-          <span>
-            Upcoming Events
-          </span>
-
-          <strong id="metricEvents">
-            0
-          </strong>
-
+          <span>Upcoming Events</span>
+          <strong id="metricEvents">0</strong>
         </article>
 
 
         <article
           class="metric admin-only-metric"
         >
-
-          <span>
-            Pending Access
-          </span>
-
-          <strong id="metricAccess">
-            0
-          </strong>
-
+          <span>Pending Access</span>
+          <strong id="metricAccess">0</strong>
         </article>
 
 
         <article
           class="metric admin-only-metric"
         >
-
           <span>
             Membership Applications
           </span>
@@ -724,20 +574,12 @@
           <strong id="metricMemberships">
             0
           </strong>
-
         </article>
 
 
         <article class="metric">
-
-          <span>
-            Your Role
-          </span>
-
-          <strong id="metricRole">
-            —
-          </strong>
-
+          <span>Your Role</span>
+          <strong id="metricRole">—</strong>
         </article>
 
       </div>
@@ -745,9 +587,7 @@
 
       <div class="card">
 
-        <h3>
-          Permissions
-        </h3>
+        <h3>Permissions</h3>
 
         <p
           id="permissionSummary"
@@ -770,10 +610,7 @@
       <div class="page-head">
 
         <div>
-
-          <p class="eyebrow">
-            EVENTS
-          </p>
+          <p class="eyebrow">EVENTS</p>
 
           <h1>
             Event management
@@ -783,7 +620,6 @@
             Create, edit, publish and remove
             community events.
           </p>
-
         </div>
 
 
@@ -806,7 +642,6 @@
         <div class="card-head">
 
           <div>
-
             <h3 id="formTitle">
               Add event
             </h3>
@@ -815,7 +650,6 @@
               Published events appear on
               the public site.
             </p>
-
           </div>
 
 
@@ -925,27 +759,20 @@
           <div class="check-row">
 
             <label>
-
               <input
                 id="eventFeatured"
                 type="checkbox"
               >
-
               Featured event
-
             </label>
 
-
             <label>
-
               <input
                 id="eventPublished"
                 type="checkbox"
                 checked
               >
-
               Published
-
             </label>
 
           </div>
@@ -1030,11 +857,9 @@
       <div class="toolbar">
 
         <select id="galleryYearFilter">
-
           <option value="all">
             All years
           </option>
-
         </select>
 
 
@@ -1082,11 +907,9 @@
               id="quickPhotoAlbumSelect"
               required
             >
-
               <option value="">
                 Select an album
               </option>
-
             </select>
           </label>
 
@@ -1192,11 +1015,9 @@
               Link to event
 
               <select id="albumEventId">
-
                 <option value="">
                   No linked event
                 </option>
-
               </select>
             </label>
 
@@ -1213,14 +1034,12 @@
 
 
           <label>
-
             <input
               id="albumPublished"
               type="checkbox"
             >
 
             Published
-
           </label>
 
 
@@ -1503,7 +1322,6 @@
                 </option>
 
               </select>
-
             </label>
 
           </div>
