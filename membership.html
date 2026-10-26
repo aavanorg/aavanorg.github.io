@@ -1,1 +1,98 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Membership | AAVAN</title><link rel="stylesheet" href="css/public-v2.css"></head><body class="membership-shell"><header class="site-header"><div class="container header-inner"><a class="brand" href="index.html"><img src="assets/images/logo.png" alt="AAVAN"><span>Assam Association Vancouver</span></a><a class="btn" href="index.html">Back to Home</a></div></header><main class="container"><section class="membership-hero"><p class="eyebrow">JOIN AAVAN</p><h1 style="font:700 58px/1 Georgia,serif;margin:0 0 16px">Membership application.</h1><p style="max-width:700px;color:#6f6a63">Complete the application below. Your membership will be activated after payment verification.</p><div id="membershipPlanPreview" class="cards"></div></section><section class="membership-card" id="membershipModal"><div class="membership-progress"><button data-step-jump="1" class="active">1 About you</button><button data-step-jump="2">2 Household</button><button data-step-jump="3">3 Interests</button><button data-step-jump="4">4 Membership</button><button data-step-jump="5">5 Payment</button></div><form id="membershipForm"><section class="membership-step" data-membership-step="1"><div class="form-grid"><label>Full name<input name="full_name" required></label><label>Email<input name="email" type="email" required></label><label>Phone<input name="phone" required></label><label>Date of birth<input name="date_of_birth" type="date"></label><label>Address<input name="address"></label><label>City<input name="city"></label><label>Province<input name="province" value="BC"></label><label>Postal code<input name="postal_code"></label></div></section><section class="membership-step" data-membership-step="2" hidden><label>Spouse/partner name<input name="spouse_name"></label><div id="familyMembers"></div><button class="btn" id="addFamilyMemberBtn" type="button">+ Add family member</button></section><section class="membership-step" data-membership-step="3" hidden><div class="cards"><label class="card"><input type="checkbox" name="interests" value="Cultural events"> Cultural events</label><label class="card"><input type="checkbox" name="interests" value="Volunteering"> Volunteering</label><label class="card"><input type="checkbox" name="interests" value="Community support"> Community support</label></div><label>Anything else you’d like us to know?<textarea name="notes"></textarea></label></section><section class="membership-step" data-membership-step="4" hidden><div id="membershipPlanOptions" class="plan-grid"></div></section><section class="membership-step" data-membership-step="5" hidden><div class="card"><h3>Payment summary</h3><p>Plan: <strong id="paymentPlanName">—</strong></p><p>Amount: <strong id="paymentAmount">—</strong></p><p>Interac e-Transfer: <strong id="paymentEmail">—</strong></p></div><label>Interac reference/message<input name="interac_reference"></label></section><div class="form-actions"><button class="btn" id="membershipBack" type="button" hidden>Back</button><div style="margin-left:auto;display:flex;gap:10px"><button class="btn btn-primary" id="membershipNext" type="button">Continue</button><button class="btn btn-accent" id="membershipSubmit" type="submit" hidden>Submit Application</button></div></div><p id="membershipMessage"></p></form><div id="membershipSuccess" class="success-box" hidden><p class="eyebrow">APPLICATION RECEIVED</p><h2>Thank you for joining AAVAN.</h2><p>Your reference is <strong id="membershipReference"></strong>.</p><a class="btn btn-primary" href="index.html">Return to Home</a></div></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/membership.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Membership | AAVAN</title>
+  <link rel="stylesheet" href="css/public-v2.css">
+</head>
+<body class="membership-shell">
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html"><img src="assets/images/logo.png" alt="AAVAN"><span>Assam Association Vancouver</span></a>
+    <a class="btn" href="index.html">Back to Home</a>
+  </div>
+</header>
+<main class="container">
+  <section class="membership-hero">
+    <p class="eyebrow">JOIN AAVAN</p>
+    <h1>Membership application.</h1>
+    <p style="max-width:700px;color:#6f6a63">Complete the application below. Your membership will be activated after payment verification.</p>
+    <div id="membershipPlanPreview" class="cards"></div>
+  </section>
+
+  <section class="membership-card" id="membershipModal">
+    <div class="membership-progress">
+      <button data-step-jump="1" class="active">1 About you</button>
+      <button data-step-jump="2">2 Household</button>
+      <button data-step-jump="3">3 Interests</button>
+      <button data-step-jump="4">4 Membership</button>
+      <button data-step-jump="5">5 Payment</button>
+    </div>
+
+    <form id="membershipForm">
+      <section class="membership-step" data-membership-step="1">
+        <div class="form-grid">
+          <label>Full name<input name="full_name" required></label>
+          <label>Email<input name="email" type="email" required></label>
+          <label>Phone<input name="phone" required></label>
+          <label>Date of birth<input name="date_of_birth" type="date"></label>
+          <label>Address<input name="address"></label>
+          <label>City<input name="city"></label>
+          <label>Province<input name="province" value="BC"></label>
+          <label>Postal code<input name="postal_code"></label>
+        </div>
+      </section>
+
+      <section class="membership-step" data-membership-step="2" hidden>
+        <label>Spouse/partner name<input name="spouse_name"></label>
+        <div id="familyMembers"></div>
+        <button class="btn" id="addFamilyMemberBtn" type="button">+ Add family member</button>
+      </section>
+
+      <section class="membership-step" data-membership-step="3" hidden>
+        <div class="interest-grid">
+          <label class="interest-card"><input type="checkbox" name="interests" value="Cultural events"><span>Cultural events</span></label>
+          <label class="interest-card"><input type="checkbox" name="interests" value="Volunteering"><span>Volunteering</span></label>
+          <label class="interest-card"><input type="checkbox" name="interests" value="Community support"><span>Community support</span></label>
+        </div>
+        <label>Anything else you’d like us to know?<textarea name="notes"></textarea></label>
+      </section>
+
+      <section class="membership-step" data-membership-step="4" hidden>
+        <div id="membershipPlanOptions" class="plan-grid"></div>
+      </section>
+
+      <section class="membership-step" data-membership-step="5" hidden>
+        <div class="payment-summary">
+          <h3>Payment summary</h3>
+          <p>Plan: <strong id="paymentPlanName">—</strong></p>
+          <p>Amount: <strong id="paymentAmount">—</strong></p>
+          <p>Interac e-Transfer: <strong id="paymentEmail">—</strong></p>
+        </div>
+        <label>Interac reference/message<input name="interac_reference"></label>
+      </section>
+
+      <div class="form-actions">
+        <button class="btn" id="membershipBack" type="button" hidden>Back</button>
+        <div>
+          <button class="btn btn-primary" id="membershipNext" type="button">Continue</button>
+          <button class="btn btn-accent" id="membershipSubmit" type="submit" hidden>Submit Application</button>
+        </div>
+      </div>
+      <p id="membershipMessage"></p>
+    </form>
+
+    <div id="membershipSuccess" class="success-box" hidden>
+      <p class="eyebrow">APPLICATION RECEIVED</p>
+      <h2>Thank you for joining AAVAN.</h2>
+      <p>Your reference is <strong id="membershipReference"></strong>.</p>
+      <a class="btn btn-primary" href="index.html">Return to Home</a>
+    </div>
+  </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/membership.js"></script>
+</body>
+</html>
