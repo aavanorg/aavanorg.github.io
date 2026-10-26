@@ -12,16 +12,103 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/admin.css">
   <style>
-    body.portal-page{margin:0;background:#efeae2;min-height:100vh}
-    #committeePortal.committee-portal{position:static!important;inset:auto!important;display:block!important;min-height:100vh!important;background:linear-gradient(180deg,#173f35 0,#173f35 220px,#efeae2 220px)!important;padding:34px 24px 60px!important;overflow:visible!important;z-index:auto!important}
-    #committeePortal .committee-portal-shell{position:relative!important;inset:auto!important;transform:none!important;width:min(1240px,100%)!important;max-width:1240px!important;max-height:none!important;min-height:calc(100vh - 94px)!important;margin:0 auto!important;border-radius:28px!important;overflow:hidden!important;box-shadow:0 28px 80px rgba(20,28,25,.22)!important;border:1px solid rgba(255,255,255,.14)!important;background:#fff!important}
-    #committeePortal .committee-portal-topbar{position:sticky;top:0;z-index:50}
-    #committeePortal .committee-portal-content{min-height:calc(100vh - 170px)}
-    .portal-page-home{display:inline-flex;align-items:center;justify-content:center;padding:9px 14px;border:1px solid rgba(255,255,255,.24);border-radius:999px;color:inherit;text-decoration:none;font-weight:700;font-size:.85rem}
-    #committeePortal #authPanel.committee-auth{min-height:650px}
+    html,body{margin:0;min-height:100%;background:#f5f1ea}
+    body.portal-page{min-height:100vh;background:#f5f1ea}
+
+    /* Full-page committee experience — not a modal */
+    #committeePortal.committee-portal{
+      position:static!important;
+      inset:auto!important;
+      display:block!important;
+      width:100%!important;
+      min-height:100vh!important;
+      padding:0!important;
+      margin:0!important;
+      overflow:visible!important;
+      background:#f5f1ea!important;
+      z-index:auto!important;
+    }
+
+    #committeePortal .committee-portal-shell{
+      position:static!important;
+      inset:auto!important;
+      transform:none!important;
+      width:100%!important;
+      max-width:none!important;
+      min-height:100vh!important;
+      max-height:none!important;
+      margin:0!important;
+      border:0!important;
+      border-radius:0!important;
+      overflow:visible!important;
+      box-shadow:none!important;
+      background:#fff!important;
+    }
+
+    #committeePortal .committee-portal-topbar{
+      position:sticky;
+      top:0;
+      z-index:100;
+      min-height:74px;
+      border-radius:0!important;
+    }
+
+    #committeePortal .committee-portal-content{
+      min-height:calc(100vh - 74px)!important;
+      overflow:visible!important;
+    }
+
+    /* Login/request-access screen */
+    #committeePortal #authPanel.committee-auth{
+      min-height:calc(100vh - 74px)!important;
+      border-radius:0!important;
+    }
+
+    /* Dashboard fills the page */
+    #committeePortal #dashboard.committee-dashboard{
+      min-height:calc(100vh - 74px)!important;
+      width:100%!important;
+      max-width:none!important;
+      margin:0!important;
+      border-radius:0!important;
+    }
+
+    #committeePortal .dashboard-sidebar{
+      min-height:calc(100vh - 74px);
+    }
+
+    #committeePortal .dashboard-main{
+      min-width:0;
+    }
+
+    .portal-page-home{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:9px 14px;
+      border:1px solid rgba(23,63,53,.18);
+      border-radius:999px;
+      color:inherit;
+      text-decoration:none;
+      font-weight:700;
+      font-size:.85rem;
+      background:#fff;
+    }
+
     @media(max-width:760px){
-      #committeePortal.committee-portal{padding:12px 10px 28px!important;background:#173f35!important}
-      #committeePortal .committee-portal-shell{border-radius:18px!important;min-height:calc(100vh - 40px)!important}
+      #committeePortal .committee-portal-topbar{
+        min-height:68px;
+      }
+
+      #committeePortal .committee-portal-content,
+      #committeePortal #authPanel.committee-auth,
+      #committeePortal #dashboard.committee-dashboard{
+        min-height:calc(100vh - 68px)!important;
+      }
+
+      #committeePortal .dashboard-sidebar{
+        min-height:auto;
+      }
     }
   </style>
 </head>
