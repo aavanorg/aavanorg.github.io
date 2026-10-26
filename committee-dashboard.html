@@ -1,11 +1,1345 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Committee Dashboard | AAVAN</title><link rel="stylesheet" href="css/dashboard-v2.css"></head><body>
-<div class="app" id="dashboard"><aside class="sidebar"><div class="brand"><img src="assets/images/logo.png" alt="AAVAN"><div><strong>AAVAN Admin</strong><span>Committee workspace</span></div></div><div class="userbox"><span class="avatar" id="dashboardAvatar">A</span><div><strong id="dashboardUserName">Committee Member</strong><div id="roleSummary"></div></div></div><nav class="nav"><button class="dashboard-nav active" data-panel="overviewPanel">Overview</button><button class="dashboard-nav" data-panel="eventsPanel">Events</button><button class="dashboard-nav" data-panel="galleryPanel">Gallery</button><button class="dashboard-nav" data-panel="membershipsPanel" id="membershipsTab" hidden>Memberships</button><button class="dashboard-nav" data-panel="accessPanel" id="accessTab" hidden>Access Management</button><button class="dashboard-nav" data-panel="settingsPanel" id="settingsTab" hidden>Settings</button></nav><div class="side-bottom"><a href="index.html">View Live Site</a><button id="logoutBtn">Sign out</button></div></aside>
-<main class="main">
-<section class="dashboard-panel" id="overviewPanel"><div class="page-head"><div><p class="eyebrow">OVERVIEW</p><h1>Committee Dashboard</h1><p class="page-intro">A clear view of community activity and administration.</p></div></div><div class="metric-grid"><article class="metric"><span>Upcoming Events</span><strong id="metricEvents">0</strong></article><article class="metric admin-only-metric"><span>Pending Access</span><strong id="metricAccess">0</strong></article><article class="metric admin-only-metric"><span>Membership Applications</span><strong id="metricMemberships">0</strong></article><article class="metric"><span>Your Role</span><strong id="metricRole">—</strong></article></div><div class="card"><h3>Permissions</h3><p id="permissionSummary" class="page-intro"></p></div></section>
-<section class="dashboard-panel" id="eventsPanel" hidden><div class="page-head"><div><p class="eyebrow">EVENTS</p><h1>Event management</h1><p class="page-intro">Create, edit, publish and remove community events.</p></div><button class="btn btn-primary" id="newEventBtn">+ Add Event</button></div><div class="card" id="eventFormPanel" hidden><div class="card-head"><div><h3 id="formTitle">Add event</h3><p class="page-intro">Published events appear on the public site.</p></div><button class="text-btn" id="cancelEditBtn" type="button">Cancel</button></div><form class="admin-form" id="eventForm"><input type="hidden" id="eventId"><div class="form-grid-2"><label>Event title<input id="eventTitle" maxlength="120"></label><label>Start date<input id="eventDate" type="date"></label><label>End date<input id="eventEndDate" type="date"></label><label>Start time<input id="eventTime" type="time"></label><label>Venue<input id="eventVenue"></label></div><label>Description<textarea id="eventSummary"></textarea></label><label>Registration/details URL<input id="eventRegistration" type="url"></label><label>Event image<input id="eventImage" type="file" accept="image/jpeg,image/png,image/webp"></label><div class="check-row"><label><input id="eventFeatured" type="checkbox"> Featured event</label><label><input id="eventPublished" type="checkbox" checked> Published</label></div><button class="btn btn-primary" type="submit">Save Event</button><p class="form-message" id="eventMessage"></p></form></div><div class="admin-list" id="eventsList"></div></section>
-<section class="dashboard-panel" id="galleryPanel" hidden><div class="page-head"><div><p class="eyebrow">GALLERY</p><h1>Photo archive</h1><p class="page-intro">Organize albums and publish community photos.</p></div><div class="gallery-header-actions"><button class="btn" id="uploadPhotosBtn">+ Upload Photos</button><button class="btn btn-primary" id="newAlbumBtn">+ New Album</button></div></div><div class="toolbar"><select id="galleryYearFilter"><option value="all">All years</option></select><input id="galleryAlbumSearch" type="search" placeholder="Search album or event"></div><div class="card" id="quickPhotoUploadPanel" hidden><div class="card-head"><h3>Upload photos</h3><button class="text-btn" id="cancelQuickPhotoUploadBtn">Cancel</button></div><form class="admin-form" id="quickPhotoUploadForm"><label>Choose album<select id="quickPhotoAlbumSelect" required><option value="">Select an album</option></select></label><label>Photos<input id="quickPhotoFiles" type="file" multiple required accept="image/jpeg,image/png,image/webp"></label><button class="btn btn-primary" type="submit">Upload Photos</button><p id="quickPhotoUploadMessage" class="form-message"></p></form></div><div class="card" id="albumFormPanel" hidden><div class="card-head"><h3 id="albumFormTitle">Create album</h3><button class="text-btn" id="cancelAlbumEditBtn">Cancel</button></div><form class="admin-form" id="albumForm"><input id="albumId" type="hidden"><div class="form-grid-2"><label>Album title<input id="albumTitle" required></label><label>Year<input id="albumYear" type="number" min="2000" max="2100" required></label><label>Event/category<input id="albumEventName"></label><label>Link to event<select id="albumEventId"><option value="">No linked event</option></select></label></div><label>Description<textarea id="albumDescription"></textarea></label><label><input id="albumPublished" type="checkbox"> Published</label><label>Photos<input id="albumPhotoUpload" type="file" multiple accept="image/jpeg,image/png,image/webp"></label><div id="albumSelectedPhotos" hidden></div><button class="btn btn-primary" type="submit">Save Album & Photos</button><p id="albumMessage" class="form-message"></p></form></div><div class="admin-list" id="albumsList"></div><div class="card" id="albumPhotosPanel" hidden><div class="card-head"><h3 id="albumPhotosTitle">Photos</h3><button class="text-btn" id="closeAlbumPhotosBtn">Close</button></div><label>Upload photos<input id="galleryPhotoUpload" type="file" multiple accept="image/jpeg,image/png,image/webp"></label><p id="galleryUploadMessage" class="form-message"></p><div class="admin-gallery-grid" id="albumPhotosGrid"></div></div></section>
-<section class="dashboard-panel" id="membershipsPanel" hidden><div class="page-head"><div><p class="eyebrow">MEMBERSHIPS</p><h1>Applications & payments</h1><p class="page-intro">Review applications and verify payment status.</p></div></div><div class="toolbar"><select id="membershipStatusFilter"><option value="all">All applications</option><option value="pending_payment">Pending payment</option><option value="active">Active</option><option value="declined">Declined</option></select><input id="membershipSearch" type="search" placeholder="Search name or email"></div><div class="admin-list" id="membershipApplicationsList"></div></section>
-<section class="dashboard-panel" id="accessPanel" hidden><div class="page-head"><div><p class="eyebrow">ACCESS</p><h1>Committee access</h1><p class="page-intro">Approve requests and manage committee roles.</p></div><button class="btn btn-primary" id="addCommitteeUserBtn">+ Add Committee User</button></div><p id="membersMessage" class="form-message"></p><div class="card" id="addCommitteeUserPanel" hidden><div class="card-head"><h3>Add committee user</h3><button class="text-btn" id="cancelAddCommitteeUserBtn">Cancel</button></div><form class="admin-form" id="committeeInviteForm"><div class="form-grid-2"><label>Full name<input id="inviteFullName" required></label><label>Email<input id="inviteEmail" type="email" required></label><label>Role<select id="inviteRole"><option value="viewer">Viewer</option><option value="editor" selected>Editor</option><option value="admin">Admin</option></select></label></div><button class="btn btn-primary" type="submit">Add Authorized User</button><p id="inviteMessage" class="form-message"></p></form></div><div><div class="card-head"><div><p class="eyebrow">PENDING REQUESTS</p><h3>Waiting for approval</h3></div><span id="pendingRequestCount"></span></div><div class="members-list" id="pendingMembersList"></div></div><div><div class="card-head"><div><p class="eyebrow">COMMITTEE USERS</p><h3>Active & revoked access</h3></div></div><div class="members-list" id="membersList"></div></div></section>
-<section class="dashboard-panel" id="settingsPanel" hidden><div class="page-head"><div><p class="eyebrow">SETTINGS</p><h1>Membership settings</h1><p class="page-intro">Maintain plans and payment instructions.</p></div></div><div class="settings-grid"><div class="card"><div class="card-head"><h3>Membership plans</h3><button class="btn" id="addPlanBtn">+ Add Plan</button></div><div id="planSettingsList"></div></div><div class="card"><h3>Payment instructions</h3><form class="admin-form" id="paymentSettingsForm"><label>Interac email<input id="settingInteracEmail" type="email"></label><label>Instructions<textarea id="settingPaymentInstructions"></textarea></label><button class="btn btn-primary" type="submit">Save Settings</button><p id="settingsMessage" class="form-message"></p></form></div></div></section>
-</main></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/admin.js"></script><script src="js/gallery.js"></script><script src="js/dashboard-v2.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
+  <title>Committee Dashboard | AAVAN</title>
+
+  <link
+    rel="stylesheet"
+    href="css/dashboard-v2.css"
+  >
+
+  <style>
+    /* =========================================================
+       AAVAN ADMIN SIDEBAR — CLEAN VERSION
+       ========================================================= */
+
+    .sidebar {
+      padding: 28px 18px 22px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 0 7px 28px;
+    }
+
+    .brand img {
+      width: 58px;
+      height: 58px;
+      padding: 6px;
+
+      flex: 0 0 auto;
+
+      object-fit: contain;
+
+      background: #fff;
+      border-radius: 14px;
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand strong {
+      display: block;
+
+      margin: 0;
+
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 17px;
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+
+      color: #fff;
+    }
+
+    .brand span {
+      display: block;
+
+      margin-top: 4px;
+
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11.5px;
+      line-height: 1.25;
+      font-weight: 400;
+
+      color: #b9d0c8;
+    }
+
+    .nav {
+      display: grid;
+      gap: 5px;
+    }
+
+    .dashboard-nav {
+      width: 100%;
+      min-height: 43px;
+
+      padding: 0 13px;
+
+      border: 0;
+      border-radius: 11px;
+
+      background: transparent;
+      color: #c6d7d1;
+
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 1;
+      font-weight: 500;
+      letter-spacing: 0;
+
+      text-align: left;
+
+      cursor: pointer;
+
+      transition:
+        background-color 0.16s ease,
+        color 0.16s ease,
+        transform 0.16s ease;
+    }
+
+    .dashboard-nav:hover {
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+    }
+
+    .dashboard-nav.active {
+      background: #fff;
+      color: #151515;
+      font-weight: 650;
+    }
+
+    .dashboard-nav.active:hover {
+      background: #fff;
+      color: #151515;
+    }
+
+    .side-bottom {
+      margin-top: auto;
+
+      display: grid;
+      gap: 9px;
+    }
+
+    .side-bottom a,
+    .side-bottom button {
+      min-height: 42px;
+
+      padding: 0 12px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border:
+        1px solid
+        rgba(255,255,255,0.15);
+
+      border-radius: 11px;
+
+      background: transparent;
+      color: #fff;
+
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+
+      text-decoration: none;
+
+      cursor: pointer;
+    }
+
+    .side-bottom a:hover,
+    .side-bottom button:hover {
+      background:
+        rgba(255,255,255,0.07);
+    }
+
+    @media (max-width: 760px) {
+      .sidebar {
+        padding: 22px 16px;
+      }
+
+      .brand {
+        padding-bottom: 20px;
+      }
+
+      .brand img {
+        width: 52px;
+        height: 52px;
+      }
+
+      .brand strong {
+        font-size: 16px;
+      }
+
+      .dashboard-nav {
+        min-height: 42px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div
+    class="app"
+    id="dashboard"
+  >
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+      <div class="brand">
+
+        <img
+          src="assets/images/logo.png"
+          alt="AAVAN"
+        >
+
+        <div class="brand-copy">
+          <strong>AAVAN Admin</strong>
+          <span>Committee workspace</span>
+        </div>
+
+      </div>
+
+      <nav class="nav">
+
+        <button
+          class="dashboard-nav active"
+          data-panel="overviewPanel"
+        >
+          Overview
+        </button>
+
+        <button
+          class="dashboard-nav"
+          data-panel="eventsPanel"
+        >
+          Events
+        </button>
+
+        <button
+          class="dashboard-nav"
+          data-panel="galleryPanel"
+        >
+          Gallery
+        </button>
+
+        <button
+          class="dashboard-nav"
+          data-panel="membershipsPanel"
+          id="membershipsTab"
+          hidden
+        >
+          Memberships
+        </button>
+
+        <button
+          class="dashboard-nav"
+          data-panel="accessPanel"
+          id="accessTab"
+          hidden
+        >
+          Access Management
+        </button>
+
+        <button
+          class="dashboard-nav"
+          data-panel="settingsPanel"
+          id="settingsTab"
+          hidden
+        >
+          Settings
+        </button>
+
+      </nav>
+
+      <div class="side-bottom">
+
+        <a href="index.html">
+          View Live Site
+        </a>
+
+        <button id="logoutBtn">
+          Sign out
+        </button>
+
+      </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+
+      <!-- ================= OVERVIEW ================= -->
+
+      <section
+        class="dashboard-panel"
+        id="overviewPanel"
+      >
+
+        <div class="page-head">
+
+          <div>
+
+            <p class="eyebrow">
+              OVERVIEW
+            </p>
+
+            <h1>
+              Committee Dashboard
+            </h1>
+
+            <p class="page-intro">
+              A clear view of community activity
+              and administration.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="metric-grid">
+
+          <article class="metric">
+
+            <span>
+              Upcoming Events
+            </span>
+
+            <strong id="metricEvents">
+              0
+            </strong>
+
+          </article>
+
+
+          <article
+            class="metric admin-only-metric"
+          >
+
+            <span>
+              Pending Access
+            </span>
+
+            <strong id="metricAccess">
+              0
+            </strong>
+
+          </article>
+
+
+          <article
+            class="metric admin-only-metric"
+          >
+
+            <span>
+              Membership Applications
+            </span>
+
+            <strong id="metricMemberships">
+              0
+            </strong>
+
+          </article>
+
+
+          <article class="metric">
+
+            <span>
+              Your Role
+            </span>
+
+            <strong id="metricRole">
+              —
+            </strong>
+
+          </article>
+
+        </div>
+
+
+        <div class="card">
+
+          <h3>
+            Permissions
+          </h3>
+
+          <p
+            id="permissionSummary"
+            class="page-intro"
+          ></p>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= EVENTS ================= -->
+
+      <section
+        class="dashboard-panel"
+        id="eventsPanel"
+        hidden
+      >
+
+        <div class="page-head">
+
+          <div>
+
+            <p class="eyebrow">
+              EVENTS
+            </p>
+
+            <h1>
+              Event management
+            </h1>
+
+            <p class="page-intro">
+              Create, edit, publish and remove
+              community events.
+            </p>
+
+          </div>
+
+
+          <button
+            class="btn btn-primary"
+            id="newEventBtn"
+          >
+            + Add Event
+          </button>
+
+        </div>
+
+
+        <div
+          class="card"
+          id="eventFormPanel"
+          hidden
+        >
+
+          <div class="card-head">
+
+            <div>
+
+              <h3 id="formTitle">
+                Add event
+              </h3>
+
+              <p class="page-intro">
+                Published events appear on
+                the public site.
+              </p>
+
+            </div>
+
+
+            <button
+              class="text-btn"
+              id="cancelEditBtn"
+              type="button"
+            >
+              Cancel
+            </button>
+
+          </div>
+
+
+          <form
+            class="admin-form"
+            id="eventForm"
+          >
+
+            <input
+              type="hidden"
+              id="eventId"
+            >
+
+
+            <div class="form-grid-2">
+
+              <label>
+                Event title
+
+                <input
+                  id="eventTitle"
+                  maxlength="120"
+                >
+              </label>
+
+
+              <label>
+                Start date
+
+                <input
+                  id="eventDate"
+                  type="date"
+                >
+              </label>
+
+
+              <label>
+                End date
+
+                <input
+                  id="eventEndDate"
+                  type="date"
+                >
+              </label>
+
+
+              <label>
+                Start time
+
+                <input
+                  id="eventTime"
+                  type="time"
+                >
+              </label>
+
+
+              <label>
+                Venue
+
+                <input id="eventVenue">
+              </label>
+
+            </div>
+
+
+            <label>
+              Description
+
+              <textarea
+                id="eventSummary"
+              ></textarea>
+            </label>
+
+
+            <label>
+              Registration/details URL
+
+              <input
+                id="eventRegistration"
+                type="url"
+              >
+            </label>
+
+
+            <label>
+              Event image
+
+              <input
+                id="eventImage"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+              >
+            </label>
+
+
+            <div class="check-row">
+
+              <label>
+
+                <input
+                  id="eventFeatured"
+                  type="checkbox"
+                >
+
+                Featured event
+
+              </label>
+
+
+              <label>
+
+                <input
+                  id="eventPublished"
+                  type="checkbox"
+                  checked
+                >
+
+                Published
+
+              </label>
+
+            </div>
+
+
+            <button
+              class="btn btn-primary"
+              type="submit"
+            >
+              Save Event
+            </button>
+
+
+            <p
+              class="form-message"
+              id="eventMessage"
+            ></p>
+
+          </form>
+
+        </div>
+
+
+        <div
+          class="admin-list"
+          id="eventsList"
+        ></div>
+
+      </section>
+
+
+      <!-- ================= GALLERY ================= -->
+
+      <section
+        class="dashboard-panel"
+        id="galleryPanel"
+        hidden
+      >
+
+        <div class="page-head">
+
+          <div>
+
+            <p class="eyebrow">
+              GALLERY
+            </p>
+
+            <h1>
+              Photo archive
+            </h1>
+
+            <p class="page-intro">
+              Organize albums and publish
+              community photos.
+            </p>
+
+          </div>
+
+
+          <div class="gallery-header-actions">
+
+            <button
+              class="btn"
+              id="uploadPhotosBtn"
+            >
+              + Upload Photos
+            </button>
+
+
+            <button
+              class="btn btn-primary"
+              id="newAlbumBtn"
+            >
+              + New Album
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="toolbar">
+
+          <select id="galleryYearFilter">
+
+            <option value="all">
+              All years
+            </option>
+
+          </select>
+
+
+          <input
+            id="galleryAlbumSearch"
+            type="search"
+            placeholder="Search album or event"
+          >
+
+        </div>
+
+
+        <div
+          class="card"
+          id="quickPhotoUploadPanel"
+          hidden
+        >
+
+          <div class="card-head">
+
+            <h3>
+              Upload photos
+            </h3>
+
+            <button
+              class="text-btn"
+              id="cancelQuickPhotoUploadBtn"
+            >
+              Cancel
+            </button>
+
+          </div>
+
+
+          <form
+            class="admin-form"
+            id="quickPhotoUploadForm"
+          >
+
+            <label>
+              Choose album
+
+              <select
+                id="quickPhotoAlbumSelect"
+                required
+              >
+
+                <option value="">
+                  Select an album
+                </option>
+
+              </select>
+
+            </label>
+
+
+            <label>
+              Photos
+
+              <input
+                id="quickPhotoFiles"
+                type="file"
+                multiple
+                required
+                accept="image/jpeg,image/png,image/webp"
+              >
+            </label>
+
+
+            <button
+              class="btn btn-primary"
+              type="submit"
+            >
+              Upload Photos
+            </button>
+
+
+            <p
+              id="quickPhotoUploadMessage"
+              class="form-message"
+            ></p>
+
+          </form>
+
+        </div>
+
+
+        <div
+          class="card"
+          id="albumFormPanel"
+          hidden
+        >
+
+          <div class="card-head">
+
+            <h3 id="albumFormTitle">
+              Create album
+            </h3>
+
+            <button
+              class="text-btn"
+              id="cancelAlbumEditBtn"
+            >
+              Cancel
+            </button>
+
+          </div>
+
+
+          <form
+            class="admin-form"
+            id="albumForm"
+          >
+
+            <input
+              id="albumId"
+              type="hidden"
+            >
+
+
+            <div class="form-grid-2">
+
+              <label>
+                Album title
+
+                <input
+                  id="albumTitle"
+                  required
+                >
+              </label>
+
+
+              <label>
+                Year
+
+                <input
+                  id="albumYear"
+                  type="number"
+                  min="2000"
+                  max="2100"
+                  required
+                >
+              </label>
+
+
+              <label>
+                Event/category
+
+                <input id="albumEventName">
+              </label>
+
+
+              <label>
+                Link to event
+
+                <select id="albumEventId">
+
+                  <option value="">
+                    No linked event
+                  </option>
+
+                </select>
+
+              </label>
+
+            </div>
+
+
+            <label>
+              Description
+
+              <textarea
+                id="albumDescription"
+              ></textarea>
+            </label>
+
+
+            <label>
+
+              <input
+                id="albumPublished"
+                type="checkbox"
+              >
+
+              Published
+
+            </label>
+
+
+            <label>
+              Photos
+
+              <input
+                id="albumPhotoUpload"
+                type="file"
+                multiple
+                accept="image/jpeg,image/png,image/webp"
+              >
+            </label>
+
+
+            <div
+              id="albumSelectedPhotos"
+              hidden
+            ></div>
+
+
+            <button
+              class="btn btn-primary"
+              type="submit"
+            >
+              Save Album & Photos
+            </button>
+
+
+            <p
+              id="albumMessage"
+              class="form-message"
+            ></p>
+
+          </form>
+
+        </div>
+
+
+        <div
+          class="admin-list"
+          id="albumsList"
+        ></div>
+
+
+        <div
+          class="card"
+          id="albumPhotosPanel"
+          hidden
+        >
+
+          <div class="card-head">
+
+            <h3 id="albumPhotosTitle">
+              Photos
+            </h3>
+
+            <button
+              class="text-btn"
+              id="closeAlbumPhotosBtn"
+            >
+              Close
+            </button>
+
+          </div>
+
+
+          <label>
+            Upload photos
+
+            <input
+              id="galleryPhotoUpload"
+              type="file"
+              multiple
+              accept="image/jpeg,image/png,image/webp"
+            >
+          </label>
+
+
+          <p
+            id="galleryUploadMessage"
+            class="form-message"
+          ></p>
+
+
+          <div
+            class="admin-gallery-grid"
+            id="albumPhotosGrid"
+          ></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= MEMBERSHIPS ================= -->
+
+      <section
+        class="dashboard-panel"
+        id="membershipsPanel"
+        hidden
+      >
+
+        <div class="page-head">
+
+          <div>
+
+            <p class="eyebrow">
+              MEMBERSHIPS
+            </p>
+
+            <h1>
+              Applications & payments
+            </h1>
+
+            <p class="page-intro">
+              Review applications and verify
+              payment status.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="toolbar">
+
+          <select id="membershipStatusFilter">
+
+            <option value="all">
+              All applications
+            </option>
+
+            <option value="pending_payment">
+              Pending payment
+            </option>
+
+            <option value="active">
+              Active
+            </option>
+
+            <option value="declined">
+              Declined
+            </option>
+
+          </select>
+
+
+          <input
+            id="membershipSearch"
+            type="search"
+            placeholder="Search name or email"
+          >
+
+        </div>
+
+
+        <div
+          class="admin-list"
+          id="membershipApplicationsList"
+        ></div>
+
+      </section>
+
+
+      <!-- ================= ACCESS ================= -->
+
+      <section
+        class="dashboard-panel"
+        id="accessPanel"
+        hidden
+      >
+
+        <div class="page-head">
+
+          <div>
+
+            <p class="eyebrow">
+              ACCESS
+            </p>
+
+            <h1>
+              Committee access
+            </h1>
+
+            <p class="page-intro">
+              Approve requests and manage
+              committee roles.
+            </p>
+
+          </div>
+
+
+          <button
+            class="btn btn-primary"
+            id="addCommitteeUserBtn"
+          >
+            + Add Committee User
+          </button>
+
+        </div>
+
+
+        <p
+          id="membersMessage"
+          class="form-message"
+        ></p>
+
+
+        <div
+          class="card"
+          id="addCommitteeUserPanel"
+          hidden
+        >
+
+          <div class="card-head">
+
+            <h3>
+              Add committee user
+            </h3>
+
+            <button
+              class="text-btn"
+              id="cancelAddCommitteeUserBtn"
+            >
+              Cancel
+            </button>
+
+          </div>
+
+
+          <form
+            class="admin-form"
+            id="committeeInviteForm"
+          >
+
+            <div class="form-grid-2">
+
+              <label>
+                Full name
+
+                <input
+                  id="inviteFullName"
+                  required
+                >
+              </label>
+
+
+              <label>
+                Email
+
+                <input
+                  id="inviteEmail"
+                  type="email"
+                  required
+                >
+              </label>
+
+
+              <label>
+                Role
+
+                <select id="inviteRole">
+
+                  <option value="viewer">
+                    Viewer
+                  </option>
+
+                  <option
+                    value="editor"
+                    selected
+                  >
+                    Editor
+                  </option>
+
+                  <option value="admin">
+                    Admin
+                  </option>
+
+                </select>
+
+              </label>
+
+            </div>
+
+
+            <button
+              class="btn btn-primary"
+              type="submit"
+            >
+              Add Authorized User
+            </button>
+
+
+            <p
+              id="inviteMessage"
+              class="form-message"
+            ></p>
+
+          </form>
+
+        </div>
+
+
+        <div>
+
+          <div class="card-head">
+
+            <div>
+
+              <p class="eyebrow">
+                PENDING REQUESTS
+              </p>
+
+              <h3>
+                Waiting for approval
+              </h3>
+
+            </div>
+
+            <span id="pendingRequestCount"></span>
+
+          </div>
+
+
+          <div
+            class="members-list"
+            id="pendingMembersList"
+          ></div>
+
+        </div>
+
+
+        <div>
+
+          <div class="card-head">
+
+            <div>
+
+              <p class="eyebrow">
+                COMMITTEE USERS
+              </p>
+
+              <h3>
+                Active & revoked access
+              </h3>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="members-list"
+            id="membersList"
+          ></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= SETTINGS ================= -->
+
+      <section
+        class="dashboard-panel"
+        id="settingsPanel"
+        hidden
+      >
+
+        <div class="page-head">
+
+          <div>
+
+            <p class="eyebrow">
+              SETTINGS
+            </p>
+
+            <h1>
+              Membership settings
+            </h1>
+
+            <p class="page-intro">
+              Maintain plans and payment
+              instructions.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="settings-grid">
+
+
+          <div class="card">
+
+            <div class="card-head">
+
+              <h3>
+                Membership plans
+              </h3>
+
+
+              <button
+                class="btn"
+                id="addPlanBtn"
+              >
+                + Add Plan
+              </button>
+
+            </div>
+
+
+            <div id="planSettingsList"></div>
+
+          </div>
+
+
+          <div class="card">
+
+            <h3>
+              Payment instructions
+            </h3>
+
+
+            <form
+              class="admin-form"
+              id="paymentSettingsForm"
+            >
+
+              <label>
+                Interac email
+
+                <input
+                  id="settingInteracEmail"
+                  type="email"
+                >
+              </label>
+
+
+              <label>
+                Instructions
+
+                <textarea
+                  id="settingPaymentInstructions"
+                ></textarea>
+              </label>
+
+
+              <button
+                class="btn btn-primary"
+                type="submit"
+              >
+                Save Settings
+              </button>
+
+
+              <p
+                id="settingsMessage"
+                class="form-message"
+              ></p>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+  <script src="js/supabase-config.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/gallery.js"></script>
+  <script src="js/dashboard-v2.js"></script>
+
+</body>
+</html>
