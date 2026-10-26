@@ -2181,6 +2181,711 @@
       }
     }
 
+
+    /* ===== ACCESS MANAGEMENT: ACTION-TRIGGERED FORM ===== */
+    #addCommitteeUserPanel[hidden]{
+      display:none!important;
+    }
+
+    #addCommitteeUserPanel:not([hidden]){
+      display:block!important;
+    }
+
+    #committeePortal #addCommitteeUserPanel{
+      width:100%!important;
+      max-width:760px!important;
+      margin:18px auto 24px!important;
+    }
+
+    #committeePortal #accessPanel .access-section{
+      width:100%!important;
+      max-width:none!important;
+    }
+
+
+    /* =========================================================
+       AAVAN ADMIN — UNIFIED LAYOUT SYSTEM
+       One aligned content rail across every section.
+       No inner section stretches across the full viewport.
+       ========================================================= */
+
+    :root{
+      --admin-rail:1120px;
+      --admin-form:760px;
+      --admin-settings:980px;
+      --admin-gap:18px;
+      --admin-card:#fff;
+      --admin-bg:#f7f3ec;
+      --admin-border:#e2d9ce;
+      --admin-muted:#7c746b;
+      --admin-green:#123b32;
+      --admin-red:#b7131d;
+      --admin-orange:#ed6c1a;
+    }
+
+    /* Workspace rhythm */
+    #committeePortal .dashboard-main{
+      background:var(--admin-bg)!important;
+      overflow-x:hidden!important;
+    }
+
+    #committeePortal .dashboard-panel{
+      width:100%!important;
+      max-width:var(--admin-rail)!important;
+      margin:0 auto!important;
+      padding:26px 28px 38px!important;
+      box-sizing:border-box!important;
+    }
+
+    /* Every page header uses the same rail and alignment */
+    #committeePortal .dashboard-heading{
+      width:100%!important;
+      max-width:none!important;
+      margin:0 0 20px!important;
+      padding:0 0 14px!important;
+      display:flex!important;
+      align-items:flex-end!important;
+      justify-content:space-between!important;
+      gap:20px!important;
+      border-bottom:1px solid #e8dfd4!important;
+      box-sizing:border-box!important;
+    }
+
+    #committeePortal .dashboard-heading > div:first-child{
+      min-width:0!important;
+    }
+
+    #committeePortal .dashboard-heading h2{
+      margin:0!important;
+      font-size:clamp(2.15rem,3.4vw,3.35rem)!important;
+      line-height:.97!important;
+      letter-spacing:-.035em!important;
+    }
+
+    #committeePortal .dashboard-heading .eyebrow{
+      margin:0 0 6px!important;
+    }
+
+    #committeePortal .dashboard-heading > p{
+      max-width:360px!important;
+      margin:0 0 3px!important;
+      color:var(--admin-muted)!important;
+      text-align:right!important;
+      font-size:.82rem!important;
+    }
+
+    /* Top-right action groups */
+    #committeePortal .gallery-header-actions,
+    #committeePortal .subpage-actions,
+    #committeePortal .dashboard-heading .header-actions{
+      display:flex!important;
+      align-items:center!important;
+      gap:8px!important;
+      flex-wrap:wrap!important;
+      flex-shrink:0!important;
+    }
+
+    #committeePortal .dashboard-heading .btn,
+    #committeePortal .gallery-header-actions .btn,
+    #committeePortal #newEventBtn,
+    #committeePortal #addCommitteeUserBtn,
+    #committeePortal #addPlanBtn{
+      width:auto!important;
+      min-width:0!important;
+      height:36px!important;
+      min-height:36px!important;
+      padding:0 14px!important;
+      border-radius:9px!important;
+      font-size:.76rem!important;
+      line-height:1!important;
+    }
+
+    /* Shared card shell */
+    #committeePortal .dashboard-card,
+    #committeePortal .registrations-card,
+    #committeePortal .recent-activity-card{
+      border:1px solid var(--admin-border)!important;
+      border-radius:14px!important;
+      background:var(--admin-card)!important;
+      box-shadow:0 8px 22px rgba(23,23,23,.035)!important;
+      box-sizing:border-box!important;
+    }
+
+    /* =========================================================
+       ACTION-TRIGGERED FORM SYSTEM
+       ========================================================= */
+
+    #committeePortal #eventFormPanel,
+    #committeePortal #albumFormPanel,
+    #committeePortal #quickPhotoUploadPanel,
+    #committeePortal #albumPhotosPanel,
+    #committeePortal #addCommitteeUserPanel{
+      width:100%!important;
+      max-width:var(--admin-form)!important;
+      min-width:0!important;
+      margin:20px auto 24px!important;
+      padding:22px!important;
+      box-sizing:border-box!important;
+    }
+
+    #committeePortal #eventFormPanel[hidden],
+    #committeePortal #albumFormPanel[hidden],
+    #committeePortal #quickPhotoUploadPanel[hidden],
+    #committeePortal #albumPhotosPanel[hidden],
+    #committeePortal #addCommitteeUserPanel[hidden]{
+      display:none!important;
+    }
+
+    #committeePortal #eventFormPanel:not([hidden]),
+    #committeePortal #albumFormPanel:not([hidden]),
+    #committeePortal #quickPhotoUploadPanel:not([hidden]),
+    #committeePortal #albumPhotosPanel:not([hidden]),
+    #committeePortal #addCommitteeUserPanel:not([hidden]){
+      display:block!important;
+    }
+
+    /* Card headings */
+    #committeePortal #eventFormPanel .card-heading,
+    #committeePortal #albumFormPanel .card-heading,
+    #committeePortal #quickPhotoUploadPanel .card-heading,
+    #committeePortal #albumPhotosPanel .card-heading,
+    #committeePortal #addCommitteeUserPanel .card-heading{
+      display:flex!important;
+      align-items:flex-start!important;
+      justify-content:space-between!important;
+      gap:16px!important;
+      margin-bottom:16px!important;
+      padding-bottom:12px!important;
+      border-bottom:1px solid #eee7de!important;
+    }
+
+    #committeePortal .card-heading h3{
+      margin:0!important;
+      font-size:1rem!important;
+      line-height:1.2!important;
+    }
+
+    #committeePortal .card-heading p{
+      margin:4px 0 0!important;
+      max-width:520px!important;
+      color:var(--admin-muted)!important;
+      font-size:.74rem!important;
+      line-height:1.4!important;
+    }
+
+    /* Consistent field grids */
+    #committeePortal .form-grid-2{
+      display:grid!important;
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      gap:12px 14px!important;
+      align-items:start!important;
+    }
+
+    #committeePortal .admin-form{
+      gap:13px!important;
+    }
+
+    #committeePortal .admin-form label{
+      gap:5px!important;
+      font-size:.74rem!important;
+      font-weight:700!important;
+      color:#3f3934!important;
+    }
+
+    #committeePortal .admin-form input:not([type="checkbox"]):not([type="file"]),
+    #committeePortal .admin-form select,
+    #committeePortal #planSettingsList input,
+    #committeePortal #planSettingsList select,
+    #committeePortal #paymentSettingsForm input{
+      width:100%!important;
+      min-width:0!important;
+      height:40px!important;
+      min-height:40px!important;
+      padding:0 11px!important;
+      box-sizing:border-box!important;
+      border:1px solid #cfc5b9!important;
+      border-radius:8px!important;
+      background:#fff!important;
+      box-shadow:inset 0 1px 2px rgba(23,23,23,.03)!important;
+      font-size:.8rem!important;
+    }
+
+    #committeePortal .admin-form textarea,
+    #committeePortal #paymentSettingsForm textarea{
+      width:100%!important;
+      max-width:none!important;
+      min-height:88px!important;
+      padding:10px 11px!important;
+      box-sizing:border-box!important;
+      border:1px solid #cfc5b9!important;
+      border-radius:8px!important;
+      background:#fff!important;
+      box-shadow:inset 0 1px 2px rgba(23,23,23,.03)!important;
+      font-size:.8rem!important;
+      line-height:1.45!important;
+    }
+
+    #committeePortal input[type="file"]{
+      width:100%!important;
+      max-width:none!important;
+      min-height:38px!important;
+      padding:6px 8px!important;
+      box-sizing:border-box!important;
+      border:1px dashed #d1c7bb!important;
+      border-radius:8px!important;
+      background:#fcfaf7!important;
+      font-size:.74rem!important;
+    }
+
+    #committeePortal .gallery-upload-box,
+    #committeePortal .album-create-upload,
+    #committeePortal .portal-note{
+      width:100%!important;
+      box-sizing:border-box!important;
+      padding:11px 12px!important;
+      border-radius:9px!important;
+      background:#faf7f2!important;
+      border:1px solid #e5ddd2!important;
+    }
+
+    /* Form actions — always bottom-right */
+    #committeePortal .form-action-row{
+      display:flex!important;
+      align-items:center!important;
+      justify-content:flex-end!important;
+      gap:8px!important;
+      width:100%!important;
+      margin-top:4px!important;
+      padding-top:14px!important;
+      border-top:1px solid #eee7de!important;
+    }
+
+    #committeePortal .form-action-row button,
+    #committeePortal .form-action-row .btn{
+      width:auto!important;
+      min-width:96px!important;
+      height:36px!important;
+      min-height:36px!important;
+      padding:0 13px!important;
+      border-radius:8px!important;
+      font-size:.73rem!important;
+      box-shadow:none!important;
+    }
+
+    /* =========================================================
+       FILTER / TOOLBAR SYSTEM
+       ========================================================= */
+
+    #committeePortal .dashboard-toolbar,
+    #committeePortal .gallery-toolbar{
+      width:100%!important;
+      max-width:none!important;
+      display:grid!important;
+      grid-template-columns:200px minmax(0,1fr)!important;
+      gap:10px!important;
+      margin:0 0 18px!important;
+    }
+
+    #committeePortal .dashboard-toolbar input,
+    #committeePortal .dashboard-toolbar select,
+    #committeePortal .gallery-toolbar input,
+    #committeePortal .gallery-toolbar select{
+      width:100%!important;
+      height:40px!important;
+      min-height:40px!important;
+      box-sizing:border-box!important;
+      border:1px solid #d5cbc0!important;
+      border-radius:9px!important;
+      background:#fff!important;
+      padding:0 12px!important;
+      font-size:.8rem!important;
+    }
+
+    /* =========================================================
+       TABLE / DIRECTORY SYSTEM
+       ========================================================= */
+
+    #committeePortal .ux-directory,
+    #committeePortal .registrations-card,
+    #committeePortal .events-directory-wrap,
+    #committeePortal .members-directory-wrap,
+    #committeePortal .access-mock-section,
+    #committeePortal #membersList,
+    #committeePortal #pendingMembersList{
+      width:100%!important;
+      max-width:none!important;
+      box-sizing:border-box!important;
+    }
+
+    #committeePortal .ux-directory{
+      border-collapse:separate!important;
+      border-spacing:0!important;
+      overflow:hidden!important;
+      border:1px solid var(--admin-border)!important;
+      border-radius:12px!important;
+      background:#fff!important;
+    }
+
+    #committeePortal .ux-directory th,
+    #committeePortal .registrations-table th{
+      padding:10px 13px!important;
+      background:#fbf8f3!important;
+      color:var(--admin-muted)!important;
+      font-size:.65rem!important;
+      letter-spacing:.07em!important;
+      text-transform:uppercase!important;
+      border-bottom:1px solid #e9e1d7!important;
+    }
+
+    #committeePortal .ux-directory td,
+    #committeePortal .registrations-table td{
+      padding:12px 13px!important;
+      font-size:.8rem!important;
+      border-bottom:1px solid #eee7de!important;
+    }
+
+    #committeePortal .member-row,
+    #committeePortal .admin-row{
+      padding:11px 13px!important;
+      border-radius:11px!important;
+      gap:12px!important;
+    }
+
+    #committeePortal #membersList .member-row{
+      display:grid!important;
+      grid-template-columns:minmax(0,1.4fr) 120px 88px auto!important;
+      align-items:center!important;
+    }
+
+    /* =========================================================
+       GALLERY
+       ========================================================= */
+
+    #committeePortal #galleryPanel .gallery-folder-grid{
+      width:100%!important;
+      max-width:none!important;
+      display:grid!important;
+      grid-template-columns:repeat(3,minmax(0,1fr))!important;
+      gap:14px!important;
+      margin-top:14px!important;
+    }
+
+    #committeePortal .gallery-folder-card{
+      border-radius:12px!important;
+      overflow:hidden!important;
+    }
+
+    #committeePortal .gallery-folder-card img{
+      height:145px!important;
+    }
+
+    /* All three Gallery cards share identical width and axis */
+    #committeePortal #quickPhotoUploadPanel,
+    #committeePortal #albumFormPanel,
+    #committeePortal #albumPhotosPanel{
+      max-width:760px!important;
+    }
+
+    /* =========================================================
+       MEMBERSHIPS
+       ========================================================= */
+
+    #committeePortal #membershipsPanel .members-directory-wrap{
+      margin-top:8px!important;
+    }
+
+    /* =========================================================
+       ACCESS MANAGEMENT
+       ========================================================= */
+
+    #committeePortal #accessPanel .access-section{
+      width:100%!important;
+      max-width:none!important;
+      margin-top:24px!important;
+    }
+
+    #committeePortal #accessPanel .access-section + .access-section{
+      padding-top:20px!important;
+      border-top:1px solid #e8dfd4!important;
+    }
+
+    #committeePortal #pendingMembersList .admin-empty{
+      min-height:68px!important;
+      padding:18px!important;
+      border:1px dashed #ddd3c7!important;
+      border-radius:11px!important;
+      background:#fff!important;
+    }
+
+    /* =========================================================
+       SETTINGS
+       ========================================================= */
+
+    #committeePortal #settingsPanel{
+      max-width:var(--admin-settings)!important;
+    }
+
+    #committeePortal #settingsPanel .settings-grid{
+      display:grid!important;
+      grid-template-columns:1fr!important;
+      gap:18px!important;
+      max-width:var(--admin-settings)!important;
+      margin:0 auto!important;
+    }
+
+    #committeePortal #settingsPanel .settings-grid > .dashboard-card{
+      width:100%!important;
+      margin:0!important;
+      padding:20px!important;
+    }
+
+    #committeePortal #planSettingsList{
+      width:100%!important;
+      max-width:none!important;
+      margin:0!important;
+    }
+
+    #committeePortal #planSettingsList .setting-row{
+      display:grid!important;
+      grid-template-columns:minmax(220px,1fr) 90px 105px auto!important;
+      align-items:center!important;
+      gap:9px!important;
+      padding:11px 0!important;
+      border-radius:0!important;
+      border-bottom:1px solid #ece4da!important;
+      background:transparent!important;
+      box-shadow:none!important;
+    }
+
+    #committeePortal #planSettingsList .setting-row:last-child{
+      border-bottom:0!important;
+    }
+
+    #committeePortal #paymentSettingsForm{
+      width:100%!important;
+      max-width:none!important;
+      margin:0!important;
+    }
+
+    #committeePortal #paymentSettingsForm .btn{
+      width:auto!important;
+      min-width:150px!important;
+      height:36px!important;
+      align-self:flex-end!important;
+      margin-left:auto!important;
+      padding:0 15px!important;
+      border-radius:8px!important;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media(max-width:1100px){
+      #committeePortal .dashboard-panel{
+        max-width:100%!important;
+        padding:22px 20px 32px!important;
+      }
+
+      #committeePortal #galleryPanel .gallery-folder-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      }
+    }
+
+    @media(max-width:820px){
+      #committeePortal .dashboard-heading{
+        align-items:flex-start!important;
+        flex-direction:column!important;
+      }
+
+      #committeePortal .dashboard-heading > p{
+        text-align:left!important;
+      }
+
+      #committeePortal .form-grid-2{
+        grid-template-columns:1fr!important;
+      }
+
+      #committeePortal .dashboard-toolbar,
+      #committeePortal .gallery-toolbar{
+        grid-template-columns:1fr!important;
+      }
+
+      #committeePortal #membersList .member-row{
+        grid-template-columns:1fr!important;
+      }
+
+      #committeePortal #galleryPanel .gallery-folder-grid{
+        grid-template-columns:1fr!important;
+      }
+
+      #committeePortal #planSettingsList .setting-row{
+        grid-template-columns:1fr!important;
+      }
+    }
+
+
+    /* =========================================================
+       UNIFIED TYPOGRAPHY SYSTEM
+       ========================================================= */
+    :root{
+      --font-body:'DM Sans',sans-serif;
+      --font-display:'Playfair Display',serif;
+      --fs-page-title:3rem;
+      --fs-section-title:1.25rem;
+      --fs-card-title:1rem;
+      --fs-body:.82rem;
+      --fs-label:.74rem;
+      --fs-small:.7rem;
+      --fs-eyebrow:.64rem;
+      --fs-button:.74rem;
+      --fs-metric:2.35rem;
+      --lh-body:1.45;
+    }
+    #committeePortal,
+    #committeePortal button,
+    #committeePortal input,
+    #committeePortal select,
+    #committeePortal textarea,
+    #committeePortal table{
+      font-family:var(--font-body)!important;
+    }
+    #committeePortal{
+      font-size:var(--fs-body)!important;
+      line-height:var(--lh-body)!important;
+    }
+    #committeePortal .dashboard-heading h2{
+      font-family:var(--font-display)!important;
+      font-size:var(--fs-page-title)!important;
+      line-height:.98!important;
+      letter-spacing:-.035em!important;
+      font-weight:700!important;
+    }
+    #committeePortal .access-section-heading h3,
+    #committeePortal .registrations-head h3,
+    #committeePortal .recent-activity-head h3{
+      font-family:var(--font-display)!important;
+      font-size:var(--fs-section-title)!important;
+      line-height:1.1!important;
+      font-weight:700!important;
+    }
+    #committeePortal .card-heading h3,
+    #committeePortal .dashboard-card h3,
+    #committeePortal .gallery-folder-card__body h3{
+      font-family:var(--font-body)!important;
+      font-size:var(--fs-card-title)!important;
+      line-height:1.2!important;
+      font-weight:800!important;
+    }
+    #committeePortal p,
+    #committeePortal .dashboard-heading > p,
+    #committeePortal .card-heading p,
+    #committeePortal .portal-note,
+    #committeePortal .gallery-folder-meta,
+    #committeePortal .member-identity span,
+    #committeePortal .admin-row-main span,
+    #committeePortal .admin-row-meta,
+    #committeePortal .metric-subtext{
+      font-size:var(--fs-body)!important;
+      line-height:var(--lh-body)!important;
+    }
+    #committeePortal .admin-form label,
+    #committeePortal .settings-grid label,
+    #committeePortal .gallery-upload-box span,
+    #committeePortal .album-create-upload span{
+      font-size:var(--fs-label)!important;
+      line-height:1.3!important;
+      font-weight:700!important;
+    }
+    #committeePortal input,
+    #committeePortal select,
+    #committeePortal textarea{
+      font-size:var(--fs-body)!important;
+      line-height:1.3!important;
+    }
+    #committeePortal .eyebrow,
+    #committeePortal .section-kicker{
+      font-size:var(--fs-eyebrow)!important;
+      line-height:1!important;
+      letter-spacing:.16em!important;
+      font-weight:800!important;
+      text-transform:uppercase!important;
+    }
+    #committeePortal th{
+      font-size:var(--fs-small)!important;
+      line-height:1.2!important;
+      letter-spacing:.07em!important;
+      font-weight:800!important;
+    }
+    #committeePortal td{
+      font-size:var(--fs-body)!important;
+      line-height:1.35!important;
+    }
+    #committeePortal button,
+    #committeePortal .btn,
+    #committeePortal .portal-signout,
+    #committeePortal .admin-live-site-link{
+      font-size:var(--fs-button)!important;
+      line-height:1!important;
+      font-weight:800!important;
+    }
+    #committeePortal .status-pill,
+    #committeePortal .ux-status,
+    #committeePortal .type-pill,
+    #committeePortal .activity-status{
+      font-size:var(--fs-small)!important;
+      line-height:1!important;
+      font-weight:800!important;
+    }
+    #committeePortal .metric-grid article strong{
+      font-family:var(--font-display)!important;
+      font-size:var(--fs-metric)!important;
+      line-height:.95!important;
+      font-weight:700!important;
+    }
+    #committeePortal .metric-grid article > span:first-child{
+      font-size:var(--fs-small)!important;
+      line-height:1.25!important;
+      letter-spacing:.08em!important;
+      font-weight:800!important;
+      text-transform:uppercase!important;
+    }
+    #committeePortal .admin-sidebar-brand strong{
+      font-size:.94rem!important;
+      line-height:1.15!important;
+      font-weight:800!important;
+    }
+    #committeePortal .admin-sidebar-brand span,
+    #committeePortal .dashboard-user span{
+      font-size:var(--fs-small)!important;
+      line-height:1.25!important;
+    }
+    #committeePortal .dashboard-user strong{
+      font-size:.82rem!important;
+      line-height:1.2!important;
+      font-weight:800!important;
+    }
+    #committeePortal .dashboard-nav{
+      font-size:.78rem!important;
+      line-height:1.2!important;
+      font-weight:800!important;
+    }
+    @media(max-width:900px){
+      :root{
+        --fs-page-title:2.45rem;
+        --fs-section-title:1.15rem;
+        --fs-body:.8rem;
+      }
+    }
+    @media(max-width:620px){
+      :root{
+        --fs-page-title:2.15rem;
+        --fs-body:.78rem;
+        --fs-label:.72rem;
+        --fs-button:.72rem;
+      }
+    }
+
 </style>
 </head>
 <body class="committee-app-page">
@@ -3282,6 +3987,117 @@ document.addEventListener('DOMContentLoaded', () => {
     'cancelAlbumEditBtn',
     'Save'
   );
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const panel = document.getElementById('addCommitteeUserPanel');
+  const openBtn = document.getElementById('addCommitteeUserBtn');
+  const cancelBtn = document.getElementById('cancelAddCommitteeUserBtn');
+
+  if (!panel) return;
+
+  // Clean landing state: form stays closed until explicitly requested.
+  panel.hidden = true;
+
+  openBtn?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    panel.hidden = false;
+
+    window.setTimeout(() => {
+      panel.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }, 20);
+  });
+
+  cancelBtn?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    panel.hidden = true;
+  });
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const eventFormPanel = document.getElementById('eventFormPanel');
+  const quickPhotoUploadPanel = document.getElementById('quickPhotoUploadPanel');
+  const albumFormPanel = document.getElementById('albumFormPanel');
+  const albumPhotosPanel = document.getElementById('albumPhotosPanel');
+  const addCommitteeUserPanel = document.getElementById('addCommitteeUserPanel');
+
+  const hide = (panel) => {
+    if (panel) panel.hidden = true;
+  };
+
+  const show = (panel) => {
+    if (!panel) return;
+
+    panel.hidden = false;
+
+    window.setTimeout(() => {
+      panel.scrollIntoView({
+        behavior:'smooth',
+        block:'start'
+      });
+    }, 20);
+  };
+
+  // Clean landing state for all creation/edit forms.
+  [
+    eventFormPanel,
+    quickPhotoUploadPanel,
+    albumFormPanel,
+    albumPhotosPanel,
+    addCommitteeUserPanel
+  ].forEach(hide);
+
+  document.getElementById('newEventBtn')?.addEventListener('click', () => {
+    show(eventFormPanel);
+  });
+
+  document.getElementById('uploadPhotosBtn')?.addEventListener('click', () => {
+    hide(albumFormPanel);
+    hide(albumPhotosPanel);
+    show(quickPhotoUploadPanel);
+  });
+
+  document.getElementById('newAlbumBtn')?.addEventListener('click', () => {
+    hide(quickPhotoUploadPanel);
+    hide(albumPhotosPanel);
+    show(albumFormPanel);
+  });
+
+  document.getElementById('addCommitteeUserBtn')?.addEventListener('click', () => {
+    show(addCommitteeUserPanel);
+  });
+
+  document.getElementById('cancelEditBtn')?.addEventListener('click', () => {
+    hide(eventFormPanel);
+  });
+
+  document.getElementById('cancelQuickPhotoUploadBtn')?.addEventListener('click', () => {
+    hide(quickPhotoUploadPanel);
+  });
+
+  document.getElementById('cancelAlbumEditBtn')?.addEventListener('click', () => {
+    hide(albumFormPanel);
+  });
+
+  document.getElementById('closeAlbumPhotosBtn')?.addEventListener('click', () => {
+    hide(albumPhotosPanel);
+  });
+
+  document.getElementById('cancelAddCommitteeUserBtn')?.addEventListener('click', () => {
+    hide(addCommitteeUserPanel);
+  });
 });
 </script>
 
