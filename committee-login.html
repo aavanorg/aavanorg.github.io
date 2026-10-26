@@ -12,21 +12,85 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/admin.css">
   <style>
-    html,body{margin:0;min-height:100%;background:#f5f1ea}
-    body.portal-page{min-height:100vh;background:#f5f1ea}
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:#f7f3ec;
+    }
 
-    /* Full-page committee experience — not a modal */
+    body.committee-page{
+      background:#f7f3ec;
+    }
+
+    .committee-page-hero{
+      padding:72px 0 58px;
+      background:
+        linear-gradient(135deg,#173f35 0%,#204f43 64%,#8c281f 130%);
+      color:#fff;
+    }
+
+    .committee-page-hero .eyebrow{
+      color:#ffd8c5;
+    }
+
+    .committee-page-hero h1{
+      max-width:760px;
+      margin:0 0 18px;
+      font-family:'Playfair Display',serif;
+      font-size:clamp(3.6rem,7vw,6.2rem);
+      line-height:.94;
+      letter-spacing:-.05em;
+    }
+
+    .committee-page-hero p{
+      max-width:720px;
+      margin:0;
+      color:#e2ece8;
+      font-size:1.02rem;
+    }
+
+    .committee-page-main{
+      padding:54px 0 84px;
+      background:#f7f3ec;
+    }
+
+    .committee-page-intro{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:28px;
+      margin-bottom:24px;
+    }
+
+    .committee-page-intro h2{
+      margin:0;
+      font-family:'Playfair Display',serif;
+      font-size:clamp(2rem,4vw,3.25rem);
+      letter-spacing:-.035em;
+    }
+
+    .committee-page-intro p{
+      max-width:520px;
+      margin:0;
+      color:var(--muted);
+    }
+
+    /* The committee system now behaves like page content, not a modal. */
     #committeePortal.committee-portal{
       position:static!important;
       inset:auto!important;
       display:block!important;
       width:100%!important;
-      min-height:100vh!important;
+      min-height:0!important;
       padding:0!important;
       margin:0!important;
       overflow:visible!important;
-      background:#f5f1ea!important;
+      background:transparent!important;
       z-index:auto!important;
+    }
+
+    #committeePortal .committee-portal-backdrop{
+      display:none!important;
     }
 
     #committeePortal .committee-portal-shell{
@@ -35,84 +99,189 @@
       transform:none!important;
       width:100%!important;
       max-width:none!important;
-      min-height:100vh!important;
+      min-height:0!important;
       max-height:none!important;
       margin:0!important;
-      border:0!important;
-      border-radius:0!important;
-      overflow:visible!important;
-      box-shadow:none!important;
+      border:1px solid #e3dbd0!important;
+      border-radius:24px!important;
+      overflow:hidden!important;
+      box-shadow:0 22px 56px rgba(23,23,23,.09)!important;
       background:#fff!important;
     }
 
     #committeePortal .committee-portal-topbar{
-      position:sticky;
-      top:0;
-      z-index:100;
-      min-height:74px;
+      position:static!important;
+      min-height:72px;
       border-radius:0!important;
+      border-bottom:1px solid #e7dfd5;
+      background:#fff;
     }
 
     #committeePortal .committee-portal-content{
-      min-height:calc(100vh - 74px)!important;
+      min-height:0!important;
+      max-height:none!important;
       overflow:visible!important;
+      background:#fff;
     }
 
-    /* Login/request-access screen */
     #committeePortal #authPanel.committee-auth{
-      min-height:calc(100vh - 74px)!important;
+      min-height:620px!important;
       border-radius:0!important;
+      background:#fff;
     }
 
-    /* Dashboard fills the page */
     #committeePortal #dashboard.committee-dashboard{
-      min-height:calc(100vh - 74px)!important;
+      min-height:650px!important;
       width:100%!important;
       max-width:none!important;
       margin:0!important;
       border-radius:0!important;
+      background:#f8f5f0;
     }
 
     #committeePortal .dashboard-sidebar{
-      min-height:calc(100vh - 74px);
+      min-height:650px;
     }
 
     #committeePortal .dashboard-main{
       min-width:0;
+      padding-bottom:36px;
     }
 
-    .portal-page-home{
+    #committeePortalClose{
+      display:none!important;
+    }
+
+    .committee-home-link{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       padding:9px 14px;
-      border:1px solid rgba(23,63,53,.18);
+      border:1px solid #ddd4c8;
       border-radius:999px;
-      color:inherit;
+      color:#171717;
       text-decoration:none;
       font-weight:700;
-      font-size:.85rem;
+      font-size:.83rem;
       background:#fff;
+      transition:.2s ease;
     }
 
-    @media(max-width:760px){
-      #committeePortal .committee-portal-topbar{
-        min-height:68px;
+    .committee-home-link:hover{
+      transform:translateY(-1px);
+      border-color:#bdb2a5;
+    }
+
+    @media(max-width:900px){
+      .committee-page-hero{
+        padding:58px 0 48px;
       }
 
-      #committeePortal .committee-portal-content,
-      #committeePortal #authPanel.committee-auth,
+      .committee-page-main{
+        padding:38px 0 64px;
+      }
+
+      .committee-page-intro{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      #committeePortal .committee-portal-shell{
+        border-radius:18px!important;
+      }
+
+      #committeePortal #authPanel.committee-auth{
+        min-height:0!important;
+      }
+
       #committeePortal #dashboard.committee-dashboard{
-        min-height:calc(100vh - 68px)!important;
+        min-height:0!important;
       }
 
       #committeePortal .dashboard-sidebar{
         min-height:auto;
       }
     }
+
+    @media(max-width:620px){
+      .committee-page-hero h1{
+        font-size:3.5rem;
+      }
+
+      .committee-page-hero{
+        padding:48px 0 42px;
+      }
+
+      .committee-page-main{
+        padding:28px 0 52px;
+      }
+    }
   </style>
 </head>
-<body class="portal-page">
+<body class="committee-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Assam Association Vancouver home">
+        <img src="assets/images/logo.png" alt="Assam Association Vancouver">
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="siteNav"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
+        <a href="index.html#about">About</a>
+        <a href="index.html#events">Events</a>
+        <a href="discover-assam.html">Discover Assam</a>
+        <a href="index.html#gallery">Gallery</a>
+        <a href="membership.html" target="_blank" rel="noopener">Membership</a>
+        <a href="index.html#partners">Partners</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="header-join" href="membership.html" target="_blank" rel="noopener">
+          Join Us
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="committee-page-hero">
+      <div class="container">
+        <p class="eyebrow">COMMITTEE PORTAL</p>
+        <h1>Manage AAVAN with clarity.</h1>
+        <p>
+          Secure access for approved committee members managing events,
+          gallery, memberships, access and site settings.
+        </p>
+      </div>
+    </section>
+
+    <section class="committee-page-main">
+      <div class="container">
+        <div class="committee-page-intro">
+          <div>
+            <p class="eyebrow">SECURE WORKSPACE</p>
+            <h2>Committee administration.</h2>
+          </div>
+          <p>
+            Sign in with your approved committee account. Your available tools
+            are shown according to your assigned role.
+          </p>
+        </div>
+
   <div aria-hidden="false" class="committee-portal" id="committeePortal">
 
 <section aria-labelledby="committeePortalTitle" class="committee-portal-shell">
@@ -129,6 +298,7 @@
 </div>
 </div>
 <div class="committee-portal-actions">
+          <a class="committee-home-link" href="index.html">Back to site</a>
 <button class="portal-signout" hidden="" id="logoutBtn" type="button">
             Sign out
           </button>
@@ -706,6 +876,51 @@
 </div>
 </section>
 </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand">
+        <img src="assets/images/logo.png" alt="Assam Association Vancouver">
+        <p>
+          Celebrating Assamese culture, heritage and community in British Columbia.
+        </p>
+      </div>
+
+      <div class="footer-column">
+        <h3>Explore</h3>
+        <a href="index.html#about">About</a>
+        <a href="index.html#events">Events</a>
+        <a href="discover-assam.html">Discover Assam</a>
+        <a href="index.html#gallery">Gallery</a>
+      </div>
+
+      <div class="footer-column">
+        <h3>Community</h3>
+        <a href="membership.html" target="_blank" rel="noopener">Membership</a>
+        <a href="index.html#partners">Partners</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+
+      <div class="footer-column">
+        <h3>Connect</h3>
+        <a href="mailto:aavandir@gmail.com">Email</a>
+        <span>Greater Vancouver, BC</span>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© <span id="year"></span> Assam Association Vancouver</span>
+      <div>
+        <a href="index.html">Home</a>
+        <a href="#top">Back to top ↑</a>
+      </div>
+    </div>
+  </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/events.js"></script>
