@@ -47,10 +47,18 @@
       </nav>
 
       <div class="header-actions">
-        <button class="header-login" type="button" data-committee-login>
+        <button
+          class="header-login"
+          type="button"
+          onclick="window.location.href='committee-login.html'"
+        >
           Committee Login
         </button>
-        <button class="header-join" type="button" data-membership-open>
+        <button
+          class="header-join"
+          type="button"
+          onclick="window.open('membership.html','_blank','noopener')"
+        >
           Join Us
         </button>
       </div>
@@ -77,7 +85,11 @@
 
           <div class="hero-actions-row">
             <a class="btn btn-primary" href="#events">Explore Events</a>
-            <button class="btn btn-secondary" type="button" data-membership-open>
+            <button
+              class="btn btn-secondary"
+              type="button"
+              onclick="window.open('membership.html','_blank','noopener')"
+            >
               Become a Member
             </button>
           </div>
@@ -442,7 +454,7 @@
             <button
               class="btn btn-light"
               type="button"
-              data-membership-open
+              onclick="window.open('membership.html','_blank','noopener')"
             >
               Start Membership Application
             </button>
@@ -526,11 +538,17 @@
           </a>
 
           <div class="contact-actions">
-            <button type="button" data-membership-open>
+            <button
+              type="button"
+              onclick="window.open('membership.html','_blank','noopener')"
+            >
               Join AAVAN
             </button>
 
-            <button type="button" data-committee-login>
+            <button
+              type="button"
+              onclick="window.location.href='committee-login.html'"
+            >
               Committee Login
             </button>
           </div>
@@ -567,14 +585,20 @@
       <div class="footer-column">
         <h3>Community</h3>
 
-        <button type="button" data-membership-open>
+        <button
+          type="button"
+          onclick="window.open('membership.html','_blank','noopener')"
+        >
           Membership
         </button>
 
         <a href="#partners">Partners</a>
         <a href="#contact">Contact</a>
 
-        <button type="button" data-committee-login>
+        <button
+          type="button"
+          onclick="window.location.href='committee-login.html'"
+        >
           Committee Login
         </button>
       </div>
