@@ -1068,6 +1068,194 @@
       }
     }
 
+
+    /* =========================================================
+       CONSTRAINED FORM SYSTEM — HUMAN-SCALE ADMIN UX
+       ========================================================= */
+
+    /* Center all inner-page forms as controlled cards */
+    #committeePortal #eventFormPanel,
+    #committeePortal #albumFormPanel,
+    #committeePortal #quickPhotoUploadPanel,
+    #committeePortal #addCommitteeUserPanel,
+    #committeePortal #paymentSettingsForm,
+    #committeePortal #planSettingsList{
+      width:min(58%,860px)!important;
+      max-width:860px!important;
+      min-width:620px;
+      margin:18px auto 22px!important;
+    }
+
+    #committeePortal #eventFormPanel,
+    #committeePortal #albumFormPanel,
+    #committeePortal #quickPhotoUploadPanel,
+    #committeePortal #addCommitteeUserPanel{
+      padding:22px!important;
+      background:#fff!important;
+      border:1px solid #e2d9ce!important;
+      border-radius:16px!important;
+      box-shadow:0 12px 28px rgba(23,23,23,.045)!important;
+    }
+
+    /* Settings cards also feel contained, not stretched */
+    #committeePortal #settingsPanel{
+      max-width:1220px;
+      margin:0 auto;
+    }
+
+    #committeePortal #settingsPanel > .settings-grid,
+    #committeePortal #settingsPanel .settings-grid{
+      grid-template-columns:minmax(0,1fr)!important;
+      gap:18px!important;
+    }
+
+    #committeePortal #planSettingsList,
+    #committeePortal #paymentSettingsForm{
+      min-width:0!important;
+      width:min(70%,920px)!important;
+    }
+
+    /* Keep forms compact and grid-driven */
+    #committeePortal #eventForm .form-grid-2,
+    #committeePortal #albumForm .form-grid-2,
+    #committeePortal #committeeInviteForm .form-grid-2{
+      display:grid!important;
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      gap:12px 14px!important;
+    }
+
+    #committeePortal #eventForm .form-grid-2 > label,
+    #committeePortal #albumForm .form-grid-2 > label,
+    #committeePortal #committeeInviteForm .form-grid-2 > label{
+      min-width:0;
+    }
+
+    /* Useful 3-col rows where space allows */
+    #committeePortal #eventForm .form-grid-2 > label:nth-child(2),
+    #committeePortal #eventForm .form-grid-2 > label:nth-child(3),
+    #committeePortal #eventForm .form-grid-2 > label:nth-child(4){
+      grid-column:auto!important;
+    }
+
+    #committeePortal .admin-form input:not([type="checkbox"]):not([type="file"]),
+    #committeePortal .admin-form select{
+      width:100%!important;
+      box-sizing:border-box!important;
+    }
+
+    #committeePortal .admin-form textarea{
+      width:100%!important;
+      min-height:86px!important;
+      box-sizing:border-box!important;
+    }
+
+    /* File inputs stay normal-sized */
+    #committeePortal .gallery-upload-box,
+    #committeePortal .album-create-upload{
+      width:100%!important;
+      box-sizing:border-box!important;
+    }
+
+    /* Primary actions align to lower right instead of full width */
+    #committeePortal #eventForm > .btn.btn-primary,
+    #committeePortal #albumForm > .btn.btn-primary,
+    #committeePortal #committeeInviteForm > .btn.btn-primary,
+    #committeePortal #quickPhotoUploadForm > .btn.btn-primary{
+      width:auto!important;
+      min-width:128px!important;
+      align-self:flex-end!important;
+      margin-left:auto!important;
+      display:inline-flex!important;
+      justify-content:center!important;
+    }
+
+    #committeePortal #eventForm,
+    #committeePortal #albumForm,
+    #committeePortal #committeeInviteForm,
+    #committeePortal #quickPhotoUploadForm{
+      display:flex!important;
+      flex-direction:column!important;
+    }
+
+    /* Clean footer/action row feel */
+    #committeePortal .check-row{
+      justify-content:flex-start!important;
+    }
+
+    #committeePortal .card-heading{
+      align-items:flex-start!important;
+    }
+
+    #committeePortal .card-heading > div{
+      max-width:75%;
+    }
+
+    /* Membership / access tables remain full workspace width */
+    #committeePortal .members-directory-wrap,
+    #committeePortal .access-mock-section,
+    #committeePortal .events-directory-wrap,
+    #committeePortal .gallery-folder-grid{
+      width:100%!important;
+      max-width:none!important;
+      margin-left:0!important;
+      margin-right:0!important;
+    }
+
+    /* Settings row hierarchy */
+    #committeePortal #planSettingsList .setting-row{
+      grid-template-columns:minmax(0,1fr) 92px 110px auto!important;
+    }
+
+    #committeePortal #paymentSettingsForm .btn{
+      width:auto!important;
+      min-width:160px!important;
+      align-self:flex-end!important;
+      margin-left:auto!important;
+    }
+
+    /* Center modal-like editing panels in available workspace */
+    #committeePortal .ux-collapsible-panel:not([hidden]){
+      display:block!important;
+    }
+
+    @media(max-width:1200px){
+      #committeePortal #eventFormPanel,
+      #committeePortal #albumFormPanel,
+      #committeePortal #quickPhotoUploadPanel,
+      #committeePortal #addCommitteeUserPanel{
+        width:min(68%,820px)!important;
+        min-width:560px;
+      }
+
+      #committeePortal #planSettingsList,
+      #committeePortal #paymentSettingsForm{
+        width:min(78%,880px)!important;
+      }
+    }
+
+    @media(max-width:900px){
+      #committeePortal #eventFormPanel,
+      #committeePortal #albumFormPanel,
+      #committeePortal #quickPhotoUploadPanel,
+      #committeePortal #addCommitteeUserPanel,
+      #committeePortal #planSettingsList,
+      #committeePortal #paymentSettingsForm{
+        width:100%!important;
+        min-width:0!important;
+        max-width:none!important;
+      }
+
+      #committeePortal #eventForm .form-grid-2,
+      #committeePortal #albumForm .form-grid-2,
+      #committeePortal #committeeInviteForm .form-grid-2{
+        grid-template-columns:1fr!important;
+      }
+
+      #committeePortal .card-heading > div{
+        max-width:100%;
+      }
+    }
+
 </style>
 </head>
 <body class="committee-app-page">
