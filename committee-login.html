@@ -705,15 +705,15 @@
 <div class="metric-grid">
 <article>
 <span>Upcoming Events</span>
-<strong id="metricEvents">1</strong><span class="metric-subtext">Upcoming Events</span>
+<strong id="metricEvents">0</strong><span class="metric-subtext">Upcoming Events</span>
 </article>
 <article class="admin-only-metric">
 <span>Pending Access</span>
-<strong id="metricAccess">12</strong><span class="metric-subtext">Pending Access Requests</span>
+<strong id="metricAccess">0</strong><span class="metric-subtext">Pending Access Requests</span>
 </article>
 <article class="admin-only-metric">
 <span>Membership Applications</span>
-<strong id="metricMemberships">8</strong><span class="metric-subtext">Active Memberships</span>
+<strong id="metricMemberships">0</strong><span class="metric-subtext">Pending Membership Applications</span>
 </article>
 <article>
 <span>Your Role</span>
@@ -739,49 +739,10 @@
         <th>Action</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="recentRegistrationsBody">
       <tr>
-        <td>Rina Das</td>
-        <td>Oct 26, 2026</td>
-        <td><span class="type-pill">Membership</span></td>
-        <td>
-          <div class="table-actions">
-            <button class="approve-btn" type="button">Approve</button>
-            <button class="reject-btn" type="button">Reject</button>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>Arup Bora</td>
-        <td>Oct 25, 2026</td>
-        <td><span class="type-pill">Committee Access</span></td>
-        <td>
-          <div class="table-actions">
-            <button class="approve-btn" type="button">Approve</button>
-            <button class="reject-btn" type="button">Reject</button>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>Manisha Saikia</td>
-        <td>Oct 24, 2026</td>
-        <td><span class="type-pill">Membership</span></td>
-        <td>
-          <div class="table-actions">
-            <button class="approve-btn" type="button">Approve</button>
-            <button class="reject-btn" type="button">Reject</button>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>Debajit Hazarika</td>
-        <td>Oct 23, 2026</td>
-        <td><span class="type-pill">Membership</span></td>
-        <td>
-          <div class="table-actions">
-            <button class="approve-btn" type="button">Approve</button>
-            <button class="reject-btn" type="button">Reject</button>
-          </div>
+        <td colspan="4" style="text-align:center;color:#7c746b;padding:28px 18px;">
+          Loading recent registrations…
         </td>
       </tr>
     </tbody>
@@ -1210,6 +1171,252 @@ document.addEventListener('DOMContentLoaded', () => {
     footer.appendChild(logout);
   }
 });
+</script>
+
+
+<script>
+(() => {
+  const escapeHtml = (value = '') =>
+    String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+
+  const localDateString = (date = new Date()) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatDateTime = (value) => {
+    if (!value) return '—';
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return '—';
+
+    return new Intl.DateTimeFormat('en-CA', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
+  };
+
+  const openDashboardPanel = (panelId) => {
+    const button = document.querySelector(
+      `.dashboard-nav[data-panel="${panelId}"]`
+    );
+
+    button?.click();
+  };
+
+  const loadLiveOverview = async () => {
+    const supabase = window.AAVAN?.supabase;
+
+    const metricEvents = document.getElementById('metricEvents');
+    const metricAccess = document.getElementById('metricAccess');
+    const metricMemberships = document.getElementById('metricMemberships');
+    const recentBody = document.getElementById('recentRegistrationsBody');
+
+    if (!supabase) return;
+
+    try {
+      const today = localDateString();
+
+      const [
+        eventsResult,
+        accessResult,
+        membershipsResult
+      ] = await Promise.all([
+        supabase
+          .from('events')
+          .select('id,event_date,end_date,published,created_at'),
+
+        supabase
+          .from('profiles')
+          .select('id,full_name,email,status,created_at')
+          .eq('status', 'pending')
+          .order('created_at', { ascending: false }),
+
+        supabase
+          .from('membership_applications')
+          .select(
+            'id,full_name,email,created_at,membership_status,payment_status'
+          )
+          .order('created_at', { ascending: false })
+      ]);
+
+      if (eventsResult.error) throw eventsResult.error;
+      if (accessResult.error) throw accessResult.error;
+      if (membershipsResult.error) throw membershipsResult.error;
+
+      const activeEvents = (eventsResult.data || []).filter((event) => {
+        if (event.published === false) return false;
+
+        if (event.end_date) {
+          return event.end_date >= today;
+        }
+
+        if (event.event_date) {
+          return event.event_date >= today;
+        }
+
+        // Published event with no date stays active until unpublished/deleted.
+        return true;
+      });
+
+      const pendingAccess = accessResult.data || [];
+
+      const pendingMemberships = (membershipsResult.data || []).filter(
+        (application) =>
+          application.payment_status === 'pending_payment' ||
+          application.membership_status === 'pending_payment'
+      );
+
+      if (metricEvents) {
+        metricEvents.textContent = String(activeEvents.length);
+      }
+
+      if (metricAccess) {
+        metricAccess.textContent = String(pendingAccess.length);
+      }
+
+      if (metricMemberships) {
+        metricMemberships.textContent =
+          String(pendingMemberships.length);
+      }
+
+      if (!recentBody) return;
+
+      const rows = [
+        ...pendingMemberships.map((application) => ({
+          name:
+            application.full_name ||
+            application.email ||
+            'Membership applicant',
+          date: application.created_at,
+          type: 'Membership',
+          panel: 'membershipsPanel'
+        })),
+
+        ...pendingAccess.map((profile) => ({
+          name:
+            profile.full_name ||
+            profile.email ||
+            'Committee applicant',
+          date: profile.created_at,
+          type: 'Committee Access',
+          panel: 'accessPanel'
+        }))
+      ]
+        .sort(
+          (a, b) =>
+            new Date(b.date || 0).getTime() -
+            new Date(a.date || 0).getTime()
+        )
+        .slice(0, 8);
+
+      if (!rows.length) {
+        recentBody.innerHTML = `
+          <tr>
+            <td
+              colspan="4"
+              style="text-align:center;color:#7c746b;padding:30px 18px;"
+            >
+              No recent registrations.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      recentBody.innerHTML = rows.map((row) => `
+        <tr>
+          <td>${escapeHtml(row.name)}</td>
+          <td>${escapeHtml(formatDateTime(row.date))}</td>
+          <td>
+            <span class="type-pill">
+              ${escapeHtml(row.type)}
+            </span>
+          </td>
+          <td>
+            <div class="table-actions">
+              <button
+                class="approve-btn"
+                type="button"
+                data-open-panel="${escapeHtml(row.panel)}"
+              >
+                Review
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      recentBody
+        .querySelectorAll('[data-open-panel]')
+        .forEach((button) => {
+          button.addEventListener('click', () => {
+            openDashboardPanel(button.dataset.openPanel);
+          });
+        });
+
+    } catch (error) {
+      console.error('Live dashboard overview error:', error);
+
+      if (recentBody) {
+        recentBody.innerHTML = `
+          <tr>
+            <td
+              colspan="4"
+              style="text-align:center;color:#a53b34;padding:30px 18px;"
+            >
+              Unable to load recent registrations.
+            </td>
+          </tr>
+        `;
+      }
+    }
+  };
+
+  const refreshSoon = () => {
+    window.setTimeout(loadLiveOverview, 100);
+    window.setTimeout(loadLiveOverview, 600);
+  };
+
+  document.addEventListener('DOMContentLoaded', refreshSoon);
+  window.addEventListener('load', refreshSoon);
+
+  document.addEventListener('click', (event) => {
+    if (
+      event.target.closest('.dashboard-nav') ||
+      event.target.closest('[data-event-delete]') ||
+      event.target.closest('[data-payment-received]') ||
+      event.target.closest('[data-membership-decline]') ||
+      event.target.closest('[data-user-approve]') ||
+      event.target.closest('[data-user-decline]')
+    ) {
+      refreshSoon();
+    }
+  });
+
+  const waitForSupabase = window.setInterval(() => {
+    const supabase = window.AAVAN?.supabase;
+
+    if (!supabase) return;
+
+    window.clearInterval(waitForSupabase);
+
+    supabase.auth.onAuthStateChange(() => {
+      refreshSoon();
+    });
+
+    refreshSoon();
+  }, 100);
+})();
 </script>
 
 </body>
