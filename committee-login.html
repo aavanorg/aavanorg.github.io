@@ -1950,6 +1950,237 @@
       }
     }
 
+
+    /* =========================================================
+       ACCESS MANAGEMENT PAGE REFINEMENT
+       ========================================================= */
+
+    #committeePortal #accessPanel{
+      max-width:1180px!important;
+      margin:0 auto!important;
+      padding-left:24px!important;
+      padding-right:24px!important;
+    }
+
+    #committeePortal #accessPanel .dashboard-heading{
+      width:100%!important;
+      max-width:none!important;
+      margin:0 0 22px!important;
+      padding:0!important;
+      display:flex!important;
+      align-items:flex-end!important;
+      justify-content:space-between!important;
+      gap:24px!important;
+      border-bottom:0!important;
+    }
+
+    #committeePortal #accessPanel .dashboard-heading h2{
+      margin:0!important;
+      font-size:clamp(2.4rem,4vw,3.7rem)!important;
+      line-height:.96!important;
+    }
+
+    #committeePortal #accessPanel #addCommitteeUserBtn{
+      width:auto!important;
+      min-width:0!important;
+      height:38px!important;
+      min-height:38px!important;
+      padding:0 15px!important;
+      border-radius:10px!important;
+      font-size:.78rem!important;
+    }
+
+    /* Contained Add User card */
+    #committeePortal #addCommitteeUserPanel{
+      width:100%!important;
+      max-width:760px!important;
+      margin:18px auto 26px!important;
+      padding:22px!important;
+      border:1px solid #e2d9ce!important;
+      border-radius:14px!important;
+      background:#fff!important;
+      box-shadow:0 10px 24px rgba(23,23,23,.04)!important;
+      box-sizing:border-box!important;
+    }
+
+    #committeePortal #addCommitteeUserPanel .card-heading{
+      display:flex!important;
+      align-items:flex-start!important;
+      justify-content:space-between!important;
+      gap:16px!important;
+      margin-bottom:16px!important;
+      padding-bottom:12px!important;
+      border-bottom:1px solid #eee7de!important;
+    }
+
+    #committeePortal #addCommitteeUserPanel .card-heading h3{
+      margin:0!important;
+      font-size:1rem!important;
+    }
+
+    #committeePortal #committeeInviteForm .form-grid-2{
+      display:grid!important;
+      grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      gap:12px 14px!important;
+    }
+
+    #committeePortal #committeeInviteForm .form-grid-2 > label:last-child{
+      grid-column:1 / 2!important;
+    }
+
+    #committeePortal #committeeInviteForm input,
+    #committeePortal #committeeInviteForm select{
+      width:100%!important;
+      height:40px!important;
+      min-height:40px!important;
+      border:1px solid #cfc5b9!important;
+      border-radius:8px!important;
+      background:#fff!important;
+      box-sizing:border-box!important;
+    }
+
+    #committeePortal #committeeInviteForm .portal-note{
+      margin-top:2px!important;
+      padding:11px 13px!important;
+      border-radius:9px!important;
+      background:#f8f5ef!important;
+      border:1px solid #e8dfd4!important;
+    }
+
+    #committeePortal #committeeInviteForm .form-action-row{
+      display:flex!important;
+      justify-content:flex-end!important;
+      gap:8px!important;
+      margin-top:4px!important;
+      padding-top:14px!important;
+      border-top:1px solid #eee7de!important;
+    }
+
+    /* Pending section */
+    #committeePortal #accessPanel .access-section{
+      margin-top:26px!important;
+    }
+
+    #committeePortal #accessPanel .access-section-heading{
+      display:flex!important;
+      align-items:flex-end!important;
+      justify-content:space-between!important;
+      gap:16px!important;
+      margin-bottom:10px!important;
+    }
+
+    #committeePortal #accessPanel .access-section-heading h3{
+      margin:0!important;
+      font-size:1.05rem!important;
+    }
+
+    #committeePortal #accessPanel .access-section-heading .eyebrow{
+      margin-bottom:6px!important;
+    }
+
+    #committeePortal #pendingMembersList{
+      display:block!important;
+      width:100%!important;
+    }
+
+    #committeePortal #pendingMembersList .admin-empty{
+      min-height:72px!important;
+      display:flex!important;
+      align-items:center!important;
+      justify-content:center!important;
+      border:1px dashed #ded5ca!important;
+      border-radius:12px!important;
+      background:#fff!important;
+      color:#7c746b!important;
+    }
+
+    /* Active users directory */
+    #committeePortal #membersList{
+      display:grid!important;
+      gap:8px!important;
+    }
+
+    #committeePortal #membersList .member-row{
+      display:grid!important;
+      grid-template-columns:minmax(0,1.5fr) 120px 90px auto!important;
+      align-items:center!important;
+      gap:12px!important;
+      padding:12px 14px!important;
+      border:1px solid #e2d9ce!important;
+      border-radius:12px!important;
+      background:#fff!important;
+    }
+
+    #committeePortal #membersList .member-identity strong{
+      display:block!important;
+      font-size:.84rem!important;
+    }
+
+    #committeePortal #membersList .member-identity span{
+      display:block!important;
+      margin-top:3px!important;
+      color:#7c746b!important;
+      font-size:.72rem!important;
+    }
+
+    #committeePortal #membersList select{
+      width:100%!important;
+      height:36px!important;
+      min-height:36px!important;
+      border:1px solid #d4cabf!important;
+      border-radius:8px!important;
+      background:#fff!important;
+      font-size:.76rem!important;
+    }
+
+    #committeePortal #membersList .member-actions{
+      display:flex!important;
+      justify-content:flex-end!important;
+      gap:6px!important;
+      flex-wrap:wrap!important;
+    }
+
+    #committeePortal #membersList .member-actions button{
+      min-height:32px!important;
+      height:32px!important;
+      padding:0 10px!important;
+      border-radius:8px!important;
+      font-size:.7rem!important;
+    }
+
+    #committeePortal #membersList .status-pill{
+      justify-self:start!important;
+    }
+
+    /* Better section separation */
+    #committeePortal #accessPanel .access-section + .access-section{
+      padding-top:22px!important;
+      border-top:1px solid #e8dfd4!important;
+    }
+
+    @media(max-width:900px){
+      #committeePortal #accessPanel{
+        padding-left:14px!important;
+        padding-right:14px!important;
+      }
+
+      #committeePortal #committeeInviteForm .form-grid-2{
+        grid-template-columns:1fr!important;
+      }
+
+      #committeePortal #committeeInviteForm .form-grid-2 > label:last-child{
+        grid-column:auto!important;
+      }
+
+      #committeePortal #membersList .member-row{
+        grid-template-columns:1fr!important;
+      }
+
+      #committeePortal #membersList .member-actions{
+        justify-content:flex-start!important;
+      }
+    }
+
 </style>
 </head>
 <body class="committee-app-page">
