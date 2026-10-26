@@ -1543,6 +1543,24 @@
       }
     }
 
+
+    /* ===== GALLERY STATE MANAGEMENT FIX ===== */
+    #quickPhotoUploadPanel[hidden],
+    #albumFormPanel[hidden],
+    #albumPhotosPanel[hidden]{
+      display:none!important;
+    }
+
+    #quickPhotoUploadPanel:not([hidden]),
+    #albumFormPanel:not([hidden]),
+    #albumPhotosPanel:not([hidden]){
+      display:block!important;
+    }
+
+    .gallery-folder-grid{
+      margin-top:16px!important;
+    }
+
 </style>
 </head>
 <body class="committee-app-page">
@@ -2451,41 +2469,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const eventPanel = document.getElementById('eventFormPanel');
-  const albumPanel = document.getElementById('albumFormPanel');
-  const uploadPanel = document.getElementById('quickPhotoUploadPanel');
-  const accessPanel = document.getElementById('addCommitteeUserPanel');
 
-  [eventPanel, albumPanel, uploadPanel, accessPanel].forEach((panel) => {
-    if (panel) panel.hidden = true;
-  });
-
-  document.getElementById('newEventBtn')?.addEventListener('click', () => {
-    if (eventPanel) eventPanel.hidden = false;
-  });
-
-  document.getElementById('newAlbumBtn')?.addEventListener('click', () => {
-    if (albumPanel) albumPanel.hidden = false;
-  });
-
-  document.getElementById('uploadPhotosBtn')?.addEventListener('click', () => {
-    if (uploadPanel) uploadPanel.hidden = false;
-  });
-
-  document.getElementById('addCommitteeUserBtn')?.addEventListener('click', () => {
-    if (accessPanel) accessPanel.hidden = false;
-  });
-
-  document.querySelector('[data-mock-event-edit]')?.addEventListener('click', () => {
-    if (eventPanel) {
-      eventPanel.hidden = false;
-      eventPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-});
-</script>
 
 
 <script>
@@ -2547,6 +2531,89 @@ document.addEventListener('DOMContentLoaded', () => {
     formId: 'committeeInviteForm',
     cancelId: 'cancelAddCommitteeUserBtn',
     submitSelector: 'button[type="submit"]'
+  });
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const uploadPanel = document.getElementById('quickPhotoUploadPanel');
+  const albumPanel = document.getElementById('albumFormPanel');
+  const photosPanel = document.getElementById('albumPhotosPanel');
+
+  const uploadBtn = document.getElementById('uploadPhotosBtn');
+  const newAlbumBtn = document.getElementById('newAlbumBtn');
+
+  const cancelUploadBtn = document.getElementById('cancelQuickPhotoUploadBtn');
+  const cancelAlbumBtn = document.getElementById('cancelAlbumEditBtn');
+  const closePhotosBtn = document.getElementById('closeAlbumPhotosBtn');
+
+  const hideAllGalleryPanels = () => {
+    if (uploadPanel) uploadPanel.hidden = true;
+    if (albumPanel) albumPanel.hidden = true;
+    if (photosPanel) photosPanel.hidden = true;
+  };
+
+  const showOnly = (panel) => {
+    hideAllGalleryPanels();
+
+    if (panel) {
+      panel.hidden = false;
+
+      window.setTimeout(() => {
+        panel.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 20);
+    }
+  };
+
+  // Clean gallery landing state.
+  hideAllGalleryPanels();
+
+  uploadBtn?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    showOnly(uploadPanel);
+  });
+
+  newAlbumBtn?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    showOnly(albumPanel);
+  });
+
+  cancelUploadBtn?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (uploadPanel) uploadPanel.hidden = true;
+  });
+
+  cancelAlbumBtn?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (albumPanel) albumPanel.hidden = true;
+  });
+
+  closePhotosBtn?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (photosPanel) photosPanel.hidden = true;
+  });
+
+  // Existing album-management buttons may open the photos panel.
+  document.addEventListener('click', (event) => {
+    const manageButton = event.target.closest(
+      '[data-manage-album],[data-album-photos],[data-album-open]'
+    );
+
+    if (!manageButton) return;
+
+    if (photosPanel) {
+      showOnly(photosPanel);
+    }
   });
 });
 </script>
