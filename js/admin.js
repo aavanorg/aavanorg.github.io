@@ -203,6 +203,10 @@
         }
 
         if (panelId === 'eventsPanel') {
+          // Always enter Events in list mode. The form opens only when
+          // Add Event or Edit is explicitly selected.
+          resetEventForm();
+          if (eventFormPanel) eventFormPanel.hidden = true;
           loadEvents();
         }
 
@@ -306,6 +310,10 @@
     if (newEventBtn) {
       newEventBtn.hidden = !canEdit();
     }
+
+    // Dashboard must start in list mode, never with an event form left open.
+    resetEventForm();
+    if (eventFormPanel) eventFormPanel.hidden = true;
 
     await Promise.all([
       loadDashboardMetrics(),
@@ -506,27 +514,20 @@
       '<div class="admin-loading">Loading events…</div>';
 
     try {
-      const {
-        data,
-        error
-      } = await supabase
+      const { data, error } = await supabase
         .from('events')
         .select('*')
-        .order('event_date', {
-          ascending: true
-        });
+        .order('event_date', { ascending: true });
 
       if (error) throw error;
 
-      const events =
-        Array.isArray(data)
-          ? data
-          : [];
+      const events = Array.isArray(data) ? data : [];
 
       if (!events.length) {
         eventsList.innerHTML = `
-          <div class="admin-empty">
-            No events have been created yet.
+          <div class="admin-empty admin-empty--large">
+            <strong>No events yet</strong>
+            <span>Create your first event and it will appear here.</span>
           </div>
         `;
         return;
@@ -534,105 +535,111 @@
 
       const today = getLocalDateString();
 
-      eventsList.innerHTML =
-        events.map((event) => {
-          const finalDate =
-            event.end_date ||
-            event.event_date;
+      const rows = events.map((event) => {
+        const finalDate = event.end_date || event.event_date;
+        const past = Boolean(finalDate && finalDate < today);
 
-          const past =
-            finalDate &&
-            finalDate < today;
+        const title =
+          event.title ||
+          (event.image_url ? 'Image-only event' : 'Untitled event');
 
-          return `
-            <article class="admin-row">
+        const venue = event.venue || 'Venue not set';
 
-              <div class="admin-row-main">
-                <strong>
-                  ${escapeHtml(event.title || (event.image_url ? 'Image-only event' : 'Untitled event'))}
-                </strong>
+        const statusText =
+          past
+            ? 'Past'
+            : event.published
+              ? 'Published'
+              : 'Draft';
 
-                <span>
-                  ${escapeHtml(
-                    event.venue ||
-                    'Venue not set'
-                  )}
-                </span>
+        const statusClass =
+          past
+            ? 'disabled'
+            : event.published
+              ? 'published'
+              : 'pending';
+
+        const actions = canEdit()
+          ? `
+              <div class="table-action-group">
+                <button
+                  class="table-action"
+                  type="button"
+                  data-event-edit="${event.id}"
+                >
+                  Edit
+                </button>
+                <button
+                  class="table-action table-action--danger"
+                  type="button"
+                  data-event-delete="${event.id}"
+                >
+                  Delete
+                </button>
               </div>
+            `
+          : '<span class="table-readonly">View only</span>';
 
-              <div class="admin-row-meta">
-                <span>
-                  ${event.end_date &&
-                  event.end_date !== event.event_date
-                    ? 'Dates'
-                    : 'Date'}
-                </span>
-
-                <strong>
-                  ${escapeHtml(
-                    formatEventDateRange(event)
-                  )}
-                </strong>
-              </div>
-
-              <div class="admin-row-meta">
-                <span>Status</span>
-
-                <span class="status-pill ${
-                  past
-                    ? 'disabled'
-                    : event.published
-                      ? 'published'
-                      : ''
-                }">
-                  ${
-                    past
-                      ? 'Past'
-                      : event.published
-                        ? 'Published'
-                        : 'Draft'
-                  }
-                </span>
-              </div>
-
-              <div class="admin-row-actions">
+        return `
+          <tr>
+            <td data-label="Event">
+              <div class="event-table-title">
+                <strong>${escapeHtml(title)}</strong>
                 ${
-                  canEdit()
-                    ? `
-                      <button
-                        type="button"
-                        data-event-edit="${event.id}"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        type="button"
-                        class="danger"
-                        data-event-delete="${event.id}"
-                      >
-                        Delete
-                      </button>
-                    `
+                  event.featured
+                    ? '<span class="mini-badge">Featured</span>'
                     : ''
                 }
               </div>
+            </td>
+            <td data-label="Date">
+              ${escapeHtml(formatEventDateRange(event))}
+            </td>
+            <td data-label="Venue">
+              ${escapeHtml(venue)}
+            </td>
+            <td data-label="Status">
+              <span class="status-pill ${statusClass}">
+                ${statusText}
+              </span>
+            </td>
+            <td data-label="Actions">
+              ${actions}
+            </td>
+          </tr>
+        `;
+      }).join('');
 
-            </article>
-          `;
-        }).join('');
+      eventsList.innerHTML = `
+        <div class="admin-table-card">
+          <div class="admin-table-scroll">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Event</th>
+                  <th>Date</th>
+                  <th>Venue</th>
+                  <th>Status</th>
+                  <th class="admin-table-actions-heading">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
 
       attachEventActions(events);
 
     } catch (error) {
-      console.error(
-        'Load events error:',
-        error
-      );
+      console.error('Load events error:', error);
 
       eventsList.innerHTML = `
-        <div class="admin-empty">
-          Unable to load events.
+        <div class="admin-empty admin-empty--large">
+          <strong>Unable to load events</strong>
+          <span>Please refresh the page or try again.</span>
         </div>
       `;
     }
