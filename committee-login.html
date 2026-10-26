@@ -786,6 +786,288 @@
       }
     }
 
+
+    /* =========================================================
+       SUB-PAGE UX OVERHAUL
+       ========================================================= */
+
+    #committeePortal .dashboard-panel{
+      padding:24px 28px 36px!important;
+    }
+
+    #committeePortal .dashboard-heading{
+      align-items:center!important;
+      margin-bottom:16px!important;
+    }
+
+    #committeePortal .dashboard-heading h2{
+      font-size:clamp(2rem,3vw,3rem)!important;
+      line-height:1!important;
+    }
+
+    #committeePortal .dashboard-heading .btn,
+    #committeePortal .dashboard-heading button{
+      min-height:36px!important;
+      height:36px!important;
+      padding:0 14px!important;
+      border-radius:10px!important;
+      font-size:.78rem!important;
+    }
+
+    .subpage-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .subpage-primary{
+      min-height:36px;
+      height:36px;
+      padding:0 14px;
+      border:0;
+      border-radius:10px;
+      background:linear-gradient(90deg,#b7131d,#ed6c1a);
+      color:#fff;
+      font-weight:800;
+      font-size:.78rem;
+      cursor:pointer;
+      box-shadow:0 7px 16px rgba(183,19,29,.16);
+    }
+
+    .subpage-secondary{
+      min-height:36px;
+      height:36px;
+      padding:0 14px;
+      border:1px solid #d8cec1;
+      border-radius:10px;
+      background:#fff;
+      color:#171717;
+      font-weight:800;
+      font-size:.78rem;
+      cursor:pointer;
+    }
+
+    .ux-collapsible-panel[hidden]{
+      display:none!important;
+    }
+
+    .ux-collapsible-panel{
+      margin:0 0 16px!important;
+    }
+
+    .ux-directory{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border:1px solid #e2d9ce;
+      border-radius:14px;
+      background:#fff;
+    }
+
+    .ux-directory th{
+      padding:10px 14px;
+      background:#fbf8f3;
+      color:#7c746b;
+      text-align:left;
+      font-size:.66rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:800;
+      border-bottom:1px solid #e8e0d6;
+    }
+
+    .ux-directory td{
+      padding:13px 14px;
+      color:#403a35;
+      font-size:.82rem;
+      border-bottom:1px solid #eee7de;
+      vertical-align:middle;
+    }
+
+    .ux-directory tr:last-child td{
+      border-bottom:0;
+    }
+
+    .ux-directory tbody tr:hover{
+      background:#fcfaf7;
+    }
+
+    .ux-status{
+      display:inline-flex;
+      align-items:center;
+      min-height:24px;
+      padding:0 9px;
+      border-radius:999px;
+      font-size:.68rem;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .ux-status.published,
+    .ux-status.active{
+      background:#e8f5ec;
+      color:#257044;
+    }
+
+    .ux-status.pending{
+      background:#fff0d8;
+      color:#9a5d00;
+    }
+
+    .ux-row-actions{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+    }
+
+    .ux-row-actions button{
+      min-height:30px!important;
+      height:30px!important;
+      padding:0 10px!important;
+      border-radius:8px!important;
+      font-size:.7rem!important;
+      font-weight:800!important;
+      cursor:pointer;
+    }
+
+    .ux-edit,
+    .ux-approve{
+      border:1px solid #c9ddd3!important;
+      background:#edf6f1!important;
+      color:#236847!important;
+    }
+
+    .ux-delete,
+    .ux-reject{
+      border:1px solid #ebd2ce!important;
+      background:#fff2ef!important;
+      color:#a23d34!important;
+    }
+
+    /* Events */
+    #eventsList{
+      display:none!important;
+    }
+
+    .events-directory-wrap{
+      margin-top:8px;
+    }
+
+    /* Gallery */
+    #quickPhotoUploadPanel,
+    #albumFormPanel,
+    #albumPhotosPanel{
+      margin-bottom:14px!important;
+    }
+
+    #albumsList{
+      display:none!important;
+    }
+
+    .gallery-folder-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-top:12px;
+    }
+
+    .gallery-folder-card{
+      overflow:hidden;
+      border:1px solid #e2d9ce;
+      border-radius:14px;
+      background:#fff;
+      box-shadow:0 8px 18px rgba(23,23,23,.035);
+    }
+
+    .gallery-folder-card img{
+      display:block;
+      width:100%;
+      height:150px;
+      object-fit:cover;
+      background:#eee8df;
+    }
+
+    .gallery-folder-card__body{
+      padding:13px 14px 14px;
+    }
+
+    .gallery-folder-card__body h3{
+      margin:0 0 5px;
+      font-family:'Playfair Display',serif;
+      font-size:1.1rem;
+    }
+
+    .gallery-folder-meta{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color:#7c746b;
+      font-size:.72rem;
+    }
+
+    /* Memberships */
+    #membershipApplicationsList{
+      display:none!important;
+    }
+
+    /* Access */
+    #pendingMembersList{
+      display:none!important;
+    }
+
+    .access-mock-section{
+      margin:14px 0 22px;
+    }
+
+    .access-mock-section h3{
+      margin:0 0 10px;
+      font-size:1rem;
+    }
+
+    /* Settings */
+    #planSettingsList .setting-row{
+      box-shadow:inset 0 0 0 1px #ece3d8!important;
+      border:0!important;
+      background:#fff!important;
+    }
+
+    #planSettingsList .setting-row + .setting-row{
+      border-top:1px solid #ece3d8!important;
+      padding-top:14px!important;
+      margin-top:4px!important;
+    }
+
+    #planSettingsList input,
+    #planSettingsList select,
+    #paymentSettingsForm input,
+    #paymentSettingsForm textarea{
+      border:1px solid #cfc5b9!important;
+      box-shadow:inset 0 1px 2px rgba(23,23,23,.035)!important;
+      background:#fff!important;
+    }
+
+    @media(max-width:1050px){
+      .gallery-folder-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:700px){
+      .ux-directory{
+        display:block;
+        overflow-x:auto;
+      }
+
+      .ux-directory table{
+        min-width:760px;
+      }
+
+      .gallery-folder-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
 </style>
 </head>
 <body class="committee-app-page">
@@ -1691,6 +1973,43 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshSoon();
   }, 100);
 })();
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const eventPanel = document.getElementById('eventFormPanel');
+  const albumPanel = document.getElementById('albumFormPanel');
+  const uploadPanel = document.getElementById('quickPhotoUploadPanel');
+  const accessPanel = document.getElementById('addCommitteeUserPanel');
+
+  [eventPanel, albumPanel, uploadPanel, accessPanel].forEach((panel) => {
+    if (panel) panel.hidden = true;
+  });
+
+  document.getElementById('newEventBtn')?.addEventListener('click', () => {
+    if (eventPanel) eventPanel.hidden = false;
+  });
+
+  document.getElementById('newAlbumBtn')?.addEventListener('click', () => {
+    if (albumPanel) albumPanel.hidden = false;
+  });
+
+  document.getElementById('uploadPhotosBtn')?.addEventListener('click', () => {
+    if (uploadPanel) uploadPanel.hidden = false;
+  });
+
+  document.getElementById('addCommitteeUserBtn')?.addEventListener('click', () => {
+    if (accessPanel) accessPanel.hidden = false;
+  });
+
+  document.querySelector('[data-mock-event-edit]')?.addEventListener('click', () => {
+    if (eventPanel) {
+      eventPanel.hidden = false;
+      eventPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
 </script>
 
 </body>
