@@ -12,21 +12,32 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/admin.css">
   <style>
+    :root{
+      --admin-green:#123b32;
+      --admin-green-2:#0d2e27;
+      --admin-cream:#f7f3ec;
+      --admin-card:#fffdf9;
+      --admin-line:#e6ddd1;
+      --admin-text:#171717;
+      --admin-muted:#7c746b;
+      --admin-red:#c81f2a;
+    }
+
     html,body{
       margin:0;
       width:100%;
       min-height:100%;
-      background:#f7f4ee;
+      background:var(--admin-cream);
     }
 
-    body.committee-admin-page{
+    body.committee-app-page{
       min-height:100vh;
-      background:#f7f4ee;
-      color:#171717;
+      background:var(--admin-cream);
+      color:var(--admin-text);
       overflow-x:hidden;
     }
 
-    /* ===== FULL-SCREEN ADMIN SHELL ===== */
+    /* Portal becomes the entire application */
     #committeePortal.committee-portal{
       position:static!important;
       inset:auto!important;
@@ -36,7 +47,7 @@
       margin:0!important;
       padding:0!important;
       overflow:visible!important;
-      background:#f7f4ee!important;
+      background:var(--admin-cream)!important;
       z-index:auto!important;
     }
 
@@ -57,152 +68,112 @@
       border-radius:0!important;
       overflow:visible!important;
       box-shadow:none!important;
-      background:#f7f4ee!important;
+      background:var(--admin-cream)!important;
     }
 
-    /* ===== ADMIN TOP BAR ===== */
+    /* Hide old portal topbar once the app is running */
     #committeePortal .committee-portal-topbar{
-      position:sticky!important;
-      top:0;
-      z-index:100;
-      min-height:76px;
-      padding:0 28px!important;
-      border:0!important;
-      border-bottom:1px solid #e5ddd1!important;
-      border-radius:0!important;
-      background:#fff!important;
-      display:flex!important;
-      align-items:center!important;
-      justify-content:space-between!important;
-      gap:20px!important;
-    }
-
-    #committeePortal .committee-portal-brand{
-      display:flex!important;
-      align-items:center!important;
-      gap:12px!important;
-    }
-
-    #committeePortal .committee-portal-brand img{
-      width:44px!important;
-      height:44px!important;
-      object-fit:contain!important;
-    }
-
-    #committeePortal .committee-portal-brand strong{
-      font-size:1rem!important;
-      font-weight:800!important;
-      color:#171717!important;
-    }
-
-    #committeePortal .committee-portal-brand span{
-      display:block!important;
-      margin-top:2px!important;
-      color:#8b8278!important;
-      font-size:.76rem!important;
-    }
-
-    #committeePortal .committee-portal-actions{
-      display:flex!important;
-      align-items:center!important;
-      gap:10px!important;
-    }
-
-    #committeePortalClose{
       display:none!important;
     }
 
-    #committeePortal .portal-signout,
-    #committeePortal .committee-home-link{
-      display:inline-flex!important;
-      align-items:center!important;
-      justify-content:center!important;
-      min-height:40px!important;
-      padding:0 16px!important;
-      border:1px solid #ddd4c8!important;
-      border-radius:999px!important;
-      background:#fff!important;
-      color:#171717!important;
-      font-weight:700!important;
-      font-size:.82rem!important;
-      text-decoration:none!important;
-      transition:.2s ease!important;
-    }
-
-    #committeePortal .committee-home-link{
-      background:#173f35!important;
-      color:#fff!important;
-      border-color:#173f35!important;
-    }
-
-    #committeePortal .portal-signout:hover,
-    #committeePortal .committee-home-link:hover{
-      transform:translateY(-1px);
-    }
-
-    /* ===== PAGE CONTENT ===== */
     #committeePortal .committee-portal-content{
-      min-height:calc(100vh - 76px)!important;
+      width:100%!important;
+      min-height:100vh!important;
       max-height:none!important;
       overflow:visible!important;
-      background:#f7f4ee!important;
+      background:var(--admin-cream)!important;
     }
 
-    /* ===== LOGIN VIEW ===== */
+    /* Signed-out screen remains usable */
     #committeePortal #authPanel.committee-auth{
-      min-height:calc(100vh - 76px)!important;
+      min-height:100vh!important;
       border-radius:0!important;
       background:#fff!important;
     }
 
-    /* ===== DASHBOARD LAYOUT ===== */
+    /* ===== FULL APP LAYOUT ===== */
     #committeePortal #dashboard.committee-dashboard{
       display:grid!important;
-      grid-template-columns:230px minmax(0,1fr)!important;
+      grid-template-columns:260px minmax(0,1fr)!important;
       width:100%!important;
-      min-height:calc(100vh - 76px)!important;
+      min-height:100vh!important;
       max-width:none!important;
       margin:0!important;
       border-radius:0!important;
-      background:#f7f4ee!important;
+      background:var(--admin-cream)!important;
     }
 
+    /* ===== SIDEBAR ===== */
     #committeePortal .dashboard-sidebar{
       position:sticky!important;
-      top:76px!important;
+      top:0!important;
       align-self:start!important;
-      height:calc(100vh - 76px)!important;
-      min-height:0!important;
-      padding:24px 18px 28px!important;
-      background:#102f28!important;
+      height:100vh!important;
+      min-height:100vh!important;
+      padding:0!important;
+      background:
+        linear-gradient(180deg,var(--admin-green) 0%,var(--admin-green-2) 100%)!important;
       border:0!important;
       overflow:auto!important;
+      display:flex!important;
+      flex-direction:column!important;
+    }
+
+    .admin-sidebar-brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:24px 22px 22px;
+      border-bottom:1px solid rgba(255,255,255,.11);
+    }
+
+    .admin-sidebar-brand img{
+      width:44px;
+      height:44px;
+      object-fit:contain;
+    }
+
+    .admin-sidebar-brand strong{
+      display:block;
+      color:#fff;
+      font-size:.98rem;
+      line-height:1.15;
+    }
+
+    .admin-sidebar-brand span{
+      display:block;
+      margin-top:4px;
+      color:#b9cbc5;
+      font-size:.72rem;
     }
 
     #committeePortal .dashboard-user{
-      padding:0 4px 20px!important;
-      margin-bottom:18px!important;
-      border-bottom:1px solid rgba(255,255,255,.12)!important;
+      padding:20px 20px 16px!important;
+      margin:0!important;
+      border-bottom:1px solid rgba(255,255,255,.1)!important;
     }
 
     #committeePortal .dashboard-user .avatar{
       width:42px!important;
       height:42px!important;
-      background:linear-gradient(135deg,#d9312b,#ef7f2d)!important;
+      background:linear-gradient(135deg,#d62924,#f18831)!important;
+      box-shadow:none!important;
     }
 
     #committeePortal .dashboard-user strong{
       color:#fff!important;
-      font-size:.86rem!important;
+      font-size:.85rem!important;
     }
 
     #committeePortal .dashboard-user span{
-      color:#c7d5d0!important;
+      color:#b9cbc5!important;
+      font-size:.72rem!important;
     }
 
     #committeePortal .dashboard-sidebar nav{
       display:grid!important;
-      gap:7px!important;
+      gap:6px!important;
+      padding:18px 14px!important;
     }
 
     #committeePortal .dashboard-nav{
@@ -211,10 +182,11 @@
       border:0!important;
       border-radius:10px!important;
       background:transparent!important;
-      color:#dbe5e1!important;
+      color:#dce8e4!important;
       text-align:left!important;
       font-size:.86rem!important;
       font-weight:700!important;
+      transition:.18s ease!important;
     }
 
     #committeePortal .dashboard-nav:hover{
@@ -224,49 +196,106 @@
 
     #committeePortal .dashboard-nav.active{
       background:#fff!important;
-      color:#173f35!important;
-      box-shadow:0 5px 16px rgba(0,0,0,.12)!important;
+      color:var(--admin-green)!important;
+      box-shadow:none!important;
     }
 
+    .admin-sidebar-footer{
+      margin-top:auto;
+      padding:18px 16px 22px;
+      border-top:1px solid rgba(255,255,255,.1);
+    }
+
+    .admin-live-site-link{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      margin-bottom:8px;
+      border-radius:10px;
+      background:#fff;
+      color:var(--admin-green);
+      text-decoration:none;
+      font-weight:800;
+      font-size:.82rem;
+    }
+
+    .admin-sidebar-footer .portal-signout{
+      width:100%;
+      min-height:42px;
+      border:1px solid rgba(255,255,255,.24)!important;
+      border-radius:10px!important;
+      background:rgba(255,255,255,.06)!important;
+      color:#fff!important;
+      font-weight:800!important;
+      cursor:pointer;
+    }
+
+    .admin-sidebar-footer .portal-signout:hover{
+      background:rgba(255,255,255,.12)!important;
+    }
+
+    /* ===== WORKSPACE ===== */
     #committeePortal .dashboard-main{
       min-width:0!important;
-      padding:32px 34px 48px!important;
-      background:#f7f4ee!important;
+      padding:0!important;
+      background:var(--admin-cream)!important;
     }
 
     #committeePortal .dashboard-panel{
-      max-width:1500px;
-      margin:0 auto;
+      max-width:none!important;
+      margin:0!important;
+      padding:34px 38px 50px!important;
     }
 
-    /* ===== OVERVIEW HEADER ===== */
-    #committeePortal .dashboard-heading{
-      display:grid!important;
-      grid-template-columns:minmax(0,1fr) auto!important;
+    /* Workspace header replaces old generic heading */
+    #committeePortal #overviewPanel .dashboard-heading{
+      display:flex!important;
+      align-items:center!important;
+      justify-content:space-between!important;
       gap:24px!important;
-      align-items:end!important;
-      margin-bottom:22px!important;
+      margin-bottom:28px!important;
+      padding-bottom:22px!important;
+      border-bottom:1px solid var(--admin-line)!important;
     }
 
-    #committeePortal .dashboard-heading .eyebrow{
-      margin-bottom:7px!important;
-      color:#c81f2a!important;
+    #committeePortal #overviewPanel .dashboard-heading .eyebrow,
+    #committeePortal #overviewPanel .dashboard-heading>p{
+      display:none!important;
     }
 
-    #committeePortal .dashboard-heading h2{
+    #committeePortal #overviewPanel .dashboard-heading h2{
       margin:0!important;
       font-family:'Playfair Display',serif!important;
-      font-size:clamp(2.55rem,4vw,4.2rem)!important;
-      line-height:.95!important;
+      font-size:clamp(2.65rem,4vw,4.5rem)!important;
+      line-height:.92!important;
       letter-spacing:-.045em!important;
+      color:var(--admin-text)!important;
     }
 
-    #committeePortal .dashboard-heading>p{
-      max-width:340px!important;
-      margin:0 0 6px!important;
-      color:#867d74!important;
-      text-align:right!important;
-      font-size:.9rem!important;
+    .admin-profile-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px 8px 9px;
+      border:1px solid var(--admin-line);
+      border-radius:999px;
+      background:#fff;
+      color:var(--admin-text);
+      font-weight:800;
+      font-size:.82rem;
+      white-space:nowrap;
+    }
+
+    .admin-profile-badge .dot{
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--admin-green);
+      color:#fff;
+      font-size:.72rem;
     }
 
     /* ===== METRICS ===== */
@@ -274,21 +303,24 @@
       display:grid!important;
       grid-template-columns:repeat(4,minmax(0,1fr))!important;
       gap:16px!important;
-      margin-bottom:20px!important;
+      margin:0 0 26px!important;
     }
 
     #committeePortal .metric-grid article{
-      min-height:132px!important;
+      min-height:142px!important;
       padding:20px!important;
-      border:1px solid #e2d9ce!important;
-      border-radius:18px!important;
-      background:#fff!important;
-      box-shadow:0 10px 28px rgba(34,31,27,.045)!important;
+      border:1px solid var(--admin-line)!important;
+      border-radius:16px!important;
+      background:var(--admin-card)!important;
+      box-shadow:none!important;
+      display:flex!important;
+      flex-direction:column!important;
+      justify-content:space-between!important;
     }
 
     #committeePortal .metric-grid article span{
-      color:#7b7167!important;
-      font-size:.68rem!important;
+      color:var(--admin-muted)!important;
+      font-size:.67rem!important;
       line-height:1.35!important;
       letter-spacing:.1em!important;
       text-transform:uppercase!important;
@@ -297,116 +329,132 @@
 
     #committeePortal .metric-grid article strong{
       display:block!important;
-      margin-top:16px!important;
+      margin-top:18px!important;
       font-family:'Playfair Display',serif!important;
-      font-size:2.7rem!important;
-      line-height:.9!important;
-      color:#171717!important;
+      font-size:2.6rem!important;
+      line-height:.92!important;
+      color:var(--admin-text)!important;
     }
 
-    /* ===== RECENT ACTIVITY TABLE ===== */
-    .recent-activity-card{
-      border:1px solid #e2d9ce;
-      border-radius:18px;
+    .metric-subtext{
+      display:block;
+      margin-top:8px;
+      color:#867d74;
+      font-size:.78rem;
+      line-height:1.35;
+    }
+
+    /* Hide old generic overview card */
+    #committeePortal #overviewPanel > .dashboard-card{
+      display:none!important;
+    }
+
+    /* ===== RECENT REGISTRATIONS ===== */
+    .registrations-card{
+      border:1px solid var(--admin-line);
+      border-radius:16px;
       background:#fff;
-      box-shadow:0 10px 28px rgba(34,31,27,.04);
       overflow:hidden;
     }
 
-    .recent-activity-head{
+    .registrations-head{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:20px;
       padding:20px 22px;
-      border-bottom:1px solid #eee7de;
+      border-bottom:1px solid var(--admin-line);
     }
 
-    .recent-activity-head h3{
+    .registrations-head h3{
       margin:0;
       font-family:'Playfair Display',serif;
-      font-size:1.45rem;
+      font-size:1.55rem;
+      color:var(--admin-text);
     }
 
-    .recent-activity-head span{
-      color:#8a8178;
+    .registrations-head span{
+      color:var(--admin-muted);
       font-size:.78rem;
     }
 
-    .activity-table{
+    .registrations-table{
       width:100%;
       border-collapse:collapse;
     }
 
-    .activity-table th{
-      padding:12px 20px;
-      background:#fbf9f5;
-      color:#8a8178;
+    .registrations-table th{
+      padding:12px 18px;
+      background:#fbf8f3;
+      color:var(--admin-muted);
       text-align:left;
-      font-size:.67rem;
+      font-size:.66rem;
       letter-spacing:.08em;
       text-transform:uppercase;
       font-weight:800;
     }
 
-    .activity-table td{
-      padding:16px 20px;
-      border-top:1px solid #f0eae2;
-      color:#4c4640;
-      font-size:.88rem;
+    .registrations-table td{
+      padding:15px 18px;
+      border-top:1px solid #eee7de;
+      color:#4b453f;
+      font-size:.87rem;
       vertical-align:middle;
     }
 
-    .activity-table tbody tr:hover{
+    .registrations-table tbody tr:hover{
       background:#fcfaf7;
     }
 
-    .activity-status{
+    .type-pill{
       display:inline-flex;
       align-items:center;
-      padding:6px 9px;
+      padding:5px 8px;
       border-radius:999px;
+      background:#edf3f0;
+      color:var(--admin-green);
       font-size:.7rem;
       font-weight:800;
     }
 
-    .activity-status.pending{
-      background:#fff1d9;
-      color:#8b5a00;
+    .table-actions{
+      display:flex;
+      gap:7px;
     }
 
-    .activity-status.published{
-      background:#e6f4eb;
-      color:#1d6b3a;
+    .table-actions button{
+      min-height:32px;
+      padding:0 10px;
+      border-radius:8px;
+      font-size:.72rem;
+      font-weight:800;
+      cursor:pointer;
     }
 
-    .activity-status.review{
-      background:#eeeaf9;
-      color:#5a4592;
+    .approve-btn{
+      border:1px solid #c9dbd3;
+      background:#eaf4ef;
+      color:#1f6b46;
     }
 
-    .activity-status.complete{
-      background:#e8f0f7;
-      color:#315d82;
+    .reject-btn{
+      border:1px solid #ead2cf;
+      background:#fff1ef;
+      color:#a53b34;
     }
 
-    /* Hide old generic overview card only */
-    #committeePortal #overviewPanel > .dashboard-card{
-      display:none!important;
-    }
-
-    /* Keep functional cards in other panels */
+    /* Preserve normal cards/forms in other panels */
     #committeePortal .dashboard-panel:not(#overviewPanel) .dashboard-card{
       display:block!important;
     }
 
-    @media(max-width:1100px){
+    @media(max-width:1150px){
       #committeePortal #dashboard.committee-dashboard{
-        grid-template-columns:205px minmax(0,1fr)!important;
+        grid-template-columns:220px minmax(0,1fr)!important;
       }
 
-      #committeePortal .dashboard-main{
-        padding:28px 24px 40px!important;
+      #committeePortal .dashboard-panel{
+        padding:28px 24px 42px!important;
       }
 
       #committeePortal .metric-grid{
@@ -415,54 +463,39 @@
     }
 
     @media(max-width:780px){
-      #committeePortal .committee-portal-topbar{
-        min-height:68px!important;
-        padding:0 16px!important;
-      }
-
-      #committeePortal .committee-portal-content{
-        min-height:calc(100vh - 68px)!important;
-      }
-
       #committeePortal #dashboard.committee-dashboard{
         grid-template-columns:1fr!important;
-        min-height:calc(100vh - 68px)!important;
       }
 
       #committeePortal .dashboard-sidebar{
         position:static!important;
         height:auto!important;
-        padding:16px!important;
+        min-height:auto!important;
+      }
+
+      .admin-sidebar-brand{
+        padding:18px 16px;
       }
 
       #committeePortal .dashboard-sidebar nav{
         grid-template-columns:repeat(3,minmax(0,1fr))!important;
       }
 
-      #committeePortal .dashboard-main{
-        padding:22px 16px 30px!important;
+      .admin-sidebar-footer{
+        margin-top:0;
       }
 
-      #committeePortal .dashboard-heading{
-        grid-template-columns:1fr!important;
+      #committeePortal .dashboard-panel{
+        padding:22px 16px 32px!important;
       }
 
-      #committeePortal .dashboard-heading>p{
-        text-align:left!important;
+      #committeePortal #overviewPanel .dashboard-heading{
+        align-items:flex-start!important;
+        flex-direction:column!important;
       }
     }
 
     @media(max-width:620px){
-      #committeePortal .committee-portal-brand span{
-        display:none!important;
-      }
-
-      #committeePortal .committee-home-link,
-      #committeePortal .portal-signout{
-        padding:0 11px!important;
-        font-size:.75rem!important;
-      }
-
       #committeePortal .metric-grid{
         grid-template-columns:1fr!important;
       }
@@ -471,24 +504,18 @@
         grid-template-columns:repeat(2,minmax(0,1fr))!important;
       }
 
-      .activity-table{
-        min-width:760px;
+      .registrations-card{
+        overflow:auto;
       }
 
-      .recent-activity-card{
-        overflow:auto;
+      .registrations-table{
+        min-width:760px;
       }
     }
   </style>
 </head>
-<body class="committee-admin-page">
-  <p>
-            Sign in with your approved committee account. Your available tools
-            are shown according to your assigned role.
-          </p>
-        </div>
-
-  <div aria-hidden="false" class="committee-portal" id="committeePortal">
+<body class="committee-app-page">
+<div aria-hidden="false" class="committee-portal" id="committeePortal">
 
 <section aria-labelledby="committeePortalTitle" class="committee-portal-shell">
 <header class="committee-portal-topbar">
@@ -504,7 +531,6 @@
 </div>
 </div>
 <div class="committee-portal-actions">
-          <a class="committee-home-link" href="index.html">View Live Site</a>
 <button class="portal-signout" hidden="" id="logoutBtn" type="button">
             Sign out
           </button>
@@ -624,6 +650,13 @@
 </section>
 <section class="committee-dashboard" hidden="" id="dashboard">
 <aside class="dashboard-sidebar">
+            <div class="admin-sidebar-brand">
+              <img src="assets/images/logo.png" alt="Assam Association Vancouver">
+              <div>
+                <strong>AAVAN Admin</strong>
+                <span>Committee workspace</span>
+              </div>
+            </div>
 <div class="dashboard-user">
 <span class="avatar" id="dashboardAvatar">
                 A
@@ -655,85 +688,105 @@
                 Settings
               </button>
 </nav>
+<div class="admin-sidebar-footer" id="adminSidebarFooter"></div>
 </aside>
 <div class="dashboard-main">
 <section class="dashboard-panel active" id="overviewPanel">
 <div class="dashboard-heading">
-<div>
-<p class="eyebrow">OVERVIEW</p>
-<h2>Committee dashboard</h2>
-</div>
-<p>
-                  A quick view of what needs attention.
-                </p>
+  <div>
+    <h2>Committee Dashboard</h2>
+  </div>
+
+  <div class="admin-profile-badge">
+    <span class="dot">A</span>
+    <span>Admin</span>
+  </div>
 </div>
 <div class="metric-grid">
 <article>
 <span>Upcoming Events</span>
-<strong id="metricEvents">3</strong>
+<strong id="metricEvents">4</strong><span class="metric-subtext">Upcoming Events</span>
 </article>
 <article class="admin-only-metric">
 <span>Pending Access</span>
-<strong id="metricAccess">12</strong>
+<strong id="metricAccess">12</strong><span class="metric-subtext">Pending Access Requests</span>
 </article>
 <article class="admin-only-metric">
 <span>Membership Applications</span>
-<strong id="metricMemberships">8</strong>
+<strong id="metricMemberships">85</strong><span class="metric-subtext">Active Memberships</span>
 </article>
 <article>
 <span>Your Role</span>
-<strong id="metricRole">—</strong>
+<strong id="metricRole">admin</strong><span class="metric-subtext">Current permission level</span>
 </article>
 </div>
 
-              <div class="recent-activity-card">
-                <div class="recent-activity-head">
-                  <h3>Recent activities</h3>
-                  <span>Operational snapshot</span>
-                </div>
+              
+<div class="registrations-card">
+  <div class="registrations-head">
+    <div>
+      <h3>Recent Registrations</h3>
+      <span>Latest membership and access requests</span>
+    </div>
+  </div>
 
-                <table class="activity-table">
-                  <thead>
-                    <tr>
-                      <th>Item</th>
-                      <th>Type</th>
-                      <th>Status</th>
-                      <th>Owner</th>
-                      <th>Updated</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Bihu 2027 planning</td>
-                      <td>Event</td>
-                      <td><span class="activity-status published">Published</span></td>
-                      <td>Committee Admin</td>
-                      <td>Today</td>
-                    </tr>
-                    <tr>
-                      <td>New committee access requests</td>
-                      <td>Access</td>
-                      <td><span class="activity-status pending">12 pending</span></td>
-                      <td>Admin review</td>
-                      <td>Today</td>
-                    </tr>
-                    <tr>
-                      <td>Membership applications</td>
-                      <td>Membership</td>
-                      <td><span class="activity-status review">8 to review</span></td>
-                      <td>Membership team</td>
-                      <td>Yesterday</td>
-                    </tr>
-                    <tr>
-                      <td>Community gallery update</td>
-                      <td>Gallery</td>
-                      <td><span class="activity-status complete">Complete</span></td>
-                      <td>Editor</td>
-                      <td>2 days ago</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+  <table class="registrations-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Rina Das</td>
+        <td>Oct 26, 2026</td>
+        <td><span class="type-pill">Membership</span></td>
+        <td>
+          <div class="table-actions">
+            <button class="approve-btn" type="button">Approve</button>
+            <button class="reject-btn" type="button">Reject</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Arup Bora</td>
+        <td>Oct 25, 2026</td>
+        <td><span class="type-pill">Committee Access</span></td>
+        <td>
+          <div class="table-actions">
+            <button class="approve-btn" type="button">Approve</button>
+            <button class="reject-btn" type="button">Reject</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Manisha Saikia</td>
+        <td>Oct 24, 2026</td>
+        <td><span class="type-pill">Membership</span></td>
+        <td>
+          <div class="table-actions">
+            <button class="approve-btn" type="button">Approve</button>
+            <button class="reject-btn" type="button">Reject</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Debajit Hazarika</td>
+        <td>Oct 23, 2026</td>
+        <td><span class="type-pill">Membership</span></td>
+        <td>
+          <div class="table-actions">
+            <button class="approve-btn" type="button">Approve</button>
+            <button class="reject-btn" type="button">Reject</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 </section>
 <section class="dashboard-panel" hidden="" id="eventsPanel">
 <div class="dashboard-heading">
@@ -1135,5 +1188,29 @@
   <script src="js/gallery.js"></script>
   <script src="js/admin.js"></script>
   <script src="js/committee-portal.js"></script>
+
+  
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const footer = document.getElementById('adminSidebarFooter');
+  const logout = document.getElementById('logoutBtn');
+
+  if (!footer) return;
+
+  const liveSite = document.createElement('a');
+  liveSite.href = 'index.html';
+  liveSite.textContent = 'View Live Site';
+  liveSite.className = 'admin-live-site-link';
+  footer.appendChild(liveSite);
+
+  if (logout) {
+    logout.hidden = false;
+    footer.appendChild(logout);
+  }
+});
+</script>
+
 </body>
 </html>
