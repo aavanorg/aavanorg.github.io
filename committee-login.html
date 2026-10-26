@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Secure AAVAN committee workspace.">
+  <meta name="theme-color" content="#173f35">
+  <title>Committee Portal | Assam Association Vancouver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <style>
+    body.portal-page{margin:0;background:#efeae2;min-height:100vh}
+    #committeePortal.committee-portal{position:static!important;inset:auto!important;display:block!important;min-height:100vh!important;background:linear-gradient(180deg,#173f35 0,#173f35 220px,#efeae2 220px)!important;padding:34px 24px 60px!important;overflow:visible!important;z-index:auto!important}
+    #committeePortal .committee-portal-shell{position:relative!important;inset:auto!important;transform:none!important;width:min(1240px,100%)!important;max-width:1240px!important;max-height:none!important;min-height:calc(100vh - 94px)!important;margin:0 auto!important;border-radius:28px!important;overflow:hidden!important;box-shadow:0 28px 80px rgba(20,28,25,.22)!important;border:1px solid rgba(255,255,255,.14)!important;background:#fff!important}
+    #committeePortal .committee-portal-topbar{position:sticky;top:0;z-index:50}
+    #committeePortal .committee-portal-content{min-height:calc(100vh - 170px)}
+    .portal-page-home{display:inline-flex;align-items:center;justify-content:center;padding:9px 14px;border:1px solid rgba(255,255,255,.24);border-radius:999px;color:inherit;text-decoration:none;font-weight:700;font-size:.85rem}
+    #committeePortal #authPanel.committee-auth{min-height:650px}
+    @media(max-width:760px){
+      #committeePortal.committee-portal{padding:12px 10px 28px!important;background:#173f35!important}
+      #committeePortal .committee-portal-shell{border-radius:18px!important;min-height:calc(100vh - 40px)!important}
+    }
+  </style>
+</head>
+<body class="portal-page">
+  <div aria-hidden="false" class="committee-portal" id="committeePortal">
+
+<section aria-labelledby="committeePortalTitle" class="committee-portal-shell">
+<header class="committee-portal-topbar">
+<div class="committee-portal-brand">
+<img alt="" src="assets/images/logo.png"/>
+<div>
+<strong id="committeePortalTitle">
+              Committee Portal
+            </strong>
+<span id="headerIdentity">
+              Secure committee workspace
+            </span>
+</div>
+</div>
+<div class="committee-portal-actions">
+<button class="portal-signout" hidden="" id="logoutBtn" type="button">
+            Sign out
+          </button>
+<a class="portal-page-home" href="index.html">Back to site</a>
+</div>
+</header>
+<div class="committee-portal-content">
+<section class="portal-state" hidden="" id="setupNotice">
+<p class="eyebrow">SETUP REQUIRED</p>
+<h2>Backend connection needed.</h2>
+<p>
+            Supabase is not connected correctly.
+          </p>
+</section>
+<section class="committee-auth" id="authPanel">
+<div class="committee-auth-brand-panel">
+<img alt="" aria-hidden="true" src="assets/images/hero-bihu.jpg"/>
+<div class="auth-brand-overlay"></div>
+<div class="auth-brand-copy">
+<span>
+                ASSAM ASSOCIATION VANCOUVER
+              </span>
+<h2>
+                Committee<br/>
+                workspace.
+              </h2>
+<p>
+                Secure access for approved committee members managing AAVAN's
+                digital community.
+              </p>
+</div>
+</div>
+<div class="committee-auth-form-panel">
+<div class="auth-panel-head">
+<p class="eyebrow">
+                COMMITTEE PORTAL
+              </p>
+<h2 id="authModeTitle">
+                Sign in.
+              </h2>
+<p id="authModeCopy">
+                Use your approved committee email and password.
+              </p>
+</div>
+<div aria-label="Committee access mode" class="auth-switch" role="tablist">
+<button aria-selected="true" class="active" id="loginTab" role="tab" type="button">
+                Login
+              </button>
+<button aria-selected="false" id="signupTab" role="tab" type="button">
+                Request Access
+              </button>
+</div>
+<form class="portal-form" id="loginForm">
+<label>
+                Email
+                <input autocomplete="email" id="loginEmail" required="" type="email"/>
+</label>
+<label>
+                Password
+                <input autocomplete="current-password" id="loginPassword" required="" type="password"/>
+</label>
+<button class="portal-primary" type="submit">
+                Sign in
+              </button>
+<button class="portal-link" id="forgotPasswordBtn" type="button">
+                Forgot password?
+              </button>
+<p class="form-message" id="loginMessage"></p>
+</form>
+<form class="portal-form" hidden="" id="signupForm">
+<label>
+                Your name
+                <input autocomplete="name" id="signupName" maxlength="100" required=""/>
+</label>
+<label>
+                Personal email
+                <input autocomplete="email" id="signupEmail" required="" type="email"/>
+</label>
+<label>
+                Create password
+                <input autocomplete="new-password" id="signupPassword" minlength="8" required="" type="password"/>
+</label>
+<label>
+                Confirm password
+                <input autocomplete="new-password" id="signupPasswordConfirm" minlength="8" required="" type="password"/>
+</label>
+<button class="portal-primary" type="submit">
+                Request committee access
+              </button>
+<div class="portal-note">
+<strong>
+                  Admin approval required.
+                </strong>
+<span>
+                  Creating an account does not grant access. An AAVAN Admin
+                  must approve your account and assign a role.
+                </span>
+</div>
+<p class="form-message" id="signupMessage"></p>
+</form>
+</div>
+</section>
+<section class="portal-state" hidden="" id="pendingPanel">
+<p class="eyebrow">
+            ACCOUNT STATUS
+          </p>
+<h2 id="pendingTitle">
+            Approval required.
+          </h2>
+<p id="pendingCopy">
+            Your account exists, but an Admin has not approved committee
+            access yet.
+          </p>
+<button class="btn btn-primary" id="pendingLogoutBtn" type="button">
+            Sign out
+          </button>
+</section>
+<section class="committee-dashboard" hidden="" id="dashboard">
+<aside class="dashboard-sidebar">
+<div class="dashboard-user">
+<span class="avatar" id="dashboardAvatar">
+                A
+              </span>
+<div>
+<strong id="dashboardUserName">
+                  Committee Member
+                </strong>
+<span id="roleSummary"></span>
+</div>
+</div>
+<nav aria-label="Committee dashboard">
+<button class="dashboard-nav active" data-panel="overviewPanel" type="button">
+                Overview
+              </button>
+<button class="dashboard-nav" data-panel="eventsPanel" type="button">
+                Events
+              </button>
+<button class="dashboard-nav" data-panel="galleryPanel" type="button">
+                Gallery
+              </button>
+<button class="dashboard-nav" data-panel="membershipsPanel" hidden="" id="membershipsTab" type="button">
+                Memberships
+              </button>
+<button class="dashboard-nav" data-panel="accessPanel" hidden="" id="accessTab" type="button">
+                Access Management
+              </button>
+<button class="dashboard-nav" data-panel="settingsPanel" hidden="" id="settingsTab" type="button">
+                Settings
+              </button>
+</nav>
+</aside>
+<div class="dashboard-main">
+<section class="dashboard-panel active" id="overviewPanel">
+<div class="dashboard-heading">
+<div>
+<p class="eyebrow">OVERVIEW</p>
+<h2>Committee dashboard</h2>
+</div>
+<p>
+                  A quick view of what needs attention.
+                </p>
+</div>
+<div class="metric-grid">
+<article>
+<span>Upcoming Events</span>
+<strong id="metricEvents">—</strong>
+</article>
+<article class="admin-only-metric">
+<span>Pending Access</span>
+<strong id="metricAccess">—</strong>
+</article>
+<article class="admin-only-metric">
+<span>Membership Applications</span>
+<strong id="metricMemberships">—</strong>
+</article>
+<article>
+<span>Your Role</span>
+<strong id="metricRole">—</strong>
+</article>
+</div>
+<div class="dashboard-card">
+<h3>What you can manage</h3>
+<p id="permissionSummary">
+                  Loading permissions…
+                </p>
+</div>
+</section>
+<section class="dashboard-panel" hidden="" id="eventsPanel">
+<div class="dashboard-heading">
+<div>
+<p class="eyebrow">EVENTS</p>
+<h2>Event management</h2>
+</div>
+<button class="btn btn-primary" id="newEventBtn" type="button">
+                  + Add Event
+                </button>
+</div>
+<div class="dashboard-card" hidden="" id="eventFormPanel">
+<div class="card-heading">
+<div>
+<h3 id="formTitle">
+                      Add event
+                    </h3>
+<p>
+                      Published events appear automatically on the public
+                      homepage.
+                    </p>
+</div>
+<button class="text-button" id="cancelEditBtn" type="button">
+                    Cancel
+                  </button>
+</div>
+<form class="admin-form" id="eventForm">
+<input id="eventId" type="hidden"/>
+<div class="form-grid-2">
+<label>
+                      Event title
+                      <span class="optional">optional</span>
+<input id="eventTitle" maxlength="120"/>
+</label>
+<label>
+                      Start date
+                      <span class="optional">optional</span>
+<input id="eventDate" type="date"/>
+</label>
+<label>
+                      End date
+                      <span class="optional">optional</span>
+<input id="eventEndDate" type="date"/>
+</label>
+<label>
+                      Start time
+                      <span class="optional">optional</span>
+<input id="eventTime" type="time"/>
+</label>
+<label>
+                      Venue
+                      <span class="optional">optional</span>
+<input id="eventVenue" placeholder="Burnaby, BC"/>
+</label>
+</div>
+<label>
+                    Description
+                    <span class="optional">optional</span>
+<textarea id="eventSummary" maxlength="700" rows="4"></textarea>
+</label>
+<label>
+                    Registration / details URL
+                    <span class="optional">optional</span>
+<input id="eventRegistration" placeholder="https://..." type="url"/>
+</label>
+<label>
+                    Event image
+                    <span class="optional">optional</span>
+<input accept="image/jpeg,image/png,image/webp" id="eventImage" type="file"/>
+</label>
+<div class="check-row">
+<label>
+<input id="eventFeatured" type="checkbox"/>
+                      Featured event
+                    </label>
+<label>
+<input checked="" id="eventPublished" type="checkbox"/>
+                      Published
+                    </label>
+</div>
+<div class="portal-note">
+<strong>Flexible event posting</strong>
+<span>
+                      All event fields are optional. For a poster-only event,
+                      simply upload the event image, choose Published, and save.
+                    </span>
+</div>
+<button class="btn btn-primary" type="submit">
+                    Save Event
+                  </button>
+<p class="form-message" id="eventMessage"></p>
+</form>
+</div>
+<div class="admin-list" id="eventsList"></div>
+</section>
+<section class="dashboard-panel" hidden="" id="galleryPanel">
+<div class="dashboard-heading">
+<div>
+<p class="eyebrow">GALLERY</p>
+<h2>Photo archive</h2>
+</div>
+<div class="gallery-header-actions">
+<button class="btn btn-secondary" id="uploadPhotosBtn" type="button">
+                    + Upload Photos
+                  </button>
+<button class="btn btn-primary" id="newAlbumBtn" type="button">
+                    + New Album
+                  </button>
+</div>
+</div>
+<div class="dashboard-toolbar">
+<select id="galleryYearFilter">
+<option value="all">All years</option>
+</select>
+<input id="galleryAlbumSearch" placeholder="Search album or event" type="search"/>
+</div>
+<div class="dashboard-card quick-photo-upload-panel" hidden="" id="quickPhotoUploadPanel">
+<div class="card-heading">
+<div>
+<h3>Upload photos to an existing album</h3>
+<p>
+                      Choose the album, select one or multiple photos, then upload.
+                    </p>
+</div>
+<button class="text-button" id="cancelQuickPhotoUploadBtn" type="button">
+                    Cancel
+                  </button>
+</div>
+<form class="admin-form" id="quickPhotoUploadForm">
+<label>
+                    Choose album
+                    <select id="quickPhotoAlbumSelect" required="">
+<option value="">Select an album</option>
+</select>
+</label>
+<label class="gallery-upload-box">
+<span>Choose photos</span>
+<small>
+                      JPEG, PNG or WebP. You can select multiple files.
+                    </small>
+<input accept="image/jpeg,image/png,image/webp" id="quickPhotoFiles" multiple="" required="" type="file"/>
+</label>
+<button class="btn btn-primary" type="submit">
+                    Upload Photos
+                  </button>
+<p class="form-message" id="quickPhotoUploadMessage"></p>
+</form>
+</div>
+<div class="dashboard-card" hidden="" id="albumFormPanel">
+<div class="card-heading">
+<div>
+<h3 id="albumFormTitle">Create album</h3>
+<p>
+                      Organize photos by event and year, then publish when ready.
+                    </p>
+</div>
+<button class="text-button" id="cancelAlbumEditBtn" type="button">
+                    Cancel
+                  </button>
+</div>
+<form class="admin-form" id="albumForm">
+<input id="albumId" type="hidden"/>
+<div class="form-grid-2">
+<label>
+                      Album title
+                      <input id="albumTitle" maxlength="140" placeholder="Bihu 2026" required=""/>
+</label>
+<label>
+                      Year
+                      <input id="albumYear" max="2100" min="2000" required="" type="number"/>
+</label>
+<label>
+                      Event / category
+                      <input id="albumEventName" maxlength="120" placeholder="Bihu"/>
+</label>
+<label>
+                      Link to event
+                      <select id="albumEventId">
+<option value="">No linked event</option>
+</select>
+</label>
+</div>
+<label>
+                    Description
+                    <span class="optional">optional</span>
+<textarea id="albumDescription" maxlength="700" rows="4"></textarea>
+</label>
+<div class="check-row">
+<label>
+<input id="albumPublished" type="checkbox"/>
+                      Published
+                    </label>
+</div>
+<div class="album-create-upload">
+<div class="album-create-upload__heading">
+<div>
+<strong>Upload photos</strong>
+<span>
+                          Select one or multiple JPEG, PNG or WebP images.
+                          The first uploaded photo becomes the album cover automatically.
+                        </span>
+</div>
+</div>
+<label class="gallery-upload-box gallery-upload-box--create">
+<span>Choose photos</span>
+<small>
+                        You can select multiple images before saving the album.
+                      </small>
+<input accept="image/jpeg,image/png,image/webp" id="albumPhotoUpload" multiple="" type="file"/>
+</label>
+<div class="album-selected-photos" hidden="" id="albumSelectedPhotos"></div>
+</div>
+<button class="btn btn-primary" type="submit">
+                    Save Album &amp; Photos
+                  </button>
+<p class="form-message" id="albumMessage"></p>
+</form>
+</div>
+<div class="admin-list" id="albumsList"></div>
+<div class="dashboard-card" hidden="" id="albumPhotosPanel">
+<div class="card-heading">
+<div>
+<p class="eyebrow">ALBUM PHOTOS</p>
+<h3 id="albumPhotosTitle">Photos</h3>
+</div>
+<button class="text-button" id="closeAlbumPhotosBtn" type="button">
+                    Close
+                  </button>
+</div>
+<label class="gallery-upload-box">
+<span>Upload photos</span>
+<small>JPEG, PNG or WebP. You can select multiple files.</small>
+<input accept="image/jpeg,image/png,image/webp" id="galleryPhotoUpload" multiple="" type="file"/>
+</label>
+<p class="form-message" id="galleryUploadMessage"></p>
+<div class="admin-gallery-grid" id="albumPhotosGrid"></div>
+</div>
+</section>
+<section class="dashboard-panel" hidden="" id="membershipsPanel">
+<div class="dashboard-heading">
+<div>
+<p class="eyebrow">MEMBERSHIPS</p>
+<h2>Applications &amp; payments</h2>
+</div>
+</div>
+<div class="dashboard-toolbar">
+<select id="membershipStatusFilter">
+<option value="all">
+                    All applications
+                  </option>
+<option value="pending_payment">
+                    Pending payment verification
+                  </option>
+<option value="active">
+                    Active
+                  </option>
+<option value="declined">
+                    Declined
+                  </option>
+</select>
+<input id="membershipSearch" placeholder="Search name or email" type="search"/>
+</div>
+<div class="admin-list" id="membershipApplicationsList"></div>
+</section>
+<section class="dashboard-panel" hidden="" id="accessPanel">
+<div class="dashboard-heading">
+<div>
+<p class="eyebrow">ACCESS</p>
+<h2>Committee access management</h2>
+</div>
+<button class="btn btn-primary" id="addCommitteeUserBtn" type="button">
+                  + Add Committee User
+                </button>
+</div>
+<p class="form-message" id="membersMessage"></p>
+<div class="dashboard-card" hidden="" id="addCommitteeUserPanel">
+<div class="card-heading">
+<div>
+<h3>Add committee user</h3>
+<p>
+                      Pre-authorize a committee member by email and assign their role.
+                    </p>
+</div>
+<button class="text-button" id="cancelAddCommitteeUserBtn" type="button">
+                    Cancel
+                  </button>
+</div>
+<form class="admin-form" id="committeeInviteForm">
+<div class="form-grid-2">
+<label>
+                      Full name
+                      <input id="inviteFullName" maxlength="100" required=""/>
+</label>
+<label>
+                      Email address
+                      <input id="inviteEmail" required="" type="email"/>
+</label>
+<label>
+                      Role
+                      <select id="inviteRole" required="">
+<option value="viewer">Viewer</option>
+<option selected="" value="editor">Editor</option>
+<option value="admin">Admin</option>
+</select>
+</label>
+</div>
+<div class="portal-note">
+<strong>How this works</strong>
+<span>
+                      The email is pre-authorized here. The committee member still creates
+                      their own password through Request Access. Admin credentials are never
+                      exposed in the browser.
+                    </span>
+</div>
+<button class="btn btn-primary" type="submit">
+                    Add Authorized User
+                  </button>
+<p class="form-message" id="inviteMessage"></p>
+</form>
+</div>
+<div class="access-section">
+<div class="access-section-heading">
+<div>
+<p class="eyebrow">PENDING REQUESTS</p>
+<h3>Waiting for approval</h3>
+</div>
+<span id="pendingRequestCount"></span>
+</div>
+<div class="members-list" id="pendingMembersList"></div>
+</div>
+<div class="access-section">
+<div class="access-section-heading">
+<div>
+<p class="eyebrow">COMMITTEE USERS</p>
+<h3>Active &amp; revoked access</h3>
+</div>
+</div>
+<div class="members-list" id="membersList"></div>
+</div>
+</section>
+<section class="dashboard-panel" hidden="" id="settingsPanel">
+<div class="dashboard-heading">
+<div>
+<p class="eyebrow">SETTINGS</p>
+<h2>Membership settings</h2>
+</div>
+<p>
+                  Change plans and payment instructions without editing code.
+                </p>
+</div>
+<div class="settings-grid">
+<div class="dashboard-card">
+<div class="card-heading">
+<div>
+<h3>Membership plans</h3>
+<p>
+                        Update prices, names and availability.
+                      </p>
+</div>
+<button class="small-action" id="addPlanBtn" type="button">
+                      + Add Plan
+                    </button>
+</div>
+<div class="settings-list" id="planSettingsList"></div>
+</div>
+<div class="dashboard-card">
+<h3>
+                    Payment settings
+                  </h3>
+<form class="admin-form" id="paymentSettingsForm">
+<label>
+                      Interac e-Transfer email
+                      <input id="settingInteracEmail" required="" type="email"/>
+</label>
+<label>
+                      Payment instructions
+                      <textarea id="settingPaymentInstructions" rows="5"></textarea>
+</label>
+<button class="btn btn-primary" type="submit">
+                      Save Payment Settings
+                    </button>
+<p class="form-message" id="settingsMessage"></p>
+</form>
+</div>
+</div>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/membership.js"></script>
+  <script src="js/gallery.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/committee-portal.js"></script>
+</body>
+</html>
