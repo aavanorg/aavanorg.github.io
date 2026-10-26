@@ -1561,6 +1561,258 @@
       margin-top:16px!important;
     }
 
+
+    /* =========================================================
+       GALLERY WORKSPACE ALIGNMENT REFINEMENT
+       ========================================================= */
+
+    /* One shared content rail for the entire Gallery page */
+    #committeePortal #galleryPanel{
+      max-width:1180px!important;
+      margin:0 auto!important;
+      padding-left:28px!important;
+      padding-right:28px!important;
+    }
+
+    #committeePortal #galleryPanel .dashboard-heading,
+    #committeePortal #galleryPanel .gallery-toolbar,
+    #committeePortal #galleryPanel .gallery-folder-grid,
+    #committeePortal #galleryPanel #quickPhotoUploadPanel,
+    #committeePortal #galleryPanel #albumFormPanel,
+    #committeePortal #galleryPanel #albumPhotosPanel{
+      width:100%!important;
+      max-width:980px!important;
+      margin-left:auto!important;
+      margin-right:auto!important;
+      box-sizing:border-box!important;
+    }
+
+    /* Header and filters align to the same rail */
+    #committeePortal #galleryPanel .dashboard-heading{
+      max-width:1180px!important;
+    }
+
+    #committeePortal #galleryPanel .gallery-toolbar{
+      display:grid!important;
+      grid-template-columns:160px minmax(0,1fr)!important;
+      gap:10px!important;
+      max-width:1180px!important;
+      margin-bottom:18px!important;
+    }
+
+    #committeePortal #galleryPanel .gallery-toolbar select,
+    #committeePortal #galleryPanel .gallery-toolbar input{
+      height:38px!important;
+      min-height:38px!important;
+      border-radius:8px!important;
+      border:1px solid #d5cbc0!important;
+      background:#fff!important;
+      font-size:.8rem!important;
+    }
+
+    /* Upload / Create / Album Photos share one card language */
+    #committeePortal #quickPhotoUploadPanel,
+    #committeePortal #albumFormPanel,
+    #committeePortal #albumPhotosPanel{
+      padding:22px!important;
+      border:1px solid #e2d9ce!important;
+      border-radius:14px!important;
+      background:#fff!important;
+      box-shadow:0 10px 24px rgba(23,23,23,.04)!important;
+    }
+
+    #committeePortal #quickPhotoUploadPanel,
+    #committeePortal #albumFormPanel{
+      max-width:760px!important;
+    }
+
+    /* Album Photos becomes part of the same workspace, not a breakout card */
+    #committeePortal #albumPhotosPanel{
+      max-width:980px!important;
+      margin-top:18px!important;
+      border-top:1px solid #e2d9ce!important;
+    }
+
+    /* Unified 2-column form grid */
+    #committeePortal #albumForm .form-grid-2{
+      display:grid!important;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+      column-gap:14px!important;
+      row-gap:12px!important;
+      align-items:start!important;
+    }
+
+    #committeePortal #albumForm .form-grid-2 > label{
+      min-width:0!important;
+      width:100%!important;
+    }
+
+    #committeePortal #albumForm input:not([type="checkbox"]):not([type="file"]),
+    #committeePortal #albumForm select{
+      width:100%!important;
+      max-width:none!important;
+      height:40px!important;
+      min-height:40px!important;
+      box-sizing:border-box!important;
+    }
+
+    #committeePortal #albumForm textarea{
+      width:100%!important;
+      max-width:none!important;
+      min-height:90px!important;
+      box-sizing:border-box!important;
+    }
+
+    /* Full-width rows inside Create Album */
+    #committeePortal #albumForm > label:not(.check-row),
+    #committeePortal #albumForm .album-create-upload,
+    #committeePortal #albumForm .portal-note{
+      width:100%!important;
+      max-width:none!important;
+    }
+
+    /* Upload panel proportions */
+    #committeePortal #quickPhotoUploadForm{
+      display:grid!important;
+      gap:12px!important;
+    }
+
+    #committeePortal #quickPhotoUploadForm > label,
+    #committeePortal #quickPhotoUploadForm .gallery-upload-box{
+      width:100%!important;
+      max-width:none!important;
+    }
+
+    /* Card headings use the same alignment */
+    #committeePortal #quickPhotoUploadPanel .card-heading,
+    #committeePortal #albumFormPanel .card-heading,
+    #committeePortal #albumPhotosPanel .card-heading{
+      display:flex!important;
+      align-items:center!important;
+      justify-content:space-between!important;
+      gap:16px!important;
+      padding-bottom:12px!important;
+      margin-bottom:14px!important;
+      border-bottom:1px solid #eee7de!important;
+    }
+
+    #committeePortal #quickPhotoUploadPanel .card-heading h3,
+    #committeePortal #albumFormPanel .card-heading h3,
+    #committeePortal #albumPhotosPanel .card-heading h3{
+      margin:0!important;
+      font-size:1rem!important;
+    }
+
+    /* Proper icon-style close control */
+    #committeePortal #closeAlbumPhotosBtn{
+      width:32px!important;
+      min-width:32px!important;
+      height:32px!important;
+      min-height:32px!important;
+      padding:0!important;
+      display:grid!important;
+      place-items:center!important;
+      border:1px solid #ddd4ca!important;
+      border-radius:50%!important;
+      background:#fff!important;
+      color:#7a302b!important;
+      font-size:0!important;
+      line-height:1!important;
+    }
+
+    #committeePortal #closeAlbumPhotosBtn::before{
+      content:"×";
+      font-size:18px;
+      font-weight:600;
+      line-height:1;
+    }
+
+    /* Standardized bottom-right actions */
+    #committeePortal #quickPhotoUploadForm .form-action-row,
+    #committeePortal #albumForm .form-action-row{
+      display:flex!important;
+      justify-content:flex-end!important;
+      align-items:center!important;
+      gap:8px!important;
+      width:100%!important;
+      margin-top:4px!important;
+      padding-top:14px!important;
+      border-top:1px solid #eee7de!important;
+    }
+
+    #committeePortal #quickPhotoUploadForm .form-action-row button,
+    #committeePortal #albumForm .form-action-row button{
+      width:auto!important;
+      min-width:94px!important;
+      height:36px!important;
+      min-height:36px!important;
+      padding:0 13px!important;
+      border-radius:8px!important;
+      font-size:.74rem!important;
+    }
+
+    /* Keep upload controls visually contained */
+    #committeePortal #quickPhotoUploadPanel .gallery-upload-box,
+    #committeePortal #albumFormPanel .album-create-upload,
+    #committeePortal #albumPhotosPanel .gallery-upload-box{
+      padding:12px!important;
+      border:1px dashed #d7cec3!important;
+      border-radius:10px!important;
+      background:#fcfaf7!important;
+      box-sizing:border-box!important;
+    }
+
+    #committeePortal #quickPhotoUploadPanel input[type="file"],
+    #committeePortal #albumFormPanel input[type="file"],
+    #committeePortal #albumPhotosPanel input[type="file"]{
+      width:100%!important;
+      max-width:none!important;
+      box-sizing:border-box!important;
+    }
+
+    /* Folder grid stays inside same content rail */
+    #committeePortal #galleryPanel .gallery-folder-grid{
+      grid-template-columns:repeat(3,minmax(0,1fr))!important;
+      gap:14px!important;
+      max-width:980px!important;
+    }
+
+    @media(max-width:1050px){
+      #committeePortal #galleryPanel{
+        padding-left:18px!important;
+        padding-right:18px!important;
+      }
+
+      #committeePortal #galleryPanel .gallery-folder-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr))!important;
+      }
+    }
+
+    @media(max-width:760px){
+      #committeePortal #galleryPanel{
+        padding-left:12px!important;
+        padding-right:12px!important;
+      }
+
+      #committeePortal #galleryPanel .gallery-toolbar{
+        grid-template-columns:1fr!important;
+      }
+
+      #committeePortal #albumForm .form-grid-2{
+        grid-template-columns:1fr!important;
+      }
+
+      #committeePortal #galleryPanel .gallery-folder-grid{
+        grid-template-columns:1fr!important;
+      }
+
+      #committeePortal #quickPhotoUploadPanel,
+      #committeePortal #albumFormPanel,
+      #committeePortal #albumPhotosPanel{
+        padding:16px!important;
+      }
+    }
+
 </style>
 </head>
 <body class="committee-app-page">
@@ -2615,6 +2867,53 @@ document.addEventListener('DOMContentLoaded', () => {
       showOnly(photosPanel);
     }
   });
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const ensureActionRow = (formId, cancelId, submitTextMatcher) => {
+    const form = document.getElementById(formId);
+    if (!form) return;
+
+    let row = form.querySelector('.form-action-row');
+    if (!row) {
+      row = document.createElement('div');
+      row.className = 'form-action-row';
+      form.appendChild(row);
+    }
+
+    const cancel = document.getElementById(cancelId);
+    if (cancel) {
+      cancel.classList.add('form-cancel-btn');
+      row.appendChild(cancel);
+    }
+
+    const submit = Array.from(form.querySelectorAll('button[type="submit"]'))
+      .find((button) =>
+        button.textContent.trim().toLowerCase().includes(
+          submitTextMatcher.toLowerCase()
+        )
+      ) || form.querySelector('button[type="submit"]');
+
+    if (submit) {
+      submit.classList.add('form-save-btn');
+      row.appendChild(submit);
+    }
+  };
+
+  ensureActionRow(
+    'quickPhotoUploadForm',
+    'cancelQuickPhotoUploadBtn',
+    'Upload'
+  );
+
+  ensureActionRow(
+    'albumForm',
+    'cancelAlbumEditBtn',
+    'Save'
+  );
 });
 </script>
 
