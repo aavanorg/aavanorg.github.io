@@ -1813,6 +1813,143 @@
       }
     }
 
+
+    /* =========================================================
+       GALLERY — THREE CARD ALIGNMENT FIX
+       Upload Photos / Create Album / Album Photos
+       ========================================================= */
+
+    #committeePortal #quickPhotoUploadPanel,
+    #committeePortal #albumFormPanel,
+    #committeePortal #albumPhotosPanel{
+      width:100%!important;
+      max-width:760px!important;
+      margin-left:auto!important;
+      margin-right:auto!important;
+      box-sizing:border-box!important;
+    }
+
+    #committeePortal #quickPhotoUploadPanel{
+      margin-top:18px!important;
+      margin-bottom:18px!important;
+    }
+
+    #committeePortal #albumFormPanel{
+      margin-top:18px!important;
+      margin-bottom:18px!important;
+    }
+
+    #committeePortal #albumPhotosPanel{
+      margin-top:18px!important;
+      margin-bottom:18px!important;
+    }
+
+    /* Keep all three cards visually identical in shell treatment */
+    #committeePortal #quickPhotoUploadPanel,
+    #committeePortal #albumFormPanel,
+    #committeePortal #albumPhotosPanel{
+      padding:22px!important;
+      background:#fff!important;
+      border:1px solid #e2d9ce!important;
+      border-radius:14px!important;
+      box-shadow:0 10px 24px rgba(23,23,23,.04)!important;
+    }
+
+    @media(max-width:900px){
+      #committeePortal #quickPhotoUploadPanel,
+      #committeePortal #albumFormPanel,
+      #committeePortal #albumPhotosPanel{
+        width:calc(100% - 24px)!important;
+        max-width:760px!important;
+      }
+    }
+
+
+    /* ===== GALLERY TOP AREA ONLY ===== */
+    #committeePortal #galleryPanel{
+      max-width:none!important;
+      margin:0!important;
+      padding-left:24px!important;
+      padding-right:24px!important;
+    }
+
+    #committeePortal #galleryPanel .dashboard-heading{
+      width:100%!important;
+      max-width:none!important;
+      margin:0 0 22px!important;
+      padding:0!important;
+      display:flex!important;
+      align-items:flex-end!important;
+      justify-content:space-between!important;
+      gap:24px!important;
+      border-bottom:0!important;
+    }
+
+    #committeePortal #galleryPanel .dashboard-heading > div:first-child{
+      min-width:0;
+    }
+
+    #committeePortal #galleryPanel .dashboard-heading h2{
+      margin:0!important;
+      font-size:clamp(2.5rem,4vw,4rem)!important;
+      line-height:.95!important;
+    }
+
+    #committeePortal #galleryPanel .gallery-header-actions{
+      display:flex!important;
+      align-items:center!important;
+      gap:10px!important;
+      flex-shrink:0;
+    }
+
+    #committeePortal #galleryPanel .gallery-header-actions .btn{
+      width:auto!important;
+      min-width:0!important;
+      height:38px!important;
+      min-height:38px!important;
+      padding:0 15px!important;
+      border-radius:10px!important;
+      font-size:.78rem!important;
+    }
+
+    #committeePortal #galleryPanel .gallery-toolbar{
+      width:100%!important;
+      max-width:none!important;
+      margin:0 0 28px!important;
+      display:grid!important;
+      grid-template-columns:220px minmax(0,1fr)!important;
+      gap:12px!important;
+    }
+
+    #committeePortal #galleryPanel .gallery-toolbar select,
+    #committeePortal #galleryPanel .gallery-toolbar input{
+      width:100%!important;
+      height:42px!important;
+      min-height:42px!important;
+      box-sizing:border-box!important;
+      border:1px solid #d7cdc1!important;
+      border-radius:10px!important;
+      background:#fff!important;
+      padding:0 13px!important;
+      font-size:.84rem!important;
+    }
+
+    @media(max-width:760px){
+      #committeePortal #galleryPanel{
+        padding-left:14px!important;
+        padding-right:14px!important;
+      }
+
+      #committeePortal #galleryPanel .dashboard-heading{
+        align-items:flex-start!important;
+        flex-direction:column!important;
+      }
+
+      #committeePortal #galleryPanel .gallery-toolbar{
+        grid-template-columns:1fr!important;
+      }
+    }
+
 </style>
 </head>
 <body class="committee-app-page">
