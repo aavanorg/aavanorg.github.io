@@ -1,2165 +1,763 @@
-(() => {
-  const supabase = window.AAVAN?.supabase;
+<!doctype html>
+<html lang="en">
 
-  if (!supabase) {
-    console.warn('AAVAN gallery: Supabase is not available.');
-    return;
-  }
+<head>
 
-  let currentUser = null;
-  let currentProfile = null;
-  let activeAlbumId = null;
-  let adminAlbums = [];
-  let adminEvents = [];
+  <meta charset="utf-8">
 
-  /* Public gallery */
-  const publicGalleryYear =
-    document.getElementById('publicGalleryYear');
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
 
-  const publicGalleryAlbums =
-    document.getElementById('publicGalleryAlbums');
+  <meta
+    name="description"
+    content="Explore photos, videos and community memories from the Assam Association of Vancouver, organized by year and event."
+  >
 
-  const galleryFallback =
-    document.getElementById('galleryFallback');
+  <title>
+    Gallery | Assam Association of Vancouver
+  </title>
 
-  /* Admin gallery */
-  const newAlbumBtn =
-    document.getElementById('newAlbumBtn');
 
-  const uploadPhotosBtn =
-    document.getElementById('uploadPhotosBtn');
+  <link
+    rel="stylesheet"
+    href="css/public-v2.css?v=20261027-3"
+  >
 
-  const quickPhotoUploadPanel =
-    document.getElementById('quickPhotoUploadPanel');
+  <link
+    rel="stylesheet"
+    href="css/gallery-page.css?v=20261027-2"
+  >
 
-  const cancelQuickPhotoUploadBtn =
-    document.getElementById('cancelQuickPhotoUploadBtn');
+</head>
 
-  const quickPhotoUploadForm =
-    document.getElementById('quickPhotoUploadForm');
 
-  const quickPhotoAlbumSelect =
-    document.getElementById('quickPhotoAlbumSelect');
+<body class="gallery-page">
 
-  const quickPhotoFiles =
-    document.getElementById('quickPhotoFiles');
 
-  const quickPhotoUploadMessage =
-    document.getElementById('quickPhotoUploadMessage');
+  <!-- ======================================================
+       HEADER
+       ====================================================== -->
 
-  const galleryYearFilter =
-    document.getElementById('galleryYearFilter');
+  <header class="site-header">
 
-  const galleryAlbumSearch =
-    document.getElementById('galleryAlbumSearch');
+    <div class="container header-inner">
 
-  const albumFormPanel =
-    document.getElementById('albumFormPanel');
 
-  const cancelAlbumEditBtn =
-    document.getElementById('cancelAlbumEditBtn');
-
-  const albumForm =
-    document.getElementById('albumForm');
-
-  const albumId =
-    document.getElementById('albumId');
-
-  const albumTitle =
-    document.getElementById('albumTitle');
-
-  const albumYear =
-    document.getElementById('albumYear');
-
-  const albumEventName =
-    document.getElementById('albumEventName');
-
-  const albumEventId =
-    document.getElementById('albumEventId');
-
-  const albumDescription =
-    document.getElementById('albumDescription');
-
-  const albumPublished =
-    document.getElementById('albumPublished');
-
-  const albumPhotoUpload =
-    document.getElementById('albumPhotoUpload');
-
-  const albumSelectedPhotos =
-    document.getElementById('albumSelectedPhotos');
-
-  const albumMessage =
-    document.getElementById('albumMessage');
-
-  const albumFormTitle =
-    document.getElementById('albumFormTitle');
-
-  const albumsList =
-    document.getElementById('albumsList');
-
-  const albumPhotosPanel =
-    document.getElementById('albumPhotosPanel');
-
-  const albumPhotosTitle =
-    document.getElementById('albumPhotosTitle');
-
-  const closeAlbumPhotosBtn =
-    document.getElementById('closeAlbumPhotosBtn');
-
-  const galleryPhotoUpload =
-    document.getElementById('galleryPhotoUpload');
-
-  const galleryUploadMessage =
-    document.getElementById('galleryUploadMessage');
-
-  const albumPhotosGrid =
-    document.getElementById('albumPhotosGrid');
-
-  /* =========================================================
-     HELPERS
-     ========================================================= */
-
-  const escapeHtml = (value = '') =>
-    String(value)
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
-
-  const canEdit = () =>
-    ['admin', 'editor'].includes(currentProfile?.role) &&
-    currentProfile?.status === 'active';
-
-  const setMessage = (
-    element,
-    text = '',
-    isError = false
-  ) => {
-    if (!element) return;
-
-    element.textContent = text;
-    element.classList.toggle('error', Boolean(isError));
-  };
-
-  const currentYear =
-    new Date().getFullYear();
-
-  const getCoverImage = (album) =>
-    album.cover_image_url ||
-    'assets/images/community-group.jpg';
-
-  const refreshYearSelect = (
-    select,
-    albums,
-    firstLabel
-  ) => {
-    if (!select) return;
-
-    const selected = select.value || 'all';
-
-    const years = [
-      ...new Set(
-        albums
-          .map((album) => Number(album.album_year))
-          .filter(Boolean)
-      )
-    ].sort((a, b) => b - a);
-
-    select.innerHTML = `
-      <option value="all">${firstLabel}</option>
-      ${years
-        .map(
-          (year) =>
-            `<option value="${year}">${year}</option>`
-        )
-        .join('')}
-    `;
-
-    if (
-      selected === 'all' ||
-      years.includes(Number(selected))
-    ) {
-      select.value = selected;
-    }
-  };
-
-  /* =========================================================
-     PUBLIC GALLERY
-     ========================================================= */
-
-  const publicGalleryMediaTabs =
-    Array.from(
-      document.querySelectorAll('[data-gallery-media]')
-    );
-
-  let publicAlbums = [];
-  let publicMediaFilter = 'all';
-
-  const getAlbumMediaType = (album) => {
-    const declaredType =
-      String(
-        album.media_type ||
-        album.album_type ||
-        ''
-      )
-        .trim()
-        .toLowerCase();
-
-    if (
-      declaredType === 'video' ||
-      declaredType === 'videos'
-    ) {
-      return 'videos';
-    }
-
-    return 'photos';
-  };
-
-  const closePublicAlbumModal = () => {
-    const modal =
-      document.getElementById('publicGalleryModal');
-
-    if (!modal) return;
-
-    modal.hidden = true;
-    document.body.style.overflow = '';
-  };
-
-  const createPublicAlbumModal = () => {
-    let modal =
-      document.getElementById('publicGalleryModal');
-
-    if (modal) return modal;
-
-    modal = document.createElement('div');
-    modal.id = 'publicGalleryModal';
-    modal.className = 'gallery-viewer';
-    modal.hidden = true;
-
-    modal.innerHTML = `
-      <div
-        class="gallery-viewer-backdrop"
-        data-gallery-viewer-close
-      ></div>
-
-      <section
-        class="gallery-viewer-shell"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="galleryViewerTitle"
+      <a
+        class="brand"
+        href="index.html"
+        aria-label="Assam Association of Vancouver home"
       >
-        <header class="gallery-viewer-header">
-          <div>
-            <span id="galleryViewerMeta"></span>
-            <h2 id="galleryViewerTitle">Gallery</h2>
-          </div>
 
-          <button
-            type="button"
-            data-gallery-viewer-close
-            aria-label="Close gallery"
-          >
-            ×
-          </button>
-        </header>
-
-        <div
-          id="galleryViewerPhotos"
-          class="gallery-viewer-grid"
-        ></div>
-      </section>
-    `;
-
-    document.body.appendChild(modal);
-
-    modal
-      .querySelectorAll('[data-gallery-viewer-close]')
-      .forEach((button) => {
-        button.addEventListener(
-          'click',
-          closePublicAlbumModal
-        );
-      });
-
-    return modal;
-  };
-
-  document.addEventListener(
-    'keydown',
-    (event) => {
-      if (event.key !== 'Escape') return;
-
-      const modal =
-        document.getElementById('publicGalleryModal');
-
-      if (!modal || modal.hidden) return;
-
-      closePublicAlbumModal();
-    }
-  );
-
-  const openPublicAlbum = async (album) => {
-    const modal =
-      createPublicAlbumModal();
-
-    const title =
-      modal.querySelector('#galleryViewerTitle');
-
-    const meta =
-      modal.querySelector('#galleryViewerMeta');
-
-    const photosGrid =
-      modal.querySelector('#galleryViewerPhotos');
-
-    if (title) {
-      title.textContent =
-        album.title || 'Gallery';
-    }
-
-    if (meta) {
-      meta.textContent =
-        [
-          album.event_name,
-          album.album_year
-        ]
-          .filter(Boolean)
-          .join(' • ');
-    }
-
-    if (photosGrid) {
-      photosGrid.innerHTML = `
-        <div class="admin-loading">
-          Loading memories…
-        </div>
-      `;
-    }
-
-    modal.hidden = false;
-    document.body.style.overflow = 'hidden';
-
-    const mediaType =
-      getAlbumMediaType(album);
-
-    if (mediaType === 'videos') {
-      if (photosGrid) {
-        photosGrid.innerHTML = `
-          <div class="admin-empty">
-            Video viewing will appear here once
-            video records are connected to the
-            AAVAN gallery archive.
-          </div>
-        `;
-      }
-
-      return;
-    }
-
-    const {
-      data,
-      error
-    } = await supabase
-      .from('gallery_photos')
-      .select('*')
-      .eq('album_id', album.id)
-      .order('featured', {
-        ascending: false
-      })
-      .order('display_order', {
-        ascending: true
-      })
-      .order('created_at', {
-        ascending: true
-      });
-
-    if (error) {
-      console.error(
-        'Public album photos error:',
-        error
-      );
-
-      if (photosGrid) {
-        photosGrid.innerHTML = `
-          <div class="admin-empty">
-            Unable to load this album.
-          </div>
-        `;
-      }
-
-      return;
-    }
-
-    const photos =
-      Array.isArray(data)
-        ? data
-        : [];
-
-    if (!photos.length) {
-      if (photosGrid) {
-        photosGrid.innerHTML = `
-          <div class="admin-empty">
-            Photos for this album are coming soon.
-          </div>
-        `;
-      }
-
-      return;
-    }
-
-    if (!photosGrid) return;
-
-    photosGrid.innerHTML =
-      photos
-        .map((photo) => `
-          <figure>
-            <img
-              src="${escapeHtml(photo.image_url)}"
-              alt="${escapeHtml(
-                photo.alt_text ||
-                photo.caption ||
-                album.title ||
-                'AAVAN gallery photo'
-              )}"
-              loading="lazy"
-            >
-
-            ${
-              photo.caption
-                ? `
-                    <figcaption>
-                      ${escapeHtml(photo.caption)}
-                    </figcaption>
-                  `
-                : ''
-            }
-          </figure>
-        `)
-        .join('');
-  };
-
-  const getPublicFilteredAlbums = () => {
-    const selectedYear =
-      publicGalleryYear?.value ||
-      'all';
-
-    return publicAlbums.filter(
-      (album) => {
-        const matchesYear =
-          selectedYear === 'all' ||
-          String(album.album_year) ===
-            String(selectedYear);
-
-        const mediaType =
-          getAlbumMediaType(album);
-
-        const matchesMedia =
-          publicMediaFilter === 'all' ||
-          mediaType === publicMediaFilter;
-
-        return matchesYear && matchesMedia;
-      }
-    );
-  };
-
-  const renderPublicAlbumCard = (album) => {
-    const mediaType =
-      getAlbumMediaType(album);
-
-    const mediaLabel =
-      mediaType === 'videos'
-        ? 'Video'
-        : 'Photos';
-
-    return `
-      <button
-        class="gallery-album-card"
-        type="button"
-        data-public-album="${escapeHtml(album.id)}"
-      >
         <img
-          src="${escapeHtml(getCoverImage(album))}"
-          alt="${escapeHtml(
-            album.title ||
-            'AAVAN gallery album'
-          )}"
-          loading="lazy"
+          src="assets/images/logo.png"
+          alt="AAVAN"
         >
 
-        <span class="gallery-album-card-copy">
-          <small>
-            ${escapeHtml(
-              [
-                album.event_name ||
-                  'AAVAN Community',
-                album.album_year,
-                mediaLabel
-              ]
-                .filter(Boolean)
-                .join(' • ')
-            )}
-          </small>
-
-          <strong>
-            ${escapeHtml(
-              album.title ||
-              'Community memories'
-            )}
-          </strong>
-
-          ${
-            album.description
-              ? `
-                  <span>
-                    ${escapeHtml(album.description)}
-                  </span>
-                `
-              : ''
-          }
+        <span>
+          Assam Association Vancouver
         </span>
-      </button>
-    `;
-  };
 
-  const attachPublicAlbumActions = () => {
-    if (!publicGalleryAlbums) return;
+      </a>
 
-    publicGalleryAlbums
-      .querySelectorAll('[data-public-album]')
-      .forEach((button) => {
-        button.addEventListener(
-          'click',
-          () => {
-            const album =
-              publicAlbums.find(
-                (item) =>
-                  String(item.id) ===
-                  String(
-                    button.dataset.publicAlbum
-                  )
-              );
 
-            if (album) {
-              openPublicAlbum(album);
-            }
-          }
-        );
-      });
-  };
+      <nav
+        class="nav"
+        aria-label="Main navigation"
+      >
 
-  const renderPublicAlbums = () => {
-    if (!publicGalleryAlbums) return;
+        <a href="index.html#about">
+          About
+        </a>
 
-    const filtered =
-      getPublicFilteredAlbums();
+        <a href="index.html#events">
+          Events
+        </a>
 
-    if (!filtered.length) {
-      publicGalleryAlbums.innerHTML = '';
+        <a href="discover-assam.html">
+          Discover Assam
+        </a>
 
-      if (galleryFallback) {
-        galleryFallback.hidden = false;
+        <a
+          href="gallery.html"
+          aria-current="page"
+        >
+          Gallery
+        </a>
 
-        const heading =
-          galleryFallback.querySelector('h3');
+        <a href="index.html#membership">
+          Membership
+        </a>
 
-        const copy =
-          galleryFallback.querySelector('p');
+        <a href="index.html#contact">
+          Contact
+        </a>
 
-        if (publicMediaFilter === 'videos') {
-          if (heading) {
-            heading.textContent =
-              'Video memories are coming.';
-          }
+      </nav>
 
-          if (copy) {
-            copy.textContent =
-              'The archive is ready for video collections once video records are added to the gallery system.';
-          }
-        } else {
-          if (heading) {
-            heading.textContent =
-              'More memories are coming.';
-          }
 
-          if (copy) {
-            copy.textContent =
-              'Photos and videos from our community archive will appear here as albums are published.';
-          }
-        }
-      }
+      <div class="nav-actions">
 
-      return;
-    }
+        <a
+          class="btn"
+          href="committee-login.html"
+        >
+          Committee Login
+        </a>
 
-    if (galleryFallback) {
-      galleryFallback.hidden = true;
-    }
+        <a
+          class="btn btn-primary"
+          href="membership.html"
+        >
+          Join Us
+        </a>
 
-    const groupedByYear =
-      filtered.reduce(
-        (groups, album) => {
-          const year =
-            Number(album.album_year) ||
-            'Archive';
-
-          if (!groups[year]) {
-            groups[year] = [];
-          }
-
-          groups[year].push(album);
-          return groups;
-        },
-        {}
-      );
-
-    const years =
-      Object.keys(groupedByYear)
-        .sort((a, b) => {
-          if (a === 'Archive') return 1;
-          if (b === 'Archive') return -1;
-
-          return Number(b) - Number(a);
-        });
-
-    publicGalleryAlbums.innerHTML =
-      years
-        .map((year) => {
-          const albums =
-            groupedByYear[year];
-
-          return `
-            <section
-              class="gallery-year-group"
-              data-gallery-year="${escapeHtml(year)}"
-            >
-              <header class="gallery-year-heading">
-                <span>
-                  ${
-                    year === 'Archive'
-                      ? 'ARCHIVE'
-                      : escapeHtml(year)
-                  }
-                </span>
-
-                <div>
-                  <h3>
-                    ${
-                      year === 'Archive'
-                        ? 'Community archive'
-                        : `${escapeHtml(year)} memories`
-                    }
-                  </h3>
-
-                  <p>
-                    ${albums.length}
-                    ${albums.length === 1
-                      ? 'event album'
-                      : 'event albums'}
-                  </p>
-                </div>
-              </header>
-
-              <div class="gallery-year-grid">
-                ${albums
-                  .map(renderPublicAlbumCard)
-                  .join('')}
-              </div>
-            </section>
-          `;
-        })
-        .join('');
-
-    attachPublicAlbumActions();
-  };
-
-  const setPublicMediaFilter = (filter) => {
-    publicMediaFilter =
-      ['all', 'photos', 'videos']
-        .includes(filter)
-        ? filter
-        : 'all';
-
-    publicGalleryMediaTabs
-      .forEach((button) => {
-        const isActive =
-          button.dataset.galleryMedia ===
-          publicMediaFilter;
-
-        button.classList.toggle(
-          'active',
-          isActive
-        );
-
-        button.setAttribute(
-          'aria-pressed',
-          isActive
-            ? 'true'
-            : 'false'
-        );
-      });
-
-    renderPublicAlbums();
-  };
-
-  publicGalleryMediaTabs
-    .forEach((button) => {
-      button.addEventListener(
-        'click',
-        () => {
-          setPublicMediaFilter(
-            button.dataset.galleryMedia ||
-            'all'
-          );
-        }
-      );
-    });
-
-  const loadPublicGallery = async () => {
-    if (!publicGalleryAlbums) return;
-
-    publicGalleryAlbums.innerHTML = `
-      <div class="admin-loading">
-        Loading community memories…
       </div>
-    `;
 
-    try {
-      const {
-        data,
-        error
-      } = await supabase
-        .from('gallery_albums')
-        .select('*')
-        .eq('published', true)
-        .order('album_year', {
-          ascending: false
-        })
-        .order('display_order', {
-          ascending: true
-        })
-        .order('created_at', {
-          ascending: false
-        });
+    </div>
 
-      if (error) throw error;
+  </header>
 
-      publicAlbums =
-        Array.isArray(data)
-          ? data
-          : [];
 
-      refreshYearSelect(
-        publicGalleryYear,
-        publicAlbums,
-        'All years'
-      );
 
-      if (publicGalleryYear) {
-        publicGalleryYear.onchange =
-          renderPublicAlbums;
-      }
+  <!-- ======================================================
+       MAIN
+       ====================================================== -->
 
-      renderPublicAlbums();
+  <main>
 
-    } catch (error) {
-      console.error(
-        'Public gallery error:',
-        error
-      );
 
-      publicAlbums = [];
-      publicGalleryAlbums.innerHTML = '';
+    <!-- ====================================================
+         HERO
+         ==================================================== -->
 
-      if (galleryFallback) {
-        galleryFallback.hidden = false;
-      }
-    }
-  };
+    <section class="gallery-hero">
 
-  /* =========================================================
-     ADMIN CONTEXT
-     ========================================================= */
+      <div class="container gallery-hero-grid">
 
-  const setAdminContext = ({
-    user,
-    profile
-  } = {}) => {
-    currentUser = user || currentUser;
-    currentProfile = profile || currentProfile;
 
-    if (newAlbumBtn) {
-      newAlbumBtn.hidden = !canEdit();
-    }
+        <!-- Hero copy -->
 
-    if (uploadPhotosBtn) {
-      uploadPhotosBtn.hidden = !canEdit();
-    }
-  };
+        <div class="gallery-hero-copy">
 
-  /* =========================================================
-     ADMIN ALBUMS
-     ========================================================= */
+          <p class="eyebrow">
+            AAVAN ARCHIVE
+          </p>
 
-  const resetAlbumForm = () => {
-    albumForm?.reset();
 
-    if (albumId) albumId.value = '';
+          <h1>
+            Our community,
+            <span>through the years.</span>
+          </h1>
 
-    if (albumYear) {
-      albumYear.value = String(currentYear);
-    }
 
-    if (albumPublished) {
-      albumPublished.checked = false;
-    }
+          <p class="gallery-hero-lead">
+            More than a decade of celebrations,
+            friendships, traditions and shared
+            moments from the Assam Association
+            of Vancouver community.
+          </p>
 
-    if (albumPhotoUpload) {
-      albumPhotoUpload.value = '';
-    }
 
-    if (albumSelectedPhotos) {
-      albumSelectedPhotos.hidden = true;
-      albumSelectedPhotos.innerHTML = '';
-    }
+          <a
+            class="gallery-hero-link"
+            href="#archive"
+          >
+            Explore the archive
+            <span aria-hidden="true">↓</span>
+          </a>
 
-    if (albumFormTitle) {
-      albumFormTitle.textContent =
-        'Create album';
-    }
-
-    setMessage(albumMessage);
-  };
-
-  const loadAdminEvents = async () => {
-    if (!albumEventId) return;
-
-    const {
-      data,
-      error
-    } = await supabase
-      .from('events')
-      .select('id,title,event_date')
-      .order('event_date', {
-        ascending: false
-      });
-
-    if (error) {
-      console.error(
-        'Gallery event list error:',
-        error
-      );
-      return;
-    }
-
-    adminEvents =
-      Array.isArray(data)
-        ? data
-        : [];
-
-    const current =
-      albumEventId.value || '';
-
-    albumEventId.innerHTML = `
-      <option value="">No linked event</option>
-      ${adminEvents
-        .map((event) => `
-          <option value="${event.id}">
-            ${escapeHtml(event.title)}
-            ${event.event_date
-              ? ` — ${escapeHtml(event.event_date)}`
-              : ''}
-          </option>
-        `)
-        .join('')}
-    `;
-
-    albumEventId.value = current;
-  };
-
-  const populateQuickPhotoAlbumSelect = () => {
-    if (!quickPhotoAlbumSelect) return;
-
-    const currentValue =
-      quickPhotoAlbumSelect.value || '';
-
-    quickPhotoAlbumSelect.innerHTML = `
-      <option value="">Select an album</option>
-      ${adminAlbums
-        .map((album) => `
-          <option value="${album.id}">
-            ${escapeHtml(album.title)}
-            ${album.album_year ? ` — ${escapeHtml(album.album_year)}` : ''}
-          </option>
-        `)
-        .join('')}
-    `;
-
-    if (
-      currentValue &&
-      adminAlbums.some(
-        (album) =>
-          String(album.id) ===
-          String(currentValue)
-      )
-    ) {
-      quickPhotoAlbumSelect.value =
-        currentValue;
-    }
-  };
-
-  const renderAdminAlbums = () => {
-    if (!albumsList) return;
-
-    const year =
-      galleryYearFilter?.value || 'all';
-
-    const search =
-      galleryAlbumSearch?.value
-        .trim()
-        .toLowerCase() || '';
-
-    const filtered =
-      adminAlbums.filter((album) => {
-        const matchesYear =
-          year === 'all' ||
-          String(album.album_year) === year;
-
-        const haystack =
-          `${album.title || ''} ${album.event_name || ''}`
-            .toLowerCase();
-
-        const matchesSearch =
-          !search ||
-          haystack.includes(search);
-
-        return matchesYear && matchesSearch;
-      });
-
-    if (!filtered.length) {
-      albumsList.innerHTML = `
-        <div class="admin-empty">
-          No gallery albums match this view.
         </div>
-      `;
-      return;
-    }
 
-    albumsList.innerHTML =
-      filtered.map((album) => `
-        <article class="admin-row">
 
-          <div class="admin-row-main">
-            <strong>
-              ${escapeHtml(album.title)}
-            </strong>
 
-            <span>
-              ${escapeHtml(
-                album.event_name ||
-                'General gallery'
-              )}
-            </span>
-          </div>
+        <!-- Hero images -->
 
-          <div class="admin-row-meta">
-            <span>Year</span>
-            <strong>
-              ${escapeHtml(album.album_year)}
-            </strong>
-          </div>
+        <div class="gallery-hero-visual">
 
-          <div class="admin-row-meta">
-            <span>Status</span>
-            <span class="status-pill ${
-              album.published
-                ? 'published'
-                : ''
-            }">
-              ${
-                album.published
-                  ? 'Published'
-                  : 'Draft'
-              }
-            </span>
-          </div>
-
-          <div class="admin-row-actions">
-            <button
-              type="button"
-              data-album-photos="${album.id}"
-            >
-              Manage Photos
-            </button>
-
-            ${
-              canEdit()
-                ? `
-                  <button
-                    type="button"
-                    data-album-edit="${album.id}"
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    type="button"
-                    class="danger"
-                    data-album-delete="${album.id}"
-                  >
-                    Delete
-                  </button>
-                `
-                : ''
-            }
-          </div>
-
-        </article>
-      `).join('');
-
-    attachAlbumActions();
-  };
-
-  const loadAlbums = async () => {
-    if (!albumsList) return;
-
-    albumsList.innerHTML =
-      '<div class="admin-loading">Loading albums…</div>';
-
-    const {
-      data,
-      error
-    } = await supabase
-      .from('gallery_albums')
-      .select('*')
-      .order('album_year', {
-        ascending: false
-      })
-      .order('display_order', {
-        ascending: true
-      })
-      .order('created_at', {
-        ascending: false
-      });
-
-    if (error) {
-      console.error(
-        'Gallery albums error:',
-        error
-      );
-
-      albumsList.innerHTML = `
-        <div class="admin-empty">
-          Unable to load gallery albums.
-        </div>
-      `;
-      return;
-    }
-
-    adminAlbums =
-      Array.isArray(data)
-        ? data
-        : [];
-
-    refreshYearSelect(
-      galleryYearFilter,
-      adminAlbums,
-      'All years'
-    );
-
-    populateQuickPhotoAlbumSelect();
-    renderAdminAlbums();
-  };
-
-  uploadPhotosBtn?.addEventListener(
-    'click',
-    async () => {
-      if (!canEdit()) return;
-
-      setMessage(
-        quickPhotoUploadMessage
-      );
-
-      if (quickPhotoUploadForm) {
-        quickPhotoUploadForm.reset();
-      }
-
-      if (!adminAlbums.length) {
-        await loadAlbums();
-      }
-
-      populateQuickPhotoAlbumSelect();
-
-      if (quickPhotoUploadPanel) {
-        quickPhotoUploadPanel.hidden = false;
-        quickPhotoUploadPanel.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-    }
-  );
-
-  cancelQuickPhotoUploadBtn?.addEventListener(
-    'click',
-    () => {
-      quickPhotoUploadForm?.reset();
-
-      setMessage(
-        quickPhotoUploadMessage
-      );
-
-      if (quickPhotoUploadPanel) {
-        quickPhotoUploadPanel.hidden = true;
-      }
-    }
-  );
-
-  newAlbumBtn?.addEventListener(
-    'click',
-    async () => {
-      if (!canEdit()) return;
-
-      resetAlbumForm();
-      await loadAdminEvents();
-
-      if (albumFormPanel) {
-        albumFormPanel.hidden = false;
-        albumFormPanel.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-    }
-  );
-
-  cancelAlbumEditBtn?.addEventListener(
-    'click',
-    () => {
-      resetAlbumForm();
-
-      if (albumFormPanel) {
-        albumFormPanel.hidden = true;
-      }
-    }
-  );
-
-  albumEventId?.addEventListener(
-    'change',
-    () => {
-      const selected =
-        adminEvents.find(
-          (event) =>
-            String(event.id) ===
-            String(albumEventId.value)
-        );
-
-      if (!selected) return;
-
-      if (
-        albumEventName &&
-        !albumEventName.value.trim()
-      ) {
-        albumEventName.value =
-          selected.title || '';
-      }
-
-      if (
-        albumYear &&
-        selected.event_date
-      ) {
-        albumYear.value =
-          String(selected.event_date)
-            .slice(0, 4);
-      }
-    }
-  );
-
-  albumPhotoUpload?.addEventListener(
-    'change',
-    () => {
-      if (!albumSelectedPhotos) return;
-
-      const files =
-        Array.from(
-          albumPhotoUpload.files || []
-        );
-
-      if (!files.length) {
-        albumSelectedPhotos.hidden = true;
-        albumSelectedPhotos.innerHTML = '';
-        return;
-      }
-
-      albumSelectedPhotos.hidden = false;
-      albumSelectedPhotos.innerHTML = `
-        <strong>
-          ${files.length} photo${files.length === 1 ? '' : 's'} selected
-        </strong>
-
-        <div class="album-selected-photos__list">
-          ${files
-            .map(
-              (file, index) => `
-                <span>
-                  ${index + 1}. ${escapeHtml(file.name)}
-                </span>
-              `
-            )
-            .join('')}
-        </div>
-      `;
-    }
-  );
-
-  albumForm?.addEventListener(
-    'submit',
-    async (event) => {
-      event.preventDefault();
-
-      if (!canEdit()) return;
-
-      const title =
-        albumTitle.value.trim();
-
-      const year =
-        Number(albumYear.value);
-
-      const selectedFiles =
-        Array.from(
-          albumPhotoUpload?.files || []
-        );
-
-      if (!title || !year) {
-        setMessage(
-          albumMessage,
-          'Album title and year are required.',
-          true
-        );
-        return;
-      }
-
-      try {
-        setMessage(
-          albumMessage,
-          selectedFiles.length
-            ? `Saving album and uploading ${selectedFiles.length} photo${selectedFiles.length === 1 ? '' : 's'}…`
-            : 'Saving album…'
-        );
-
-        const payload = {
-          title,
-          album_year: year,
-          event_name:
-            albumEventName.value.trim() ||
-            null,
-          event_id:
-            albumEventId.value ||
-            null,
-          description:
-            albumDescription.value.trim() ||
-            null,
-          published:
-            albumPublished.checked,
-          updated_by:
-            currentUser.id
-        };
-
-        let savedAlbumId =
-          albumId.value || null;
-
-        if (savedAlbumId) {
-          const {
-            error: updateError
-          } = await supabase
-            .from('gallery_albums')
-            .update(payload)
-            .eq('id', savedAlbumId);
-
-          if (updateError) {
-            throw updateError;
-          }
-        } else {
-          payload.created_by =
-            currentUser.id;
-
-          const {
-            data: insertedAlbum,
-            error: insertError
-          } = await supabase
-            .from('gallery_albums')
-            .insert(payload)
-            .select('id')
-            .single();
-
-          if (insertError) {
-            throw insertError;
-          }
-
-          savedAlbumId =
-            insertedAlbum?.id;
-
-          if (!savedAlbumId) {
-            throw new Error(
-              'Album was created but its ID could not be read.'
-            );
-          }
-        }
-
-        if (selectedFiles.length) {
-          await uploadFilesToAlbum(
-            savedAlbumId,
-            selectedFiles,
-            (message) => {
-              setMessage(
-                albumMessage,
-                message
-              );
-            }
-          );
-        }
-
-        resetAlbumForm();
-
-        if (albumFormPanel) {
-          albumFormPanel.hidden = true;
-        }
-
-        await loadAlbums();
-        await loadPublicGallery();
-
-      } catch (error) {
-        console.error(
-          'Save album error:',
-          error
-        );
-
-        setMessage(
-          albumMessage,
-          error.message ||
-          'Unable to save album.',
-          true
-        );
-      }
-    }
-  );
-
-  galleryYearFilter?.addEventListener(
-    'change',
-    renderAdminAlbums
-  );
-
-  galleryAlbumSearch?.addEventListener(
-    'input',
-    renderAdminAlbums
-  );
-
-  const attachAlbumActions = () => {
-    document
-      .querySelectorAll('[data-album-edit]')
-      .forEach((button) => {
-        button.addEventListener(
-          'click',
-          async () => {
-            const album =
-              adminAlbums.find(
-                (item) =>
-                  String(item.id) ===
-                  String(button.dataset.albumEdit)
-              );
-
-            if (!album) return;
-
-            await loadAdminEvents();
-
-            albumId.value =
-              album.id || '';
-
-            albumTitle.value =
-              album.title || '';
-
-            albumYear.value =
-              album.album_year ||
-              currentYear;
-
-            albumEventName.value =
-              album.event_name || '';
-
-            albumEventId.value =
-              album.event_id || '';
-
-            albumDescription.value =
-              album.description || '';
-
-            albumPublished.checked =
-              Boolean(album.published);
-
-            if (albumFormTitle) {
-              albumFormTitle.textContent =
-                'Edit album';
-            }
-
-            if (albumFormPanel) {
-              albumFormPanel.hidden = false;
-              albumFormPanel.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-              });
-            }
-          }
-        );
-      });
-
-    document
-      .querySelectorAll('[data-album-delete]')
-      .forEach((button) => {
-        button.addEventListener(
-          'click',
-          async () => {
-            if (!canEdit()) return;
-
-            const confirmed =
-              window.confirm(
-                'Delete this album and all of its photo records?'
-              );
-
-            if (!confirmed) return;
-
-            const { error } =
-              await supabase
-                .from('gallery_albums')
-                .delete()
-                .eq(
-                  'id',
-                  button.dataset.albumDelete
-                );
-
-            if (error) {
-              window.alert(error.message);
-              return;
-            }
-
-            await loadAlbums();
-            await loadPublicGallery();
-          }
-        );
-      });
-
-    document
-      .querySelectorAll('[data-album-photos]')
-      .forEach((button) => {
-        button.addEventListener(
-          'click',
-          async () => {
-            const album =
-              adminAlbums.find(
-                (item) =>
-                  String(item.id) ===
-                  String(button.dataset.albumPhotos)
-              );
-
-            if (!album) return;
-
-            activeAlbumId = album.id;
-
-            if (albumPhotosTitle) {
-              albumPhotosTitle.textContent =
-                album.title;
-            }
-
-            if (albumPhotosPanel) {
-              albumPhotosPanel.hidden = false;
-              albumPhotosPanel.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-              });
-            }
-
-            await loadAlbumPhotos();
-          }
-        );
-      });
-  };
-
-  /* =========================================================
-     ADMIN PHOTOS
-     ========================================================= */
-
-  const uploadGalleryPhoto = async (
-    file,
-    albumIdValue
-  ) => {
-    const extension =
-      file.name.split('.').pop()?.toLowerCase() ||
-      'jpg';
-
-    const filename =
-      `${crypto.randomUUID()}.${extension}`;
-
-    const path =
-      `albums/${albumIdValue}/${filename}`;
-
-    const {
-      error
-    } = await supabase.storage
-      .from('gallery-images')
-      .upload(
-        path,
-        file,
-        {
-          cacheControl: '3600',
-          upsert: false
-        }
-      );
-
-    if (error) throw error;
-
-    const { data } = supabase.storage
-      .from('gallery-images')
-      .getPublicUrl(path);
-
-    return {
-      publicUrl:
-        data?.publicUrl || null,
-      storagePath:
-        path
-    };
-  };
-
-  const uploadFilesToAlbum = async (
-    albumIdValue,
-    files,
-    onProgress = null
-  ) => {
-    const selectedFiles =
-      Array.from(files || []);
-
-    if (!selectedFiles.length) {
-      return;
-    }
-
-    const {
-      data: existingPhotos,
-      error: existingPhotosError
-    } = await supabase
-      .from('gallery_photos')
-      .select('id')
-      .eq('album_id', albumIdValue)
-      .limit(1);
-
-    if (existingPhotosError) {
-      throw existingPhotosError;
-    }
-
-    const albumHasNoPhotos =
-      !existingPhotos?.length;
-
-    for (
-      let index = 0;
-      index < selectedFiles.length;
-      index += 1
-    ) {
-      const file =
-        selectedFiles[index];
-
-      if (onProgress) {
-        onProgress(
-          `Uploading photo ${index + 1} of ${selectedFiles.length}…`
-        );
-      }
-
-      const uploaded =
-        await uploadGalleryPhoto(
-          file,
-          albumIdValue
-        );
-
-      if (!uploaded.publicUrl) {
-        throw new Error(
-          `Unable to create public URL for ${file.name}.`
-        );
-      }
-
-      const isCover =
-        albumHasNoPhotos &&
-        index === 0;
-
-      const {
-        error: insertError
-      } = await supabase
-        .from('gallery_photos')
-        .insert({
-          album_id:
-            albumIdValue,
-
-          image_url:
-            uploaded.publicUrl,
-
-          alt_text:
-            file.name
-              .replace(/\.[^.]+$/, '')
-              .replaceAll('-', ' ')
-              .replaceAll('_', ' '),
-
-          featured:
-            isCover,
-
-          display_order:
-            index,
-
-          uploaded_by:
-            currentUser.id
-        });
-
-      if (insertError) {
-        throw insertError;
-      }
-
-      if (isCover) {
-        const {
-          error: coverError
-        } = await supabase
-          .from('gallery_albums')
-          .update({
-            cover_image_url:
-              uploaded.publicUrl,
-
-            updated_by:
-              currentUser.id
-          })
-          .eq(
-            'id',
-            albumIdValue
-          );
-
-        if (coverError) {
-          throw coverError;
-        }
-      }
-    }
-  };
-
-  quickPhotoUploadForm?.addEventListener(
-    'submit',
-    async (event) => {
-      event.preventDefault();
-
-      if (!canEdit()) return;
-
-      const targetAlbumId =
-        quickPhotoAlbumSelect?.value || '';
-
-      const files =
-        Array.from(
-          quickPhotoFiles?.files || []
-        );
-
-      if (!targetAlbumId) {
-        setMessage(
-          quickPhotoUploadMessage,
-          'Please choose an album.',
-          true
-        );
-        return;
-      }
-
-      if (!files.length) {
-        setMessage(
-          quickPhotoUploadMessage,
-          'Please choose at least one photo.',
-          true
-        );
-        return;
-      }
-
-      try {
-        await uploadFilesToAlbum(
-          targetAlbumId,
-          files,
-          (message) => {
-            setMessage(
-              quickPhotoUploadMessage,
-              message
-            );
-          }
-        );
-
-        setMessage(
-          quickPhotoUploadMessage,
-          'Photos uploaded successfully.'
-        );
-
-        quickPhotoUploadForm?.reset();
-
-        await loadAlbums();
-        await loadPublicGallery();
-
-      } catch (error) {
-        console.error(
-          'Quick gallery upload error:',
-          error
-        );
-
-        setMessage(
-          quickPhotoUploadMessage,
-          error.message ||
-          'Unable to upload photos.',
-          true
-        );
-      }
-    }
-  );
-
-  const loadAlbumPhotos = async () => {
-    if (
-      !activeAlbumId ||
-      !albumPhotosGrid
-    ) {
-      return;
-    }
-
-    albumPhotosGrid.innerHTML =
-      '<div class="admin-loading">Loading photos…</div>';
-
-    const {
-      data,
-      error
-    } = await supabase
-      .from('gallery_photos')
-      .select('*')
-      .eq('album_id', activeAlbumId)
-      .order('featured', {
-        ascending: false
-      })
-      .order('display_order', {
-        ascending: true
-      })
-      .order('created_at', {
-        ascending: true
-      });
-
-    if (error) {
-      albumPhotosGrid.innerHTML = `
-        <div class="admin-empty">
-          Unable to load album photos.
-        </div>
-      `;
-      return;
-    }
-
-    const photos =
-      Array.isArray(data)
-        ? data
-        : [];
-
-    if (!photos.length) {
-      albumPhotosGrid.innerHTML = `
-        <div class="admin-empty">
-          No photos uploaded to this album yet.
-        </div>
-      `;
-      return;
-    }
-
-    albumPhotosGrid.innerHTML =
-      photos.map((photo) => `
-        <article class="admin-gallery-photo">
-          <img
-            src="${escapeHtml(photo.image_url)}"
-            alt="${escapeHtml(
-              photo.alt_text ||
-              photo.caption ||
-              'Gallery photo'
-            )}"
+          <div
+            class="
+              gallery-hero-image
+              gallery-hero-image-main
+            "
           >
 
-          <div>
-            <span class="status-pill ${
-              photo.featured
-                ? 'published'
-                : ''
-            }">
-              ${
-                photo.featured
-                  ? 'Cover'
-                  : 'Photo'
-              }
+            <img
+              src="assets/images/hero-bihu.jpg"
+              alt="AAVAN community cultural celebration"
+            >
+
+          </div>
+
+
+          <div
+            class="
+              gallery-hero-image
+              gallery-hero-image-secondary
+            "
+          >
+
+            <img
+              src="assets/images/community-group.jpg"
+              alt="AAVAN community gathering"
+            >
+
+          </div>
+
+
+          <div class="gallery-hero-note">
+
+            <span>
+              AAVAN COMMUNITY
             </span>
 
-            ${
-              photo.caption
-                ? `<p>${escapeHtml(photo.caption)}</p>`
-                : '<p>No caption</p>'
-            }
+            <strong>
+              Every gathering becomes
+              part of our story.
+            </strong>
 
-            ${
-              canEdit()
-                ? `
-                  <div class="admin-row-actions">
-                    <button
-                      type="button"
-                      data-photo-caption="${photo.id}"
-                    >
-                      Caption
-                    </button>
-
-                    ${
-                      !photo.featured
-                        ? `
-                          <button
-                            type="button"
-                            data-photo-cover="${photo.id}"
-                          >
-                            Make Cover
-                          </button>
-                        `
-                        : ''
-                    }
-
-                    <button
-                      type="button"
-                      class="danger"
-                      data-photo-delete="${photo.id}"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                `
-                : ''
-            }
           </div>
-        </article>
-      `).join('');
 
-    attachPhotoActions(photos);
-  };
+        </div>
 
-  galleryPhotoUpload?.addEventListener(
-    'change',
-    async () => {
-      if (
-        !canEdit() ||
-        !activeAlbumId
-      ) {
-        return;
-      }
+      </div>
 
-      const files =
-        Array.from(
-          galleryPhotoUpload.files || []
-        );
+    </section>
 
-      if (!files.length) return;
 
-      try {
-        await uploadFilesToAlbum(
-          activeAlbumId,
-          files,
-          (message) => {
-            setMessage(
-              galleryUploadMessage,
-              message
-            );
-          }
-        );
 
-        galleryPhotoUpload.value = '';
+    <!-- ====================================================
+         ARCHIVE
+         ==================================================== -->
 
-        setMessage(
-          galleryUploadMessage,
-          'Photos uploaded successfully.'
-        );
+    <section
+      class="gallery-archive"
+      id="archive"
+    >
 
-        await loadAlbumPhotos();
-        await loadAlbums();
-        await loadPublicGallery();
+      <div class="container">
 
-      } catch (error) {
-        console.error(
-          'Gallery upload error:',
-          error
-        );
 
-        setMessage(
-          galleryUploadMessage,
-          error.message ||
-          'Unable to upload photos.',
-          true
-        );
-      }
-    }
-  );
+        <!-- Archive heading -->
 
-  const attachPhotoActions = (
-    photos
-  ) => {
-    document
-      .querySelectorAll('[data-photo-caption]')
-      .forEach((button) => {
-        button.addEventListener(
-          'click',
-          async () => {
-            const photo =
-              photos.find(
-                (item) =>
-                  String(item.id) ===
-                  String(button.dataset.photoCaption)
-              );
+        <div class="gallery-archive-head">
 
-            if (!photo) return;
+          <div>
 
-            const caption =
-              window.prompt(
-                'Photo caption',
-                photo.caption || ''
-              );
+            <p class="eyebrow">
+              EXPLORE THE ARCHIVE
+            </p>
 
-            if (caption === null) return;
+            <h2>
+              Memories by year
+              and event.
+            </h2>
 
-            const { error } =
-              await supabase
-                .from('gallery_photos')
-                .update({
-                  caption:
-                    caption.trim() || null
-                })
-                .eq(
-                  'id',
-                  photo.id
-                );
+            <p class="gallery-archive-intro">
+              Browse AAVAN celebrations,
+              gatherings and community moments
+              across the years.
+            </p>
 
-            if (error) {
-              window.alert(error.message);
-              return;
-            }
+          </div>
 
-            await loadAlbumPhotos();
-            await loadPublicGallery();
-          }
-        );
-      });
 
-    document
-      .querySelectorAll('[data-photo-cover]')
-      .forEach((button) => {
-        button.addEventListener(
-          'click',
-          async () => {
-            const photo =
-              photos.find(
-                (item) =>
-                  String(item.id) ===
-                  String(button.dataset.photoCover)
-              );
 
-            if (!photo) return;
+          <!-- Year filter -->
 
-            const {
-              error: clearError
-            } = await supabase
-              .from('gallery_photos')
-              .update({
-                featured: false
-              })
-              .eq(
-                'album_id',
-                activeAlbumId
-              );
+          <div class="gallery-filter-wrap">
 
-            if (clearError) {
-              window.alert(clearError.message);
-              return;
-            }
+            <label for="publicGalleryYear">
+              Browse year
+            </label>
 
-            const {
-              error: featureError
-            } = await supabase
-              .from('gallery_photos')
-              .update({
-                featured: true
-              })
-              .eq(
-                'id',
-                photo.id
-              );
+            <div class="gallery-select-wrap">
 
-            if (featureError) {
-              window.alert(featureError.message);
-              return;
-            }
+              <select
+                id="publicGalleryYear"
+                aria-label="Filter gallery by year"
+              >
 
-            const {
-              error: albumError
-            } = await supabase
-              .from('gallery_albums')
-              .update({
-                cover_image_url:
-                  photo.image_url,
-                updated_by:
-                  currentUser.id
-              })
-              .eq(
-                'id',
-                activeAlbumId
-              );
+                <option value="all">
+                  All years
+                </option>
 
-            if (albumError) {
-              window.alert(albumError.message);
-              return;
-            }
+              </select>
 
-            await loadAlbumPhotos();
-            await loadAlbums();
-            await loadPublicGallery();
-          }
-        );
-      });
+            </div>
 
-    document
-      .querySelectorAll('[data-photo-delete]')
-      .forEach((button) => {
-        button.addEventListener(
-          'click',
-          async () => {
-            const photo =
-              photos.find(
-                (item) =>
-                  String(item.id) ===
-                  String(button.dataset.photoDelete)
-              );
+          </div>
 
-            if (!photo) return;
+        </div>
 
-            const confirmed =
-              window.confirm(
-                'Delete this photo from the album?'
-              );
 
-            if (!confirmed) return;
 
-            const { error } =
-              await supabase
-                .from('gallery_photos')
-                .delete()
-                .eq(
-                  'id',
-                  photo.id
-                );
+        <!-- Media filters -->
 
-            if (error) {
-              window.alert(error.message);
-              return;
-            }
+        <div
+          class="gallery-media-tabs"
+          aria-label="Gallery media type"
+        >
 
-            if (photo.featured) {
-              const {
-                data: remaining
-              } = await supabase
-                .from('gallery_photos')
-                .select('*')
-                .eq(
-                  'album_id',
-                  activeAlbumId
-                )
-                .order(
-                  'created_at',
-                  {
-                    ascending: true
-                  }
-                )
-                .limit(1);
+          <button
+            class="gallery-media-tab active"
+            type="button"
+            data-gallery-media="all"
+          >
+            All memories
+          </button>
 
-              const next =
-                remaining?.[0];
 
-              if (next) {
-                await supabase
-                  .from('gallery_photos')
-                  .update({
-                    featured: true
-                  })
-                  .eq(
-                    'id',
-                    next.id
-                  );
+          <button
+            class="gallery-media-tab"
+            type="button"
+            data-gallery-media="photos"
+          >
+            Photos
+          </button>
 
-                await supabase
-                  .from('gallery_albums')
-                  .update({
-                    cover_image_url:
-                      next.image_url,
-                    updated_by:
-                      currentUser.id
-                  })
-                  .eq(
-                    'id',
-                    activeAlbumId
-                  );
-              } else {
-                await supabase
-                  .from('gallery_albums')
-                  .update({
-                    cover_image_url:
-                      null,
-                    updated_by:
-                      currentUser.id
-                  })
-                  .eq(
-                    'id',
-                    activeAlbumId
-                  );
-              }
-            }
 
-            await loadAlbumPhotos();
-            await loadAlbums();
-            await loadPublicGallery();
-          }
-        );
-      });
-  };
+          <button
+            class="gallery-media-tab"
+            type="button"
+            data-gallery-media="videos"
+          >
+            Videos
+          </button>
 
-  closeAlbumPhotosBtn?.addEventListener(
-    'click',
-    () => {
-      activeAlbumId = null;
-      setMessage(galleryUploadMessage);
+        </div>
 
-      if (albumPhotosPanel) {
-        albumPhotosPanel.hidden = true;
-      }
-    }
-  );
 
-  /* =========================================================
-     ADMIN LOAD ENTRY
-     ========================================================= */
 
-  const loadAdmin = async ({
-    user,
-    profile
-  } = {}) => {
-    setAdminContext({
-      user,
-      profile
-    });
+        <!-- Dynamic gallery -->
 
-    await Promise.all([
-      loadAlbums(),
-      loadAdminEvents()
-    ]);
-  };
+        <div
+          id="publicGalleryAlbums"
+          class="gallery-year-archive"
+          aria-live="polite"
+        ></div>
 
-  /* =========================================================
-     INITIAL PUBLIC LOAD
-     ========================================================= */
 
-  loadPublicGallery();
 
-  window.AAVAN = window.AAVAN || {};
+        <!-- Empty state -->
 
-  window.AAVAN.gallery = {
-    reload: loadPublicGallery,
-    setAdminContext,
-    loadAdmin
-  };
-})();
+        <div
+          id="galleryFallback"
+          class="gallery-empty"
+          hidden
+        >
+
+          <div class="gallery-empty-mark">
+            AAVAN
+          </div>
+
+          <h3>
+            More memories are coming.
+          </h3>
+
+          <p>
+            Published community albums will
+            appear here as the archive grows.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ====================================================
+         COMMUNITY CTA
+         ==================================================== -->
+
+    <section class="gallery-community-cta">
+
+      <div class="container">
+
+        <div class="gallery-community-card">
+
+
+          <div class="gallery-community-copy">
+
+            <div
+              class="gallery-community-icon"
+              aria-hidden="true"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+
+                <path
+                  d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                />
+
+                <circle
+                  cx="9"
+                  cy="7"
+                  r="4"
+                />
+
+                <path
+                  d="M22 21v-2a4 4 0 0 0-3-3.87"
+                />
+
+                <path
+                  d="M16 3.13a4 4 0 0 1 0 7.75"
+                />
+
+              </svg>
+
+            </div>
+
+
+            <div>
+
+              <p class="eyebrow">
+                OUR SHARED HISTORY
+              </p>
+
+              <h2>
+                Have AAVAN memories
+                to share?
+              </h2>
+
+              <p>
+                If you have photos or videos from
+                a past AAVAN event, help us preserve
+                them as part of our community archive.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <a
+            class="gallery-community-button"
+            href="mailto:aavandir@gmail.com"
+          >
+            Share with AAVAN
+            <span aria-hidden="true">↗</span>
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- ======================================================
+       FOOTER
+       ====================================================== -->
+
+  <footer class="gallery-footer">
+
+    <div class="container">
+
+
+      <!-- Main footer -->
+
+      <div class="gallery-footer-grid">
+
+
+        <!-- Brand -->
+
+        <div class="gallery-footer-brand">
+
+          <div class="gallery-footer-brandmark">
+
+            <img
+              src="assets/images/logo.png"
+              alt="AAVAN"
+            >
+
+            <div>
+
+              <strong>
+                Assam Association
+                of Vancouver
+              </strong>
+
+              <span>
+                British Columbia
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <p>
+            Connecting the Assamese community
+            through culture, friendship,
+            family and shared experiences.
+          </p>
+
+        </div>
+
+
+
+        <!-- Explore -->
+
+        <div class="gallery-footer-column">
+
+          <h3>
+            Explore
+          </h3>
+
+          <a href="index.html#about">
+            About
+          </a>
+
+          <a href="index.html#events">
+            Events
+          </a>
+
+          <a href="discover-assam.html">
+            Discover Assam
+          </a>
+
+          <a href="gallery.html">
+            Gallery
+          </a>
+
+          <a href="index.html#membership">
+            Membership
+          </a>
+
+        </div>
+
+
+
+        <!-- Community -->
+
+        <div class="gallery-footer-column">
+
+          <h3>
+            Community
+          </h3>
+
+          <a href="membership.html">
+            Join AAVAN
+          </a>
+
+          <a href="committee-login.html">
+            Committee Login
+          </a>
+
+          <span>
+            Member Directory / Leaderboards
+          </span>
+
+          <a href="index.html#contact">
+            Contact
+          </a>
+
+        </div>
+
+
+
+        <!-- Contact -->
+
+        <div class="gallery-footer-column">
+
+          <h3>
+            Contact
+          </h3>
+
+          <span>
+            17147 85A Ave
+          </span>
+
+          <span>
+            Surrey, BC V4N 0B1
+          </span>
+
+          <a href="tel:+16046490469">
+            604-649-0469
+          </a>
+
+          <a href="mailto:aavandir@gmail.com">
+            aavandir@gmail.com
+          </a>
+
+        </div>
+
+
+
+        <!-- Follow -->
+
+        <div class="gallery-footer-column">
+
+          <h3>
+            Follow Us
+          </h3>
+
+
+          <!--
+            Social URLs will be added once
+            the official AAVAN links are supplied.
+          -->
+
+
+          <span class="gallery-social-item">
+
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                fill="currentColor"
+                d="M13.5 8H16V4.5c-.43-.06-1.91-.18-3.67-.18-3.63 0-6.12 2.22-6.12 6.3V14H2v3.91h4.21V24h5.16v-6.09h4.31L16.37 14h-5v-3c0-1.13.31-1.9 2.13-1.9z"
+              />
+            </svg>
+
+            Facebook
+
+          </span>
+
+
+          <span class="gallery-social-item">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+
+              <rect
+                x="3"
+                y="3"
+                width="18"
+                height="18"
+                rx="5"
+              />
+
+              <circle
+                cx="12"
+                cy="12"
+                r="4"
+              />
+
+              <circle
+                cx="17.4"
+                cy="6.6"
+                r="1"
+                fill="currentColor"
+                stroke="none"
+              />
+
+            </svg>
+
+            Instagram
+
+          </span>
+
+
+          <span class="gallery-social-item">
+
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+
+              <path
+                fill="currentColor"
+                d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.8 31.8 0 0 0 0 12a31.8 31.8 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.8 31.8 0 0 0 24 12a31.8 31.8 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"
+              />
+
+            </svg>
+
+            YouTube
+
+          </span>
+
+
+          <span class="gallery-social-item">
+
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+
+              <path
+                fill="currentColor"
+                d="M12.04 2C6.52 2 2.05 6.43 2.05 11.9c0 1.94.57 3.75 1.55 5.28L2 22l4.98-1.55A10 10 0 0 0 12.04 22C17.55 22 22 17.57 22 12.1 22 6.43 17.55 2 12.04 2Zm5.82 14.08c-.25.71-1.48 1.31-2.04 1.4-.52.08-1.18.12-1.9-.12-.44-.14-1-.33-1.72-.64-3.02-1.3-4.98-4.35-5.13-4.55-.15-.2-1.22-1.61-1.22-3.07 0-1.46.76-2.18 1.04-2.48.27-.3.6-.37.8-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.06.93 2.21.07.15.12.33.02.53-.1.2-.15.33-.3.5-.15.17-.32.38-.45.51-.15.15-.3.31-.13.61.18.3.78 1.28 1.68 2.08 1.15 1.03 2.12 1.35 2.42 1.5.3.15.48.13.66-.08.17-.2.75-.87.95-1.17.2-.3.4-.25.68-.15.28.1 1.77.83 2.07.98.3.15.5.23.58.35.07.13.07.73-.18 1.44Z"
+              />
+
+            </svg>
+
+            WhatsApp
+
+          </span>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- Footer bottom -->
+
+      <div class="gallery-footer-bottom">
+
+        <div class="gallery-footer-mini-brand">
+
+          <img
+            src="assets/images/logo.png"
+            alt=""
+          >
+
+          <strong>
+            AAVAN
+          </strong>
+
+        </div>
+
+
+        <span>
+          © 2026 Assam Association of Vancouver.
+          All rights reserved.
+        </span>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- ======================================================
+       SCRIPTS
+       ====================================================== -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+  <script src="js/supabase-config.js"></script>
+
+  <script src="js/gallery.js"></script>
+
+
+</body>
+
+</html>
