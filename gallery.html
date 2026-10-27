@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="Explore a decade of Assam Association of Vancouver community memories, cultural celebrations, gatherings, photos and videos."
+  >
+
+  <title>Gallery | Assam Association of Vancouver</title>
+
+  <link
+    rel="stylesheet"
+    href="css/public-v2.css?v=20261027-3"
+  >
+
+  <link
+    rel="stylesheet"
+    href="css/gallery-page.css?v=20261027-1"
+  >
+</head>
+
+
+<body class="gallery-page">
+
+
+  <!-- ======================================================
+       HEADER
+       ====================================================== -->
+
+  <header class="site-header">
+
+    <div class="container header-inner">
+
+      <a
+        class="brand"
+        href="index.html"
+        aria-label="Assam Association of Vancouver home"
+      >
+
+        <img
+          src="assets/images/logo.png"
+          alt="AAVAN"
+        >
+
+        <span>
+          Assam Association Vancouver
+        </span>
+
+      </a>
+
+
+      <nav
+        class="nav"
+        aria-label="Main navigation"
+      >
+
+        <a href="index.html#about">
+          About
+        </a>
+
+        <a href="index.html#events">
+          Events
+        </a>
+
+        <a href="discover-assam.html">
+          Discover Assam
+        </a>
+
+        <a
+          href="gallery.html"
+          aria-current="page"
+        >
+          Gallery
+        </a>
+
+        <a href="index.html#membership">
+          Membership
+        </a>
+
+        <a href="index.html#contact">
+          Contact
+        </a>
+
+      </nav>
+
+
+      <div class="nav-actions">
+
+        <a
+          class="btn"
+          href="committee-login.html"
+        >
+          Committee Login
+        </a>
+
+        <a
+          class="btn btn-primary"
+          href="membership.html"
+        >
+          Join Us
+        </a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- ======================================================
+       MAIN
+       ====================================================== -->
+
+  <main>
+
+
+    <!-- ====================================================
+         GALLERY HERO
+         ==================================================== -->
+
+    <section class="gallery-hero">
+
+      <div class="container gallery-hero-grid">
+
+
+        <div class="gallery-hero-copy">
+
+          <p class="eyebrow">
+            AAVAN ARCHIVES
+          </p>
+
+          <h1>
+            Our community,
+            <span>through the years.</span>
+          </h1>
+
+          <p class="gallery-hero-lead">
+            A decade of celebrations, friendships,
+            traditions and shared moments from the
+            Assam Association of Vancouver community.
+          </p>
+
+
+          <div class="gallery-hero-meta">
+
+            <div>
+              <strong>
+                10+
+              </strong>
+
+              <span>
+                Years of community
+              </span>
+            </div>
+
+
+            <div>
+              <strong>
+                Photos
+              </strong>
+
+              <span>
+                Moments worth remembering
+              </span>
+            </div>
+
+
+            <div>
+              <strong>
+                Videos
+              </strong>
+
+              <span>
+                Celebrations brought to life
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="gallery-hero-visual">
+
+          <div class="gallery-hero-image gallery-hero-image-main">
+
+            <img
+              src="assets/images/hero-bihu.jpg"
+              alt="AAVAN community celebration"
+            >
+
+          </div>
+
+
+          <div class="gallery-hero-image gallery-hero-image-secondary">
+
+            <img
+              src="assets/images/community-group.jpg"
+              alt="AAVAN community gathering"
+            >
+
+          </div>
+
+
+          <div class="gallery-hero-note">
+
+            <span>
+              SINCE OUR BEGINNING
+            </span>
+
+            <strong>
+              Every gathering becomes
+              part of our story.
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================
+         ARCHIVE INTRO
+         ==================================================== -->
+
+    <section class="gallery-intro">
+
+      <div class="container gallery-intro-grid">
+
+
+        <div>
+
+          <p class="eyebrow">
+            COMMUNITY ARCHIVE
+          </p>
+
+          <h2>
+            More than a gallery.
+            <br>
+            A growing history of AAVAN.
+          </h2>
+
+        </div>
+
+
+        <div class="gallery-intro-copy">
+
+          <p>
+            Over the years, AAVAN has brought people
+            together through Bihu celebrations,
+            picnics, cultural programs, community
+            gatherings and many other shared
+            experiences.
+          </p>
+
+          <p>
+            This archive is designed to keep those
+            memories organized year by year and
+            event by event — while continuing to grow
+            with every new chapter of our community.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================
+         ARCHIVE TOOLBAR
+         ==================================================== -->
+
+    <section class="gallery-archive">
+
+      <div class="container">
+
+
+        <div class="gallery-archive-head">
+
+          <div>
+
+            <p class="eyebrow">
+              EXPLORE THE ARCHIVE
+            </p>
+
+            <h2>
+              Memories by year
+              and event.
+            </h2>
+
+          </div>
+
+
+          <div class="gallery-filter-wrap">
+
+            <label for="publicGalleryYear">
+              Browse year
+            </label>
+
+            <div class="gallery-select-wrap">
+
+              <select
+                id="publicGalleryYear"
+                aria-label="Filter gallery by year"
+              >
+
+                <option value="all">
+                  All years
+                </option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MEDIA TYPE NAVIGATION
+
+             The next gallery JS upgrade will activate
+             Photos / Videos / All media filtering.
+             ================================================= -->
+
+        <div
+          class="gallery-media-tabs"
+          aria-label="Gallery media type"
+        >
+
+          <button
+            class="gallery-media-tab active"
+            type="button"
+            data-gallery-media="all"
+          >
+            All memories
+          </button>
+
+          <button
+            class="gallery-media-tab"
+            type="button"
+            data-gallery-media="photos"
+          >
+            Photos
+          </button>
+
+          <button
+            class="gallery-media-tab"
+            type="button"
+            data-gallery-media="videos"
+          >
+            Videos
+          </button>
+
+        </div>
+
+
+        <!-- =================================================
+             DYNAMIC ARCHIVE
+
+             gallery.js currently loads published albums
+             into this container.
+
+             Next JS pass will organize these automatically:
+             Year > Event > Media.
+             ================================================= -->
+
+        <div
+          id="publicGalleryAlbums"
+          class="gallery-year-archive"
+          aria-live="polite"
+        ></div>
+
+
+        <!-- Loading / empty state -->
+
+        <div
+          id="galleryFallback"
+          class="gallery-empty"
+          hidden
+        >
+
+          <div class="gallery-empty-mark">
+            AAVAN
+          </div>
+
+          <h3>
+            More memories are coming.
+          </h3>
+
+          <p>
+            Photos and videos from our community
+            archive will appear here as albums
+            are published.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================
+         ARCHIVE PHILOSOPHY
+         ==================================================== -->
+
+    <section class="gallery-story">
+
+      <div class="container gallery-story-inner">
+
+
+        <div class="gallery-story-number">
+          10+
+        </div>
+
+
+        <div class="gallery-story-copy">
+
+          <p class="eyebrow">
+            YEARS TOGETHER
+          </p>
+
+          <h2>
+            Yesterday's moments.
+            Tomorrow's memories.
+          </h2>
+
+          <p>
+            Every photograph and video becomes part
+            of a larger story — one that grows with
+            every family, student, newcomer,
+            celebration and gathering that becomes
+            part of AAVAN.
+          </p>
+
+        </div>
+
+
+        <a
+          class="btn"
+          href="membership.html"
+        >
+          Be part of the next chapter
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================
+         CONTACT / CONTRIBUTION
+         ==================================================== -->
+
+    <section class="gallery-contribute">
+
+      <div class="container gallery-contribute-card">
+
+
+        <div>
+
+          <p class="eyebrow">
+            HAVE AAVAN MEMORIES?
+          </p>
+
+          <h2>
+            Help us preserve
+            our community history.
+          </h2>
+
+          <p>
+            Have photos or videos from a past AAVAN
+            event that should be part of the archive?
+            Get in touch with the committee.
+          </p>
+
+        </div>
+
+
+        <div class="gallery-contribute-actions">
+
+          <a
+            class="btn btn-primary"
+            href="mailto:aavandir@gmail.com"
+          >
+            Contact AAVAN
+          </a>
+
+          <a
+            class="btn"
+            href="index.html"
+          >
+            Back to Home
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- ======================================================
+       FOOTER
+       ====================================================== -->
+
+  <footer class="footer">
+
+    <div class="container footer-grid">
+
+
+      <div class="footer-brand">
+
+        <img
+          src="assets/images/logo.png"
+          alt="AAVAN"
+        >
+
+        <h3>
+          Assam Association of Vancouver
+        </h3>
+
+        <p>
+          Connecting the Assamese community across
+          British Columbia through culture,
+          friendship, family and shared experiences.
+        </p>
+
+      </div>
+
+
+      <div class="footer-col">
+
+        <h4>
+          Explore
+        </h4>
+
+        <a href="index.html#about">
+          About
+        </a>
+
+        <a href="index.html#events">
+          Events
+        </a>
+
+        <a href="discover-assam.html">
+          Discover Assam
+        </a>
+
+        <a href="gallery.html">
+          Gallery
+        </a>
+
+        <a href="index.html#membership">
+          Membership
+        </a>
+
+      </div>
+
+
+      <div class="footer-col">
+
+        <h4>
+          Community
+        </h4>
+
+        <a href="membership.html">
+          Join AAVAN
+        </a>
+
+        <a href="committee-login.html">
+          Committee Login
+        </a>
+
+        <span>
+          Member Directory / Leaderboards
+        </span>
+
+        <a href="index.html#contact">
+          Contact
+        </a>
+
+      </div>
+
+
+      <div class="footer-col">
+
+        <h4>
+          Contact
+        </h4>
+
+        <div class="footer-contact">
+
+          <span>
+            17147 85A Ave
+          </span>
+
+          <span>
+            Surrey, BC V4N 0B1
+          </span>
+
+          <a href="tel:+16046490469">
+            604-649-0469
+          </a>
+
+          <a href="mailto:aavandir@gmail.com">
+            aavandir@gmail.com
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+      <div class="container footer-bottom-inner">
+
+        <span>
+          © 2026 Assam Association of Vancouver
+        </span>
+
+        <div class="footer-legal">
+
+          <span>
+            Privacy Policy
+          </span>
+
+          <span>
+            Terms &amp; Community Guidelines
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- ======================================================
+       SCRIPTS
+       ====================================================== -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+  <script src="js/supabase-config.js"></script>
+
+  <script src="js/gallery.js"></script>
+
+</body>
+
+</html>
