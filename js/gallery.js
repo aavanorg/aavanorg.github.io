@@ -995,7 +995,7 @@
               </div>
 
               <div
-                class="gallery-album-grid"
+                class="gallery-year-grid"
               >
 
                 ${albums
