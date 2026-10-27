@@ -1,763 +1,3990 @@
-<!doctype html>
-<html lang="en">
+(() => {
+  const supabase = window.AAVAN?.supabase;
 
-<head>
+  if (!supabase) {
+    console.warn('AAVAN gallery: Supabase is not available.');
+    return;
+  }
 
-  <meta charset="utf-8">
+  let currentUser = null;
+  let currentProfile = null;
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
+  let activeAlbumId = null;
 
-  <meta
-    name="description"
-    content="Explore photos, videos and community memories from the Assam Association of Vancouver, organized by year and event."
-  >
+  let adminAlbums = [];
+  let adminEvents = [];
+  let adminVideos = [];
 
-  <title>
-    Gallery | Assam Association of Vancouver
-  </title>
+  let publicAlbums = [];
+  let publicPhotos = [];
+  let publicVideos = [];
 
-
-  <link
-    rel="stylesheet"
-    href="css/public-v2.css?v=20261027-3"
-  >
-
-  <link
-    rel="stylesheet"
-    href="css/gallery-page.css?v=20261027-2"
-  >
-
-</head>
+  let activePublicMedia = 'all';
 
 
-<body class="gallery-page">
+  /* =========================================================
+     DOM — PUBLIC GALLERY
+     ========================================================= */
+
+  const publicGalleryYear =
+    document.getElementById('publicGalleryYear');
+
+  const publicGalleryAlbums =
+    document.getElementById('publicGalleryAlbums');
+
+  const galleryFallback =
+    document.getElementById('galleryFallback');
+
+  const galleryYearsCount =
+    document.getElementById('galleryYearsCount');
+
+  const galleryAlbumsCount =
+    document.getElementById('galleryAlbumsCount');
+
+  const galleryPhotosCount =
+    document.getElementById('galleryPhotosCount');
+
+  const galleryVideosCount =
+    document.getElementById('galleryVideosCount');
 
 
-  <!-- ======================================================
-       HEADER
-       ====================================================== -->
+  /* =========================================================
+     DOM — ADMIN GALLERY
+     ========================================================= */
 
-  <header class="site-header">
+  const newAlbumBtn =
+    document.getElementById('newAlbumBtn');
 
-    <div class="container header-inner">
+  const uploadPhotosBtn =
+    document.getElementById('uploadPhotosBtn');
+
+  const addVideoBtn =
+    document.getElementById('addVideoBtn');
 
 
-      <a
-        class="brand"
-        href="index.html"
-        aria-label="Assam Association of Vancouver home"
+  /* Quick photo upload */
+
+  const quickPhotoUploadPanel =
+    document.getElementById('quickPhotoUploadPanel');
+
+  const cancelQuickPhotoUploadBtn =
+    document.getElementById('cancelQuickPhotoUploadBtn');
+
+  const quickPhotoUploadForm =
+    document.getElementById('quickPhotoUploadForm');
+
+  const quickPhotoAlbumSelect =
+    document.getElementById('quickPhotoAlbumSelect');
+
+  const quickPhotoFiles =
+    document.getElementById('quickPhotoFiles');
+
+  const quickPhotoUploadMessage =
+    document.getElementById('quickPhotoUploadMessage');
+
+
+  /* Gallery filters */
+
+  const galleryYearFilter =
+    document.getElementById('galleryYearFilter');
+
+  const galleryAlbumSearch =
+    document.getElementById('galleryAlbumSearch');
+
+
+  /* Album form */
+
+  const albumFormPanel =
+    document.getElementById('albumFormPanel');
+
+  const cancelAlbumEditBtn =
+    document.getElementById('cancelAlbumEditBtn');
+
+  const albumForm =
+    document.getElementById('albumForm');
+
+  const albumId =
+    document.getElementById('albumId');
+
+  const albumTitle =
+    document.getElementById('albumTitle');
+
+  const albumYear =
+    document.getElementById('albumYear');
+
+  const albumEventName =
+    document.getElementById('albumEventName');
+
+  const albumEventId =
+    document.getElementById('albumEventId');
+
+  const albumDescription =
+    document.getElementById('albumDescription');
+
+  const albumPublished =
+    document.getElementById('albumPublished');
+
+  const albumPhotoUpload =
+    document.getElementById('albumPhotoUpload');
+
+  const albumSelectedPhotos =
+    document.getElementById('albumSelectedPhotos');
+
+  const albumMessage =
+    document.getElementById('albumMessage');
+
+  const albumFormTitle =
+    document.getElementById('albumFormTitle');
+
+  const albumsList =
+    document.getElementById('albumsList');
+
+
+  /* Album photo manager */
+
+  const albumPhotosPanel =
+    document.getElementById('albumPhotosPanel');
+
+  const albumPhotosTitle =
+    document.getElementById('albumPhotosTitle');
+
+  const closeAlbumPhotosBtn =
+    document.getElementById('closeAlbumPhotosBtn');
+
+  const galleryPhotoUpload =
+    document.getElementById('galleryPhotoUpload');
+
+  const galleryUploadMessage =
+    document.getElementById('galleryUploadMessage');
+
+  const albumPhotosGrid =
+    document.getElementById('albumPhotosGrid');
+
+
+  /* Video form */
+
+  const videoFormPanel =
+    document.getElementById('videoFormPanel');
+
+  const videoForm =
+    document.getElementById('videoForm');
+
+  const videoFormTitle =
+    document.getElementById('videoFormTitle');
+
+  const cancelVideoEditBtn =
+    document.getElementById('cancelVideoEditBtn');
+
+  const videoId =
+    document.getElementById('videoId');
+
+  const videoAlbumSelect =
+    document.getElementById('videoAlbumSelect');
+
+  const videoTitle =
+    document.getElementById('videoTitle');
+
+  const videoUrl =
+    document.getElementById('videoUrl');
+
+  const videoThumbnailUrl =
+    document.getElementById('videoThumbnailUrl');
+
+  const videoCaption =
+    document.getElementById('videoCaption');
+
+  const videoDisplayOrder =
+    document.getElementById('videoDisplayOrder');
+
+  const videoFeatured =
+    document.getElementById('videoFeatured');
+
+  const videoPublished =
+    document.getElementById('videoPublished');
+
+  const videoMessage =
+    document.getElementById('videoMessage');
+
+  const galleryVideosList =
+    document.getElementById('galleryVideosList');
+
+  const galleryVideosEmpty =
+    document.getElementById('galleryVideosEmpty');
+
+
+  /* Admin counters */
+
+  const galleryAlbumCount =
+    document.getElementById('galleryAlbumCount');
+
+  const galleryPhotoCount =
+    document.getElementById('galleryPhotoCount');
+
+  const galleryVideoCount =
+    document.getElementById('galleryVideoCount');
+
+  const galleryAlbumLibraryCount =
+    document.getElementById('galleryAlbumLibraryCount');
+
+  const galleryVideoLibraryCount =
+    document.getElementById('galleryVideoLibraryCount');
+
+
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+
+  const escapeHtml = (value = '') =>
+    String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+
+
+  const canEdit = () =>
+    ['admin', 'editor'].includes(currentProfile?.role) &&
+    currentProfile?.status === 'active';
+
+
+  const setMessage = (
+    element,
+    text = '',
+    isError = false
+  ) => {
+    if (!element) return;
+
+    element.textContent = text;
+
+    element.classList.toggle(
+      'error',
+      Boolean(isError)
+    );
+  };
+
+
+  const currentYear =
+    new Date().getFullYear();
+
+
+  const getCoverImage = (album) =>
+    album.cover_image_url ||
+    'assets/images/community-group.jpg';
+
+
+  const refreshYearSelect = (
+    select,
+    albums,
+    firstLabel = 'All years'
+  ) => {
+    if (!select) return;
+
+    const selected =
+      select.value || 'all';
+
+    const years = [
+      ...new Set(
+        albums
+          .map((album) =>
+            Number(album.album_year)
+          )
+          .filter(Boolean)
+      )
+    ].sort((a, b) => b - a);
+
+    select.innerHTML = `
+      <option value="all">
+        ${escapeHtml(firstLabel)}
+      </option>
+
+      ${years
+        .map(
+          (year) => `
+            <option value="${year}">
+              ${year}
+            </option>
+          `
+        )
+        .join('')}
+    `;
+
+    if (
+      selected === 'all' ||
+      years.includes(Number(selected))
+    ) {
+      select.value = selected;
+    }
+  };
+
+
+  const getYouTubeId = (url = '') => {
+    const value =
+      String(url).trim();
+
+    if (!value) return '';
+
+    try {
+      const parsed =
+        new URL(value);
+
+      if (
+        parsed.hostname === 'youtu.be' ||
+        parsed.hostname === 'www.youtu.be'
+      ) {
+        return parsed.pathname
+          .replace('/', '')
+          .split('/')[0];
+      }
+
+      if (
+        parsed.hostname.includes(
+          'youtube.com'
+        )
+      ) {
+        if (
+          parsed.pathname === '/watch'
+        ) {
+          return (
+            parsed.searchParams.get('v') ||
+            ''
+          );
+        }
+
+        const parts =
+          parsed.pathname
+            .split('/')
+            .filter(Boolean);
+
+        if (
+          ['embed', 'shorts', 'live']
+            .includes(parts[0])
+        ) {
+          return parts[1] || '';
+        }
+      }
+    } catch (error) {
+      return '';
+    }
+
+    return '';
+  };
+
+
+  const getYouTubeThumbnail = (
+    url = ''
+  ) => {
+    const id =
+      getYouTubeId(url);
+
+    return id
+      ? `https://img.youtube.com/vi/${id}/hqdefault.jpg`
+      : '';
+  };
+
+
+  const getYouTubeEmbed = (
+    url = ''
+  ) => {
+    const id =
+      getYouTubeId(url);
+
+    return id
+      ? `https://www.youtube.com/embed/${id}`
+      : '';
+  };
+
+
+  const getAlbumById = (
+    id,
+    albums = adminAlbums
+  ) =>
+    albums.find(
+      (album) =>
+        String(album.id) ===
+        String(id)
+    );
+
+
+  const closeAdminEditors = (
+    except = ''
+  ) => {
+    if (
+      quickPhotoUploadPanel &&
+      except !== 'photos'
+    ) {
+      quickPhotoUploadPanel.hidden = true;
+    }
+
+    if (
+      albumFormPanel &&
+      except !== 'album'
+    ) {
+      albumFormPanel.hidden = true;
+    }
+
+    if (
+      videoFormPanel &&
+      except !== 'video'
+    ) {
+      videoFormPanel.hidden = true;
+    }
+  };
+
+
+  /* =========================================================
+     COUNTERS
+     ========================================================= */
+
+  const loadAdminCounts = async () => {
+    if (
+      !galleryAlbumCount &&
+      !galleryPhotoCount &&
+      !galleryVideoCount
+    ) {
+      return;
+    }
+
+    try {
+      const [
+        albumsResult,
+        photosResult,
+        videosResult
+      ] = await Promise.all([
+        supabase
+          .from('gallery_albums')
+          .select(
+            'id',
+            {
+              count: 'exact',
+              head: true
+            }
+          )
+          .eq('published', true),
+
+        supabase
+          .from('gallery_photos')
+          .select(
+            'id',
+            {
+              count: 'exact',
+              head: true
+            }
+          ),
+
+        supabase
+          .from('gallery_videos')
+          .select(
+            'id',
+            {
+              count: 'exact',
+              head: true
+            }
+          )
+      ]);
+
+      if (galleryAlbumCount) {
+        galleryAlbumCount.textContent =
+          albumsResult.count ?? 0;
+      }
+
+      if (galleryPhotoCount) {
+        galleryPhotoCount.textContent =
+          photosResult.count ?? 0;
+      }
+
+      if (galleryVideoCount) {
+        galleryVideoCount.textContent =
+          videosResult.count ?? 0;
+      }
+
+    } catch (error) {
+      console.error(
+        'Gallery count error:',
+        error
+      );
+    }
+  };
+
+
+  /* =========================================================
+     PUBLIC GALLERY VIEWER
+     ========================================================= */
+
+  const createPublicAlbumModal = () => {
+    let modal =
+      document.getElementById(
+        'publicGalleryModal'
+      );
+
+    if (modal) return modal;
+
+    modal =
+      document.createElement('div');
+
+    modal.id =
+      'publicGalleryModal';
+
+    modal.className =
+      'gallery-viewer';
+
+    modal.hidden = true;
+
+    modal.innerHTML = `
+      <div
+        class="gallery-viewer-backdrop"
+        data-gallery-viewer-close
+      ></div>
+
+      <section
+        class="gallery-viewer-shell"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="galleryViewerTitle"
       >
 
-        <img
-          src="assets/images/logo.png"
-          alt="AAVAN"
+        <header
+          class="gallery-viewer-header"
         >
 
-        <span>
-          Assam Association Vancouver
-        </span>
+          <div>
 
-      </a>
+            <span
+              id="galleryViewerMeta"
+            ></span>
 
+            <h2
+              id="galleryViewerTitle"
+            >
+              Gallery
+            </h2>
 
-      <nav
-        class="nav"
-        aria-label="Main navigation"
-      >
+          </div>
 
-        <a href="index.html#about">
-          About
-        </a>
-
-        <a href="index.html#events">
-          Events
-        </a>
-
-        <a href="discover-assam.html">
-          Discover Assam
-        </a>
-
-        <a
-          href="gallery.html"
-          aria-current="page"
-        >
-          Gallery
-        </a>
-
-        <a href="index.html#membership">
-          Membership
-        </a>
-
-        <a href="index.html#contact">
-          Contact
-        </a>
-
-      </nav>
-
-
-      <div class="nav-actions">
-
-        <a
-          class="btn"
-          href="committee-login.html"
-        >
-          Committee Login
-        </a>
-
-        <a
-          class="btn btn-primary"
-          href="membership.html"
-        >
-          Join Us
-        </a>
-
-      </div>
-
-    </div>
-
-  </header>
-
-
-
-  <!-- ======================================================
-       MAIN
-       ====================================================== -->
-
-  <main>
-
-
-    <!-- ====================================================
-         HERO
-         ==================================================== -->
-
-    <section class="gallery-hero">
-
-      <div class="container gallery-hero-grid">
-
-
-        <!-- Hero copy -->
-
-        <div class="gallery-hero-copy">
-
-          <p class="eyebrow">
-            AAVAN ARCHIVE
-          </p>
-
-
-          <h1>
-            Our community,
-            <span>through the years.</span>
-          </h1>
-
-
-          <p class="gallery-hero-lead">
-            More than a decade of celebrations,
-            friendships, traditions and shared
-            moments from the Assam Association
-            of Vancouver community.
-          </p>
-
-
-          <a
-            class="gallery-hero-link"
-            href="#archive"
+          <button
+            type="button"
+            data-gallery-viewer-close
+            aria-label="Close gallery"
           >
-            Explore the archive
-            <span aria-hidden="true">↓</span>
-          </a>
+            ×
+          </button>
 
+        </header>
+
+        <div
+          id="galleryViewerContent"
+          class="gallery-viewer-grid"
+        ></div>
+
+      </section>
+    `;
+
+    document.body.appendChild(modal);
+
+    modal
+      .querySelectorAll(
+        '[data-gallery-viewer-close]'
+      )
+      .forEach((button) => {
+        button.addEventListener(
+          'click',
+          () => {
+            modal.hidden = true;
+
+            document.body.style
+              .overflow = '';
+          }
+        );
+      });
+
+    return modal;
+  };
+
+
+  const openPublicAlbum =
+    async (album) => {
+
+      const modal =
+        createPublicAlbumModal();
+
+      const title =
+        modal.querySelector(
+          '#galleryViewerTitle'
+        );
+
+      const meta =
+        modal.querySelector(
+          '#galleryViewerMeta'
+        );
+
+      const content =
+        modal.querySelector(
+          '#galleryViewerContent'
+        );
+
+      if (title) {
+        title.textContent =
+          album.title || 'Gallery';
+      }
+
+      if (meta) {
+        meta.textContent =
+          [
+            album.event_name,
+            album.album_year
+          ]
+            .filter(Boolean)
+            .join(' • ');
+      }
+
+      if (content) {
+        content.innerHTML =
+          '<div class="admin-loading">Loading memories…</div>';
+      }
+
+      modal.hidden = false;
+
+      document.body.style
+        .overflow = 'hidden';
+
+
+      const [
+        photoResult,
+        videoResult
+      ] = await Promise.all([
+        supabase
+          .from('gallery_photos')
+          .select('*')
+          .eq('album_id', album.id)
+          .order(
+            'featured',
+            {
+              ascending: false
+            }
+          )
+          .order(
+            'display_order',
+            {
+              ascending: true
+            }
+          )
+          .order(
+            'created_at',
+            {
+              ascending: true
+            }
+          ),
+
+        supabase
+          .from('gallery_videos')
+          .select('*')
+          .eq('album_id', album.id)
+          .eq('published', true)
+          .order(
+            'featured',
+            {
+              ascending: false
+            }
+          )
+          .order(
+            'display_order',
+            {
+              ascending: true
+            }
+          )
+      ]);
+
+      const photos =
+        Array.isArray(
+          photoResult.data
+        )
+          ? photoResult.data
+          : [];
+
+      const videos =
+        Array.isArray(
+          videoResult.data
+        )
+          ? videoResult.data
+          : [];
+
+      if (!photos.length && !videos.length) {
+        content.innerHTML = `
+          <div class="admin-empty">
+            Memories for this album
+            are coming soon.
+          </div>
+        `;
+
+        return;
+      }
+
+      const photoMarkup =
+        photos.map((photo) => `
+          <figure>
+
+            <img
+              src="${escapeHtml(
+                photo.image_url
+              )}"
+              alt="${escapeHtml(
+                photo.alt_text ||
+                photo.caption ||
+                album.title
+              )}"
+            >
+
+            ${
+              photo.caption
+                ? `
+                  <figcaption>
+                    ${escapeHtml(
+                      photo.caption
+                    )}
+                  </figcaption>
+                `
+                : ''
+            }
+
+          </figure>
+        `).join('');
+
+
+      const videoMarkup =
+        videos.map((video) => {
+          const embed =
+            getYouTubeEmbed(
+              video.video_url
+            );
+
+          if (!embed) return '';
+
+          return `
+            <article
+              class="gallery-video-item"
+            >
+
+              <div
+                style="
+                  position:relative;
+                  width:100%;
+                  aspect-ratio:16/9;
+                  overflow:hidden;
+                  border-radius:14px;
+                  background:#111;
+                "
+              >
+
+                <iframe
+                  src="${escapeHtml(embed)}"
+                  title="${escapeHtml(
+                    video.title ||
+                    'AAVAN video'
+                  )}"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  style="
+                    position:absolute;
+                    inset:0;
+                    width:100%;
+                    height:100%;
+                    border:0;
+                  "
+                ></iframe>
+
+              </div>
+
+              ${
+                video.title
+                  ? `
+                    <strong>
+                      ${escapeHtml(
+                        video.title
+                      )}
+                    </strong>
+                  `
+                  : ''
+              }
+
+              ${
+                video.caption
+                  ? `
+                    <p>
+                      ${escapeHtml(
+                        video.caption
+                      )}
+                    </p>
+                  `
+                  : ''
+              }
+
+            </article>
+          `;
+        }).join('');
+
+
+      content.innerHTML =
+        photoMarkup +
+        videoMarkup;
+    };
+
+
+  /* =========================================================
+     PUBLIC ARCHIVE
+     ========================================================= */
+
+  const renderPublicAlbums = () => {
+    if (!publicGalleryAlbums) {
+      return;
+    }
+
+    const year =
+      publicGalleryYear?.value ||
+      'all';
+
+    const filtered =
+      publicAlbums.filter((album) => {
+
+        const matchesYear =
+          year === 'all' ||
+          String(
+            album.album_year
+          ) === String(year);
+
+        const photoCount =
+          publicPhotos.filter(
+            (photo) =>
+              String(
+                photo.album_id
+              ) ===
+              String(album.id)
+          ).length;
+
+        const videoCount =
+          publicVideos.filter(
+            (video) =>
+              String(
+                video.album_id
+              ) ===
+              String(album.id)
+          ).length;
+
+        let matchesMedia = true;
+
+        if (
+          activePublicMedia ===
+          'photos'
+        ) {
+          matchesMedia =
+            photoCount > 0;
+        }
+
+        if (
+          activePublicMedia ===
+          'videos'
+        ) {
+          matchesMedia =
+            videoCount > 0;
+        }
+
+        return (
+          matchesYear &&
+          matchesMedia
+        );
+      });
+
+
+    if (!filtered.length) {
+      publicGalleryAlbums.innerHTML =
+        '';
+
+      if (galleryFallback) {
+        galleryFallback.hidden =
+          false;
+      }
+
+      return;
+    }
+
+
+    if (galleryFallback) {
+      galleryFallback.hidden =
+        true;
+    }
+
+
+    const grouped = {};
+
+    filtered.forEach((album) => {
+      const yearKey =
+        String(
+          album.album_year ||
+          'Archive'
+        );
+
+      grouped[yearKey] =
+        grouped[yearKey] || [];
+
+      grouped[yearKey].push(album);
+    });
+
+
+    publicGalleryAlbums.innerHTML =
+      Object.entries(grouped)
+        .sort(
+          ([a], [b]) =>
+            Number(b) - Number(a)
+        )
+        .map(
+          ([yearLabel, albums]) => `
+
+            <section
+              class="gallery-year-group"
+            >
+
+              <div
+                class="gallery-year-heading"
+              >
+                <h3>
+                  ${escapeHtml(
+                    yearLabel
+                  )}
+                </h3>
+
+                <span>
+                  ${albums.length}
+                  album${
+                    albums.length === 1
+                      ? ''
+                      : 's'
+                  }
+                </span>
+              </div>
+
+              <div
+                class="gallery-album-grid"
+              >
+
+                ${albums
+                  .map((album) => {
+
+                    const photoCount =
+                      publicPhotos
+                        .filter(
+                          (photo) =>
+                            String(
+                              photo.album_id
+                            ) ===
+                            String(
+                              album.id
+                            )
+                        )
+                        .length;
+
+                    const videoCount =
+                      publicVideos
+                        .filter(
+                          (video) =>
+                            String(
+                              video.album_id
+                            ) ===
+                            String(
+                              album.id
+                            )
+                        )
+                        .length;
+
+                    return `
+                      <button
+                        class="gallery-album-card"
+                        type="button"
+                        data-public-album="${album.id}"
+                      >
+
+                        <img
+                          src="${escapeHtml(
+                            getCoverImage(
+                              album
+                            )
+                          )}"
+                          alt="${escapeHtml(
+                            album.title
+                          )}"
+                        >
+
+                        <span
+                          class="gallery-album-card-copy"
+                        >
+
+                          <small>
+                            ${escapeHtml(
+                              album.event_name ||
+                              album.album_year ||
+                              'AAVAN'
+                            )}
+                          </small>
+
+                          <strong>
+                            ${escapeHtml(
+                              album.title
+                            )}
+                          </strong>
+
+                          <span>
+                            ${photoCount}
+                            photo${
+                              photoCount === 1
+                                ? ''
+                                : 's'
+                            }
+
+                            ${
+                              videoCount
+                                ? ` • ${videoCount} video${
+                                    videoCount === 1
+                                      ? ''
+                                      : 's'
+                                  }`
+                                : ''
+                            }
+                          </span>
+
+                        </span>
+
+                      </button>
+                    `;
+                  })
+                  .join('')}
+
+              </div>
+
+            </section>
+          `
+        )
+        .join('');
+
+
+    publicGalleryAlbums
+      .querySelectorAll(
+        '[data-public-album]'
+      )
+      .forEach((button) => {
+
+        button.addEventListener(
+          'click',
+          () => {
+
+            const album =
+              publicAlbums.find(
+                (item) =>
+                  String(item.id) ===
+                  String(
+                    button.dataset
+                      .publicAlbum
+                  )
+              );
+
+            if (album) {
+              openPublicAlbum(album);
+            }
+          }
+        );
+      });
+  };
+
+
+  const loadPublicGallery =
+    async () => {
+
+      if (!publicGalleryAlbums) {
+        return;
+      }
+
+      try {
+        const [
+          albumResult,
+          photoResult,
+          videoResult
+        ] = await Promise.all([
+          supabase
+            .from('gallery_albums')
+            .select('*')
+            .eq('published', true)
+            .order(
+              'album_year',
+              {
+                ascending: false
+              }
+            )
+            .order(
+              'display_order',
+              {
+                ascending: true
+              }
+            ),
+
+          supabase
+            .from('gallery_photos')
+            .select(
+              'id,album_id,image_url,featured,display_order'
+            ),
+
+          supabase
+            .from('gallery_videos')
+            .select(
+              'id,album_id,title,video_url,thumbnail_url,caption,featured,display_order,published'
+            )
+            .eq('published', true)
+        ]);
+
+
+        if (albumResult.error) {
+          throw albumResult.error;
+        }
+
+        if (photoResult.error) {
+          throw photoResult.error;
+        }
+
+        if (videoResult.error) {
+          throw videoResult.error;
+        }
+
+
+        publicAlbums =
+          Array.isArray(
+            albumResult.data
+          )
+            ? albumResult.data
+            : [];
+
+        publicPhotos =
+          Array.isArray(
+            photoResult.data
+          )
+            ? photoResult.data
+            : [];
+
+        publicVideos =
+          Array.isArray(
+            videoResult.data
+          )
+            ? videoResult.data
+            : [];
+
+
+        refreshYearSelect(
+          publicGalleryYear,
+          publicAlbums,
+          'All years'
+        );
+
+
+        if (galleryAlbumsCount) {
+          galleryAlbumsCount
+            .textContent =
+            publicAlbums.length;
+        }
+
+        if (galleryPhotosCount) {
+          galleryPhotosCount
+            .textContent =
+            publicPhotos.length;
+        }
+
+        if (galleryVideosCount) {
+          galleryVideosCount
+            .textContent =
+            publicVideos.length;
+        }
+
+
+        renderPublicAlbums();
+
+      } catch (error) {
+        console.error(
+          'Public gallery error:',
+          error
+        );
+
+        if (galleryFallback) {
+          galleryFallback.hidden =
+            false;
+        }
+      }
+    };
+
+
+  publicGalleryYear
+    ?.addEventListener(
+      'change',
+      renderPublicAlbums
+    );
+
+
+  document
+    .querySelectorAll(
+      '[data-gallery-media]'
+    )
+    .forEach((button) => {
+
+      button.addEventListener(
+        'click',
+        () => {
+
+          activePublicMedia =
+            button.dataset
+              .galleryMedia ||
+            'all';
+
+          document
+            .querySelectorAll(
+              '[data-gallery-media]'
+            )
+            .forEach((item) =>
+              item.classList.remove(
+                'active'
+              )
+            );
+
+          button.classList.add(
+            'active'
+          );
+
+          renderPublicAlbums();
+        }
+      );
+    });
+
+
+  /* =========================================================
+     ADMIN CONTEXT
+     ========================================================= */
+
+  const setAdminContext = ({
+    user,
+    profile
+  } = {}) => {
+
+    currentUser =
+      user || currentUser;
+
+    currentProfile =
+      profile || currentProfile;
+
+
+    if (newAlbumBtn) {
+      newAlbumBtn.hidden =
+        !canEdit();
+    }
+
+    if (uploadPhotosBtn) {
+      uploadPhotosBtn.hidden =
+        !canEdit();
+    }
+
+    if (addVideoBtn) {
+      addVideoBtn.hidden =
+        !canEdit();
+    }
+  };
+
+
+  /* =========================================================
+     ALBUM FORM
+     ========================================================= */
+
+  const resetAlbumForm = () => {
+    albumForm?.reset();
+
+    if (albumId) {
+      albumId.value = '';
+    }
+
+    if (albumYear) {
+      albumYear.value =
+        String(currentYear);
+    }
+
+    if (albumPublished) {
+      albumPublished.checked =
+        false;
+    }
+
+    if (albumPhotoUpload) {
+      albumPhotoUpload.value =
+        '';
+    }
+
+    if (albumSelectedPhotos) {
+      albumSelectedPhotos.hidden =
+        true;
+
+      albumSelectedPhotos.innerHTML =
+        '';
+    }
+
+    if (albumFormTitle) {
+      albumFormTitle.textContent =
+        'Create album';
+    }
+
+    setMessage(albumMessage);
+  };
+
+
+  const loadAdminEvents =
+    async () => {
+
+      if (!albumEventId) {
+        return;
+      }
+
+      const {
+        data,
+        error
+      } = await supabase
+        .from('events')
+        .select(
+          'id,title,event_date'
+        )
+        .order(
+          'event_date',
+          {
+            ascending: false
+          }
+        );
+
+      if (error) {
+        console.error(
+          'Gallery event list error:',
+          error
+        );
+
+        return;
+      }
+
+      adminEvents =
+        Array.isArray(data)
+          ? data
+          : [];
+
+      const current =
+        albumEventId.value || '';
+
+      albumEventId.innerHTML = `
+        <option value="">
+          No linked event
+        </option>
+
+        ${adminEvents
+          .map(
+            (event) => `
+              <option
+                value="${event.id}"
+              >
+                ${escapeHtml(
+                  event.title
+                )}
+
+                ${
+                  event.event_date
+                    ? ` — ${escapeHtml(
+                        event.event_date
+                      )}`
+                    : ''
+                }
+              </option>
+            `
+          )
+          .join('')}
+      `;
+
+      albumEventId.value =
+        current;
+    };
+
+
+  const populateAlbumSelect = (
+    select
+  ) => {
+    if (!select) return;
+
+    const current =
+      select.value || '';
+
+    select.innerHTML = `
+      <option value="">
+        Select an album
+      </option>
+
+      ${adminAlbums
+        .map(
+          (album) => `
+            <option
+              value="${album.id}"
+            >
+              ${escapeHtml(
+                album.title
+              )}
+
+              ${
+                album.album_year
+                  ? ` — ${escapeHtml(
+                      album.album_year
+                    )}`
+                  : ''
+              }
+            </option>
+          `
+        )
+        .join('')}
+    `;
+
+    if (
+      current &&
+      adminAlbums.some(
+        (album) =>
+          String(album.id) ===
+          String(current)
+      )
+    ) {
+      select.value = current;
+    }
+  };
+
+
+  const populateAdminAlbumSelects =
+    () => {
+
+      populateAlbumSelect(
+        quickPhotoAlbumSelect
+      );
+
+      populateAlbumSelect(
+        videoAlbumSelect
+      );
+    };
+
+
+  const renderAdminAlbums = () => {
+    if (!albumsList) return;
+
+    const year =
+      galleryYearFilter?.value ||
+      'all';
+
+    const search =
+      galleryAlbumSearch?.value
+        .trim()
+        .toLowerCase() ||
+      '';
+
+    const filtered =
+      adminAlbums.filter(
+        (album) => {
+
+          const matchesYear =
+            year === 'all' ||
+            String(
+              album.album_year
+            ) ===
+            String(year);
+
+          const haystack =
+            `${
+              album.title || ''
+            } ${
+              album.event_name || ''
+            }`
+              .toLowerCase();
+
+          const matchesSearch =
+            !search ||
+            haystack.includes(search);
+
+          return (
+            matchesYear &&
+            matchesSearch
+          );
+        }
+      );
+
+
+    if (
+      galleryAlbumLibraryCount
+    ) {
+      galleryAlbumLibraryCount
+        .textContent =
+        filtered.length;
+    }
+
+
+    if (!filtered.length) {
+      albumsList.innerHTML = `
+        <div class="admin-empty">
+          No gallery albums
+          match this view.
         </div>
+      `;
+
+      return;
+    }
 
 
+    albumsList.innerHTML =
+      filtered.map((album) => `
 
-        <!-- Hero images -->
-
-        <div class="gallery-hero-visual">
-
-          <div
-            class="
-              gallery-hero-image
-              gallery-hero-image-main
-            "
-          >
-
-            <img
-              src="assets/images/hero-bihu.jpg"
-              alt="AAVAN community cultural celebration"
-            >
-
-          </div>
-
+        <article class="admin-row">
 
           <div
-            class="
-              gallery-hero-image
-              gallery-hero-image-secondary
-            "
+            class="admin-row-main"
           >
 
-            <img
-              src="assets/images/community-group.jpg"
-              alt="AAVAN community gathering"
-            >
-
-          </div>
-
-
-          <div class="gallery-hero-note">
+            <strong>
+              ${escapeHtml(
+                album.title
+              )}
+            </strong>
 
             <span>
-              AAVAN COMMUNITY
+              ${escapeHtml(
+                album.event_name ||
+                'General gallery'
+              )}
+            </span>
+
+          </div>
+
+
+          <div
+            class="admin-row-meta"
+          >
+
+            <span>
+              Year
             </span>
 
             <strong>
-              Every gathering becomes
-              part of our story.
+              ${escapeHtml(
+                album.album_year
+              )}
             </strong>
 
           </div>
 
-        </div>
 
-      </div>
+          <div
+            class="admin-row-meta"
+          >
 
-    </section>
+            <span>
+              Status
+            </span>
 
-
-
-    <!-- ====================================================
-         ARCHIVE
-         ==================================================== -->
-
-    <section
-      class="gallery-archive"
-      id="archive"
-    >
-
-      <div class="container">
-
-
-        <!-- Archive heading -->
-
-        <div class="gallery-archive-head">
-
-          <div>
-
-            <p class="eyebrow">
-              EXPLORE THE ARCHIVE
-            </p>
-
-            <h2>
-              Memories by year
-              and event.
-            </h2>
-
-            <p class="gallery-archive-intro">
-              Browse AAVAN celebrations,
-              gatherings and community moments
-              across the years.
-            </p>
+            <span
+              class="status-pill ${
+                album.published
+                  ? 'published'
+                  : ''
+              }"
+            >
+              ${
+                album.published
+                  ? 'Published'
+                  : 'Draft'
+              }
+            </span>
 
           </div>
 
 
+          <div
+            class="admin-row-actions"
+          >
 
-          <!-- Year filter -->
+            <button
+              type="button"
+              data-album-photos="${album.id}"
+            >
+              Manage Photos
+            </button>
 
-          <div class="gallery-filter-wrap">
+            ${
+              canEdit()
+                ? `
+                  <button
+                    type="button"
+                    data-album-edit="${album.id}"
+                  >
+                    Edit
+                  </button>
 
-            <label for="publicGalleryYear">
-              Browse year
-            </label>
-
-            <div class="gallery-select-wrap">
-
-              <select
-                id="publicGalleryYear"
-                aria-label="Filter gallery by year"
-              >
-
-                <option value="all">
-                  All years
-                </option>
-
-              </select>
-
-            </div>
+                  <button
+                    type="button"
+                    class="danger"
+                    data-album-delete="${album.id}"
+                  >
+                    Delete
+                  </button>
+                `
+                : ''
+            }
 
           </div>
 
-        </div>
+        </article>
+      `).join('');
+
+    attachAlbumActions();
+  };
 
 
+  const loadAlbums =
+    async () => {
 
-        <!-- Media filters -->
+      if (!albumsList) return;
 
-        <div
-          class="gallery-media-tabs"
-          aria-label="Gallery media type"
-        >
+      albumsList.innerHTML =
+        '<div class="admin-loading">Loading albums…</div>';
 
-          <button
-            class="gallery-media-tab active"
-            type="button"
-            data-gallery-media="all"
-          >
-            All memories
-          </button>
+      const {
+        data,
+        error
+      } = await supabase
+        .from('gallery_albums')
+        .select('*')
+        .order(
+          'album_year',
+          {
+            ascending: false
+          }
+        )
+        .order(
+          'display_order',
+          {
+            ascending: true
+          }
+        )
+        .order(
+          'created_at',
+          {
+            ascending: false
+          }
+        );
 
+      if (error) {
+        console.error(
+          'Gallery albums error:',
+          error
+        );
 
-          <button
-            class="gallery-media-tab"
-            type="button"
-            data-gallery-media="photos"
-          >
-            Photos
-          </button>
-
-
-          <button
-            class="gallery-media-tab"
-            type="button"
-            data-gallery-media="videos"
-          >
-            Videos
-          </button>
-
-        </div>
-
-
-
-        <!-- Dynamic gallery -->
-
-        <div
-          id="publicGalleryAlbums"
-          class="gallery-year-archive"
-          aria-live="polite"
-        ></div>
-
-
-
-        <!-- Empty state -->
-
-        <div
-          id="galleryFallback"
-          class="gallery-empty"
-          hidden
-        >
-
-          <div class="gallery-empty-mark">
-            AAVAN
+        albumsList.innerHTML = `
+          <div class="admin-empty">
+            Unable to load
+            gallery albums.
           </div>
+        `;
 
-          <h3>
-            More memories are coming.
-          </h3>
+        return;
+      }
 
-          <p>
-            Published community albums will
-            appear here as the archive grows.
-          </p>
+      adminAlbums =
+        Array.isArray(data)
+          ? data
+          : [];
 
-        </div>
+      refreshYearSelect(
+        galleryYearFilter,
+        adminAlbums,
+        'All years'
+      );
 
-      </div>
+      populateAdminAlbumSelects();
 
-    </section>
+      renderAdminAlbums();
+    };
 
 
+  uploadPhotosBtn
+    ?.addEventListener(
+      'click',
+      async () => {
 
-    <!-- ====================================================
-         COMMUNITY CTA
-         ==================================================== -->
+        if (!canEdit()) return;
 
-    <section class="gallery-community-cta">
+        closeAdminEditors(
+          'photos'
+        );
 
-      <div class="container">
+        setMessage(
+          quickPhotoUploadMessage
+        );
 
-        <div class="gallery-community-card">
+        quickPhotoUploadForm
+          ?.reset();
 
+        if (!adminAlbums.length) {
+          await loadAlbums();
+        }
 
-          <div class="gallery-community-copy">
+        populateAdminAlbumSelects();
 
-            <div
-              class="gallery-community-icon"
-              aria-hidden="true"
-            >
-
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-
-                <path
-                  d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
-                />
-
-                <circle
-                  cx="9"
-                  cy="7"
-                  r="4"
-                />
-
-                <path
-                  d="M22 21v-2a4 4 0 0 0-3-3.87"
-                />
-
-                <path
-                  d="M16 3.13a4 4 0 0 1 0 7.75"
-                />
-
-              </svg>
-
-            </div>
-
-
-            <div>
-
-              <p class="eyebrow">
-                OUR SHARED HISTORY
-              </p>
-
-              <h2>
-                Have AAVAN memories
-                to share?
-              </h2>
-
-              <p>
-                If you have photos or videos from
-                a past AAVAN event, help us preserve
-                them as part of our community archive.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <a
-            class="gallery-community-button"
-            href="mailto:aavandir@gmail.com"
-          >
-            Share with AAVAN
-            <span aria-hidden="true">↗</span>
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-  </main>
-
-
-
-  <!-- ======================================================
-       FOOTER
-       ====================================================== -->
-
-  <footer class="gallery-footer">
-
-    <div class="container">
-
-
-      <!-- Main footer -->
-
-      <div class="gallery-footer-grid">
-
-
-        <!-- Brand -->
-
-        <div class="gallery-footer-brand">
-
-          <div class="gallery-footer-brandmark">
-
-            <img
-              src="assets/images/logo.png"
-              alt="AAVAN"
-            >
-
-            <div>
-
-              <strong>
-                Assam Association
-                of Vancouver
-              </strong>
-
-              <span>
-                British Columbia
-              </span>
-
-            </div>
-
-          </div>
-
-
-          <p>
-            Connecting the Assamese community
-            through culture, friendship,
-            family and shared experiences.
-          </p>
-
-        </div>
-
-
-
-        <!-- Explore -->
-
-        <div class="gallery-footer-column">
-
-          <h3>
-            Explore
-          </h3>
-
-          <a href="index.html#about">
-            About
-          </a>
-
-          <a href="index.html#events">
-            Events
-          </a>
-
-          <a href="discover-assam.html">
-            Discover Assam
-          </a>
-
-          <a href="gallery.html">
-            Gallery
-          </a>
-
-          <a href="index.html#membership">
-            Membership
-          </a>
-
-        </div>
-
-
-
-        <!-- Community -->
-
-        <div class="gallery-footer-column">
-
-          <h3>
-            Community
-          </h3>
-
-          <a href="membership.html">
-            Join AAVAN
-          </a>
-
-          <a href="committee-login.html">
-            Committee Login
-          </a>
-
-          <span>
-            Member Directory / Leaderboards
-          </span>
-
-          <a href="index.html#contact">
-            Contact
-          </a>
-
-        </div>
-
-
-
-        <!-- Contact -->
-
-        <div class="gallery-footer-column">
-
-          <h3>
-            Contact
-          </h3>
-
-          <span>
-            17147 85A Ave
-          </span>
-
-          <span>
-            Surrey, BC V4N 0B1
-          </span>
-
-          <a href="tel:+16046490469">
-            604-649-0469
-          </a>
-
-          <a href="mailto:aavandir@gmail.com">
-            aavandir@gmail.com
-          </a>
-
-        </div>
-
-
-
-        <!-- Follow -->
-
-        <div class="gallery-footer-column">
-
-          <h3>
-            Follow Us
-          </h3>
-
-
-          <!--
-            Social URLs will be added once
-            the official AAVAN links are supplied.
-          -->
-
-
-          <span class="gallery-social-item">
-
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fill="currentColor"
-                d="M13.5 8H16V4.5c-.43-.06-1.91-.18-3.67-.18-3.63 0-6.12 2.22-6.12 6.3V14H2v3.91h4.21V24h5.16v-6.09h4.31L16.37 14h-5v-3c0-1.13.31-1.9 2.13-1.9z"
-              />
-            </svg>
-
-            Facebook
-
-          </span>
-
-
-          <span class="gallery-social-item">
-
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.7"
-              aria-hidden="true"
-            >
-
-              <rect
-                x="3"
-                y="3"
-                width="18"
-                height="18"
-                rx="5"
-              />
-
-              <circle
-                cx="12"
-                cy="12"
-                r="4"
-              />
-
-              <circle
-                cx="17.4"
-                cy="6.6"
-                r="1"
-                fill="currentColor"
-                stroke="none"
-              />
-
-            </svg>
-
-            Instagram
-
-          </span>
-
-
-          <span class="gallery-social-item">
-
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-
-              <path
-                fill="currentColor"
-                d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.8 31.8 0 0 0 0 12a31.8 31.8 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.8 31.8 0 0 0 24 12a31.8 31.8 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"
-              />
-
-            </svg>
-
-            YouTube
-
-          </span>
-
-
-          <span class="gallery-social-item">
-
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-
-              <path
-                fill="currentColor"
-                d="M12.04 2C6.52 2 2.05 6.43 2.05 11.9c0 1.94.57 3.75 1.55 5.28L2 22l4.98-1.55A10 10 0 0 0 12.04 22C17.55 22 22 17.57 22 12.1 22 6.43 17.55 2 12.04 2Zm5.82 14.08c-.25.71-1.48 1.31-2.04 1.4-.52.08-1.18.12-1.9-.12-.44-.14-1-.33-1.72-.64-3.02-1.3-4.98-4.35-5.13-4.55-.15-.2-1.22-1.61-1.22-3.07 0-1.46.76-2.18 1.04-2.48.27-.3.6-.37.8-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.06.93 2.21.07.15.12.33.02.53-.1.2-.15.33-.3.5-.15.17-.32.38-.45.51-.15.15-.3.31-.13.61.18.3.78 1.28 1.68 2.08 1.15 1.03 2.12 1.35 2.42 1.5.3.15.48.13.66-.08.17-.2.75-.87.95-1.17.2-.3.4-.25.68-.15.28.1 1.77.83 2.07.98.3.15.5.23.58.35.07.13.07.73-.18 1.44Z"
-              />
-
-            </svg>
-
-            WhatsApp
-
-          </span>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- Footer bottom -->
-
-      <div class="gallery-footer-bottom">
-
-        <div class="gallery-footer-mini-brand">
-
-          <img
-            src="assets/images/logo.png"
-            alt=""
-          >
-
+        if (
+          quickPhotoUploadPanel
+        ) {
+          quickPhotoUploadPanel
+            .hidden = false;
+
+          quickPhotoUploadPanel
+            .scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+        }
+      }
+    );
+
+
+  cancelQuickPhotoUploadBtn
+    ?.addEventListener(
+      'click',
+      () => {
+
+        quickPhotoUploadForm
+          ?.reset();
+
+        setMessage(
+          quickPhotoUploadMessage
+        );
+
+        if (
+          quickPhotoUploadPanel
+        ) {
+          quickPhotoUploadPanel
+            .hidden = true;
+        }
+      }
+    );
+
+
+  newAlbumBtn
+    ?.addEventListener(
+      'click',
+      async () => {
+
+        if (!canEdit()) return;
+
+        closeAdminEditors(
+          'album'
+        );
+
+        resetAlbumForm();
+
+        await loadAdminEvents();
+
+        if (albumFormPanel) {
+          albumFormPanel.hidden =
+            false;
+
+          albumFormPanel
+            .scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+        }
+      }
+    );
+
+
+  cancelAlbumEditBtn
+    ?.addEventListener(
+      'click',
+      () => {
+
+        resetAlbumForm();
+
+        if (albumFormPanel) {
+          albumFormPanel.hidden =
+            true;
+        }
+      }
+    );
+
+
+  albumEventId
+    ?.addEventListener(
+      'change',
+      () => {
+
+        const selected =
+          adminEvents.find(
+            (event) =>
+              String(event.id) ===
+              String(
+                albumEventId.value
+              )
+          );
+
+        if (!selected) return;
+
+        if (
+          albumEventName &&
+          !albumEventName.value
+            .trim()
+        ) {
+          albumEventName.value =
+            selected.title || '';
+        }
+
+        if (
+          albumYear &&
+          selected.event_date
+        ) {
+          albumYear.value =
+            String(
+              selected.event_date
+            ).slice(0, 4);
+        }
+      }
+    );
+
+
+  albumPhotoUpload
+    ?.addEventListener(
+      'change',
+      () => {
+
+        if (
+          !albumSelectedPhotos
+        ) {
+          return;
+        }
+
+        const files =
+          Array.from(
+            albumPhotoUpload.files ||
+            []
+          );
+
+        if (!files.length) {
+          albumSelectedPhotos.hidden =
+            true;
+
+          albumSelectedPhotos.innerHTML =
+            '';
+
+          return;
+        }
+
+        albumSelectedPhotos.hidden =
+          false;
+
+        albumSelectedPhotos.innerHTML = `
           <strong>
-            AAVAN
+            ${files.length}
+            photo${
+              files.length === 1
+                ? ''
+                : 's'
+            }
+            selected
           </strong>
 
+          <div
+            class="album-selected-photos__list"
+          >
+
+            ${files
+              .map(
+                (file, index) => `
+                  <span>
+                    ${index + 1}.
+                    ${escapeHtml(
+                      file.name
+                    )}
+                  </span>
+                `
+              )
+              .join('')}
+
+          </div>
+        `;
+      }
+    );
+
+
+  albumForm
+    ?.addEventListener(
+      'submit',
+      async (event) => {
+
+        event.preventDefault();
+
+        if (!canEdit()) return;
+
+        const title =
+          albumTitle.value.trim();
+
+        const year =
+          Number(
+            albumYear.value
+          );
+
+        const selectedFiles =
+          Array.from(
+            albumPhotoUpload
+              ?.files ||
+            []
+          );
+
+        if (!title || !year) {
+          setMessage(
+            albumMessage,
+            'Album title and year are required.',
+            true
+          );
+
+          return;
+        }
+
+        try {
+          setMessage(
+            albumMessage,
+            selectedFiles.length
+              ? `Saving album and uploading ${selectedFiles.length} photo${
+                  selectedFiles.length === 1
+                    ? ''
+                    : 's'
+                }…`
+              : 'Saving album…'
+          );
+
+          const payload = {
+            title,
+
+            album_year:
+              year,
+
+            event_name:
+              albumEventName
+                .value
+                .trim() ||
+              null,
+
+            event_id:
+              albumEventId.value ||
+              null,
+
+            description:
+              albumDescription
+                .value
+                .trim() ||
+              null,
+
+            published:
+              albumPublished.checked,
+
+            updated_by:
+              currentUser.id
+          };
+
+
+          let savedAlbumId =
+            albumId.value ||
+            null;
+
+
+          if (savedAlbumId) {
+            const {
+              error: updateError
+            } = await supabase
+              .from(
+                'gallery_albums'
+              )
+              .update(payload)
+              .eq(
+                'id',
+                savedAlbumId
+              );
+
+            if (updateError) {
+              throw updateError;
+            }
+
+          } else {
+            payload.created_by =
+              currentUser.id;
+
+            const {
+              data: insertedAlbum,
+              error: insertError
+            } = await supabase
+              .from(
+                'gallery_albums'
+              )
+              .insert(payload)
+              .select('id')
+              .single();
+
+            if (insertError) {
+              throw insertError;
+            }
+
+            savedAlbumId =
+              insertedAlbum?.id;
+
+            if (!savedAlbumId) {
+              throw new Error(
+                'Album was created but its ID could not be read.'
+              );
+            }
+          }
+
+
+          if (
+            selectedFiles.length
+          ) {
+            await uploadFilesToAlbum(
+              savedAlbumId,
+              selectedFiles,
+              (message) => {
+                setMessage(
+                  albumMessage,
+                  message
+                );
+              }
+            );
+          }
+
+
+          resetAlbumForm();
+
+          if (albumFormPanel) {
+            albumFormPanel.hidden =
+              true;
+          }
+
+          await Promise.all([
+            loadAlbums(),
+            loadAdminCounts(),
+            loadPublicGallery()
+          ]);
+
+        } catch (error) {
+          console.error(
+            'Save album error:',
+            error
+          );
+
+          setMessage(
+            albumMessage,
+            error.message ||
+            'Unable to save album.',
+            true
+          );
+        }
+      }
+    );
+
+
+  galleryYearFilter
+    ?.addEventListener(
+      'change',
+      renderAdminAlbums
+    );
+
+
+  galleryAlbumSearch
+    ?.addEventListener(
+      'input',
+      renderAdminAlbums
+    );
+
+
+  const attachAlbumActions =
+    () => {
+
+      document
+        .querySelectorAll(
+          '[data-album-edit]'
+        )
+        .forEach((button) => {
+
+          button.addEventListener(
+            'click',
+            async () => {
+
+              const album =
+                getAlbumById(
+                  button.dataset
+                    .albumEdit
+                );
+
+              if (!album) return;
+
+              closeAdminEditors(
+                'album'
+              );
+
+              await loadAdminEvents();
+
+              albumId.value =
+                album.id || '';
+
+              albumTitle.value =
+                album.title || '';
+
+              albumYear.value =
+                album.album_year ||
+                currentYear;
+
+              albumEventName.value =
+                album.event_name ||
+                '';
+
+              albumEventId.value =
+                album.event_id ||
+                '';
+
+              albumDescription.value =
+                album.description ||
+                '';
+
+              albumPublished.checked =
+                Boolean(
+                  album.published
+                );
+
+              if (albumFormTitle) {
+                albumFormTitle
+                  .textContent =
+                  'Edit album';
+              }
+
+              if (albumFormPanel) {
+                albumFormPanel.hidden =
+                  false;
+
+                albumFormPanel
+                  .scrollIntoView({
+                    behavior:
+                      'smooth',
+                    block:
+                      'start'
+                  });
+              }
+            }
+          );
+        });
+
+
+      document
+        .querySelectorAll(
+          '[data-album-delete]'
+        )
+        .forEach((button) => {
+
+          button.addEventListener(
+            'click',
+            async () => {
+
+              if (!canEdit()) {
+                return;
+              }
+
+              const confirmed =
+                window.confirm(
+                  'Delete this album and all of its photos and videos?'
+                );
+
+              if (!confirmed) {
+                return;
+              }
+
+              const {
+                error
+              } = await supabase
+                .from(
+                  'gallery_albums'
+                )
+                .delete()
+                .eq(
+                  'id',
+                  button.dataset
+                    .albumDelete
+                );
+
+              if (error) {
+                window.alert(
+                  error.message
+                );
+
+                return;
+              }
+
+              await Promise.all([
+                loadAlbums(),
+                loadVideos(),
+                loadAdminCounts(),
+                loadPublicGallery()
+              ]);
+            }
+          );
+        });
+
+
+      document
+        .querySelectorAll(
+          '[data-album-photos]'
+        )
+        .forEach((button) => {
+
+          button.addEventListener(
+            'click',
+            async () => {
+
+              const album =
+                getAlbumById(
+                  button.dataset
+                    .albumPhotos
+                );
+
+              if (!album) return;
+
+              activeAlbumId =
+                album.id;
+
+              if (
+                albumPhotosTitle
+              ) {
+                albumPhotosTitle
+                  .textContent =
+                  album.title;
+              }
+
+              if (
+                albumPhotosPanel
+              ) {
+                albumPhotosPanel
+                  .hidden = false;
+
+                albumPhotosPanel
+                  .scrollIntoView({
+                    behavior:
+                      'smooth',
+                    block:
+                      'start'
+                  });
+              }
+
+              await loadAlbumPhotos();
+            }
+          );
+        });
+    };
+
+
+  /* =========================================================
+     PHOTO UPLOAD
+     ========================================================= */
+
+  const uploadGalleryPhoto =
+    async (
+      file,
+      albumIdValue
+    ) => {
+
+      const extension =
+        file.name
+          .split('.')
+          .pop()
+          ?.toLowerCase() ||
+        'jpg';
+
+      const filename =
+        `${crypto.randomUUID()}.${extension}`;
+
+      const path =
+        `albums/${albumIdValue}/${filename}`;
+
+      const {
+        error
+      } = await supabase
+        .storage
+        .from('gallery-images')
+        .upload(
+          path,
+          file,
+          {
+            cacheControl:
+              '3600',
+
+            upsert:
+              false
+          }
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      const {
+        data
+      } = supabase.storage
+        .from('gallery-images')
+        .getPublicUrl(path);
+
+      return {
+        publicUrl:
+          data?.publicUrl ||
+          null,
+
+        storagePath:
+          path
+      };
+    };
+
+
+  const uploadFilesToAlbum =
+    async (
+      albumIdValue,
+      files,
+      onProgress = null
+    ) => {
+
+      const selectedFiles =
+        Array.from(
+          files || []
+        );
+
+      if (
+        !selectedFiles.length
+      ) {
+        return;
+      }
+
+      const {
+        data: existingPhotos,
+        error:
+          existingPhotosError
+      } = await supabase
+        .from('gallery_photos')
+        .select('id')
+        .eq(
+          'album_id',
+          albumIdValue
+        )
+        .limit(1);
+
+      if (
+        existingPhotosError
+      ) {
+        throw existingPhotosError;
+      }
+
+      const albumHasNoPhotos =
+        !existingPhotos?.length;
+
+
+      for (
+        let index = 0;
+        index <
+        selectedFiles.length;
+        index += 1
+      ) {
+
+        const file =
+          selectedFiles[index];
+
+        if (onProgress) {
+          onProgress(
+            `Uploading photo ${
+              index + 1
+            } of ${
+              selectedFiles.length
+            }…`
+          );
+        }
+
+        const uploaded =
+          await uploadGalleryPhoto(
+            file,
+            albumIdValue
+          );
+
+        if (
+          !uploaded.publicUrl
+        ) {
+          throw new Error(
+            `Unable to create public URL for ${file.name}.`
+          );
+        }
+
+        const isCover =
+          albumHasNoPhotos &&
+          index === 0;
+
+        const {
+          error:
+            insertError
+        } = await supabase
+          .from(
+            'gallery_photos'
+          )
+          .insert({
+            album_id:
+              albumIdValue,
+
+            image_url:
+              uploaded.publicUrl,
+
+            alt_text:
+              file.name
+                .replace(
+                  /\.[^.]+$/,
+                  ''
+                )
+                .replaceAll(
+                  '-',
+                  ' '
+                )
+                .replaceAll(
+                  '_',
+                  ' '
+                ),
+
+            featured:
+              isCover,
+
+            display_order:
+              index,
+
+            uploaded_by:
+              currentUser.id
+          });
+
+        if (insertError) {
+          throw insertError;
+        }
+
+
+        if (isCover) {
+          const {
+            error:
+              coverError
+          } = await supabase
+            .from(
+              'gallery_albums'
+            )
+            .update({
+              cover_image_url:
+                uploaded.publicUrl,
+
+              updated_by:
+                currentUser.id
+            })
+            .eq(
+              'id',
+              albumIdValue
+            );
+
+          if (coverError) {
+            throw coverError;
+          }
+        }
+      }
+    };
+
+
+  quickPhotoUploadForm
+    ?.addEventListener(
+      'submit',
+      async (event) => {
+
+        event.preventDefault();
+
+        if (!canEdit()) {
+          return;
+        }
+
+        const targetAlbumId =
+          quickPhotoAlbumSelect
+            ?.value ||
+          '';
+
+        const files =
+          Array.from(
+            quickPhotoFiles
+              ?.files ||
+            []
+          );
+
+
+        if (!targetAlbumId) {
+          setMessage(
+            quickPhotoUploadMessage,
+            'Please choose an album.',
+            true
+          );
+
+          return;
+        }
+
+
+        if (!files.length) {
+          setMessage(
+            quickPhotoUploadMessage,
+            'Please choose at least one photo.',
+            true
+          );
+
+          return;
+        }
+
+
+        try {
+          await uploadFilesToAlbum(
+            targetAlbumId,
+            files,
+            (message) => {
+              setMessage(
+                quickPhotoUploadMessage,
+                message
+              );
+            }
+          );
+
+          setMessage(
+            quickPhotoUploadMessage,
+            'Photos uploaded successfully.'
+          );
+
+          quickPhotoUploadForm
+            ?.reset();
+
+          await Promise.all([
+            loadAlbums(),
+            loadAdminCounts(),
+            loadPublicGallery()
+          ]);
+
+        } catch (error) {
+          console.error(
+            'Quick gallery upload error:',
+            error
+          );
+
+          setMessage(
+            quickPhotoUploadMessage,
+            error.message ||
+            'Unable to upload photos.',
+            true
+          );
+        }
+      }
+    );
+
+
+  const loadAlbumPhotos =
+    async () => {
+
+      if (
+        !activeAlbumId ||
+        !albumPhotosGrid
+      ) {
+        return;
+      }
+
+      albumPhotosGrid.innerHTML =
+        '<div class="admin-loading">Loading photos…</div>';
+
+      const {
+        data,
+        error
+      } = await supabase
+        .from('gallery_photos')
+        .select('*')
+        .eq(
+          'album_id',
+          activeAlbumId
+        )
+        .order(
+          'featured',
+          {
+            ascending: false
+          }
+        )
+        .order(
+          'display_order',
+          {
+            ascending: true
+          }
+        )
+        .order(
+          'created_at',
+          {
+            ascending: true
+          }
+        );
+
+
+      if (error) {
+        albumPhotosGrid.innerHTML = `
+          <div class="admin-empty">
+            Unable to load
+            album photos.
+          </div>
+        `;
+
+        return;
+      }
+
+
+      const photos =
+        Array.isArray(data)
+          ? data
+          : [];
+
+
+      if (!photos.length) {
+        albumPhotosGrid.innerHTML = `
+          <div class="admin-empty">
+            No photos uploaded
+            to this album yet.
+          </div>
+        `;
+
+        return;
+      }
+
+
+      albumPhotosGrid.innerHTML =
+        photos.map(
+          (photo) => `
+
+            <article
+              class="admin-gallery-photo"
+            >
+
+              <img
+                src="${escapeHtml(
+                  photo.image_url
+                )}"
+                alt="${escapeHtml(
+                  photo.alt_text ||
+                  photo.caption ||
+                  'Gallery photo'
+                )}"
+              >
+
+              <div>
+
+                <span
+                  class="status-pill ${
+                    photo.featured
+                      ? 'published'
+                      : ''
+                  }"
+                >
+                  ${
+                    photo.featured
+                      ? 'Cover'
+                      : 'Photo'
+                  }
+                </span>
+
+                ${
+                  photo.caption
+                    ? `
+                      <p>
+                        ${escapeHtml(
+                          photo.caption
+                        )}
+                      </p>
+                    `
+                    : `
+                      <p>
+                        No caption
+                      </p>
+                    `
+                }
+
+                ${
+                  canEdit()
+                    ? `
+                      <div
+                        class="admin-row-actions"
+                      >
+
+                        <button
+                          type="button"
+                          data-photo-caption="${photo.id}"
+                        >
+                          Caption
+                        </button>
+
+                        ${
+                          !photo.featured
+                            ? `
+                              <button
+                                type="button"
+                                data-photo-cover="${photo.id}"
+                              >
+                                Make Cover
+                              </button>
+                            `
+                            : ''
+                        }
+
+                        <button
+                          type="button"
+                          class="danger"
+                          data-photo-delete="${photo.id}"
+                        >
+                          Delete
+                        </button>
+
+                      </div>
+                    `
+                    : ''
+                }
+
+              </div>
+
+            </article>
+          `
+        )
+        .join('');
+
+
+      attachPhotoActions(
+        photos
+      );
+    };
+
+
+  galleryPhotoUpload
+    ?.addEventListener(
+      'change',
+      async () => {
+
+        if (
+          !canEdit() ||
+          !activeAlbumId
+        ) {
+          return;
+        }
+
+        const files =
+          Array.from(
+            galleryPhotoUpload
+              .files ||
+            []
+          );
+
+        if (!files.length) {
+          return;
+        }
+
+
+        try {
+          await uploadFilesToAlbum(
+            activeAlbumId,
+            files,
+            (message) => {
+              setMessage(
+                galleryUploadMessage,
+                message
+              );
+            }
+          );
+
+          galleryPhotoUpload.value =
+            '';
+
+          setMessage(
+            galleryUploadMessage,
+            'Photos uploaded successfully.'
+          );
+
+          await Promise.all([
+            loadAlbumPhotos(),
+            loadAlbums(),
+            loadAdminCounts(),
+            loadPublicGallery()
+          ]);
+
+        } catch (error) {
+          console.error(
+            'Gallery upload error:',
+            error
+          );
+
+          setMessage(
+            galleryUploadMessage,
+            error.message ||
+            'Unable to upload photos.',
+            true
+          );
+        }
+      }
+    );
+
+
+  const attachPhotoActions =
+    (photos) => {
+
+      document
+        .querySelectorAll(
+          '[data-photo-caption]'
+        )
+        .forEach((button) => {
+
+          button.addEventListener(
+            'click',
+            async () => {
+
+              const photo =
+                photos.find(
+                  (item) =>
+                    String(
+                      item.id
+                    ) ===
+                    String(
+                      button.dataset
+                        .photoCaption
+                    )
+                );
+
+              if (!photo) {
+                return;
+              }
+
+              const caption =
+                window.prompt(
+                  'Photo caption',
+                  photo.caption || ''
+                );
+
+              if (
+                caption === null
+              ) {
+                return;
+              }
+
+              const {
+                error
+              } = await supabase
+                .from(
+                  'gallery_photos'
+                )
+                .update({
+                  caption:
+                    caption
+                      .trim() ||
+                    null
+                })
+                .eq(
+                  'id',
+                  photo.id
+                );
+
+              if (error) {
+                window.alert(
+                  error.message
+                );
+
+                return;
+              }
+
+              await Promise.all([
+                loadAlbumPhotos(),
+                loadPublicGallery()
+              ]);
+            }
+          );
+        });
+
+
+      document
+        .querySelectorAll(
+          '[data-photo-cover]'
+        )
+        .forEach((button) => {
+
+          button.addEventListener(
+            'click',
+            async () => {
+
+              const photo =
+                photos.find(
+                  (item) =>
+                    String(
+                      item.id
+                    ) ===
+                    String(
+                      button.dataset
+                        .photoCover
+                    )
+                );
+
+              if (!photo) return;
+
+
+              const {
+                error:
+                  clearError
+              } = await supabase
+                .from(
+                  'gallery_photos'
+                )
+                .update({
+                  featured: false
+                })
+                .eq(
+                  'album_id',
+                  activeAlbumId
+                );
+
+              if (clearError) {
+                window.alert(
+                  clearError.message
+                );
+
+                return;
+              }
+
+
+              const {
+                error:
+                  featureError
+              } = await supabase
+                .from(
+                  'gallery_photos'
+                )
+                .update({
+                  featured: true
+                })
+                .eq(
+                  'id',
+                  photo.id
+                );
+
+              if (featureError) {
+                window.alert(
+                  featureError.message
+                );
+
+                return;
+              }
+
+
+              const {
+                error:
+                  albumError
+              } = await supabase
+                .from(
+                  'gallery_albums'
+                )
+                .update({
+                  cover_image_url:
+                    photo.image_url,
+
+                  updated_by:
+                    currentUser.id
+                })
+                .eq(
+                  'id',
+                  activeAlbumId
+                );
+
+              if (albumError) {
+                window.alert(
+                  albumError.message
+                );
+
+                return;
+              }
+
+
+              await Promise.all([
+                loadAlbumPhotos(),
+                loadAlbums(),
+                loadPublicGallery()
+              ]);
+            }
+          );
+        });
+
+
+      document
+        .querySelectorAll(
+          '[data-photo-delete]'
+        )
+        .forEach((button) => {
+
+          button.addEventListener(
+            'click',
+            async () => {
+
+              const photo =
+                photos.find(
+                  (item) =>
+                    String(
+                      item.id
+                    ) ===
+                    String(
+                      button.dataset
+                        .photoDelete
+                    )
+                );
+
+              if (!photo) return;
+
+
+              const confirmed =
+                window.confirm(
+                  'Delete this photo from the album?'
+                );
+
+              if (!confirmed) {
+                return;
+              }
+
+
+              const {
+                error
+              } = await supabase
+                .from(
+                  'gallery_photos'
+                )
+                .delete()
+                .eq(
+                  'id',
+                  photo.id
+                );
+
+              if (error) {
+                window.alert(
+                  error.message
+                );
+
+                return;
+              }
+
+
+              if (photo.featured) {
+                const {
+                  data: remaining
+                } = await supabase
+                  .from(
+                    'gallery_photos'
+                  )
+                  .select('*')
+                  .eq(
+                    'album_id',
+                    activeAlbumId
+                  )
+                  .order(
+                    'created_at',
+                    {
+                      ascending:
+                        true
+                    }
+                  )
+                  .limit(1);
+
+
+                const next =
+                  remaining?.[0];
+
+
+                if (next) {
+                  await supabase
+                    .from(
+                      'gallery_photos'
+                    )
+                    .update({
+                      featured: true
+                    })
+                    .eq(
+                      'id',
+                      next.id
+                    );
+
+                  await supabase
+                    .from(
+                      'gallery_albums'
+                    )
+                    .update({
+                      cover_image_url:
+                        next.image_url,
+
+                      updated_by:
+                        currentUser.id
+                    })
+                    .eq(
+                      'id',
+                      activeAlbumId
+                    );
+
+                } else {
+                  await supabase
+                    .from(
+                      'gallery_albums'
+                    )
+                    .update({
+                      cover_image_url:
+                        null,
+
+                      updated_by:
+                        currentUser.id
+                    })
+                    .eq(
+                      'id',
+                      activeAlbumId
+                    );
+                }
+              }
+
+
+              await Promise.all([
+                loadAlbumPhotos(),
+                loadAlbums(),
+                loadAdminCounts(),
+                loadPublicGallery()
+              ]);
+            }
+          );
+        });
+    };
+
+
+  closeAlbumPhotosBtn
+    ?.addEventListener(
+      'click',
+      () => {
+
+        activeAlbumId = null;
+
+        setMessage(
+          galleryUploadMessage
+        );
+
+        if (albumPhotosPanel) {
+          albumPhotosPanel.hidden =
+            true;
+        }
+      }
+    );
+
+
+  /* =========================================================
+     VIDEO MANAGEMENT
+     ========================================================= */
+
+  const resetVideoForm = () => {
+    videoForm?.reset();
+
+    if (videoId) {
+      videoId.value = '';
+    }
+
+    if (videoDisplayOrder) {
+      videoDisplayOrder.value =
+        '0';
+    }
+
+    if (videoPublished) {
+      videoPublished.checked =
+        true;
+    }
+
+    if (videoFeatured) {
+      videoFeatured.checked =
+        false;
+    }
+
+    if (videoFormTitle) {
+      videoFormTitle.textContent =
+        'Add video';
+    }
+
+    setMessage(videoMessage);
+  };
+
+
+  addVideoBtn
+    ?.addEventListener(
+      'click',
+      async () => {
+
+        if (!canEdit()) return;
+
+        closeAdminEditors(
+          'video'
+        );
+
+        resetVideoForm();
+
+        if (!adminAlbums.length) {
+          await loadAlbums();
+        }
+
+        populateAdminAlbumSelects();
+
+        if (videoFormPanel) {
+          videoFormPanel.hidden =
+            false;
+
+          videoFormPanel
+            .scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+        }
+      }
+    );
+
+
+  cancelVideoEditBtn
+    ?.addEventListener(
+      'click',
+      () => {
+
+        resetVideoForm();
+
+        if (videoFormPanel) {
+          videoFormPanel.hidden =
+            true;
+        }
+      }
+    );
+
+
+  videoUrl
+    ?.addEventListener(
+      'blur',
+      () => {
+
+        if (
+          !videoThumbnailUrl ||
+          videoThumbnailUrl
+            .value
+            .trim()
+        ) {
+          return;
+        }
+
+        const thumbnail =
+          getYouTubeThumbnail(
+            videoUrl.value
+          );
+
+        if (thumbnail) {
+          videoThumbnailUrl.value =
+            thumbnail;
+        }
+      }
+    );
+
+
+  videoForm
+    ?.addEventListener(
+      'submit',
+      async (event) => {
+
+        event.preventDefault();
+
+        if (!canEdit()) return;
+
+
+        const targetAlbum =
+          videoAlbumSelect
+            ?.value ||
+          '';
+
+        const title =
+          videoTitle
+            ?.value
+            .trim() ||
+          '';
+
+        const url =
+          videoUrl
+            ?.value
+            .trim() ||
+          '';
+
+
+        if (!targetAlbum) {
+          setMessage(
+            videoMessage,
+            'Please choose an album.',
+            true
+          );
+
+          return;
+        }
+
+
+        if (!title) {
+          setMessage(
+            videoMessage,
+            'Video title is required.',
+            true
+          );
+
+          return;
+        }
+
+
+        if (
+          !getYouTubeId(url)
+        ) {
+          setMessage(
+            videoMessage,
+            'Please enter a valid YouTube URL.',
+            true
+          );
+
+          return;
+        }
+
+
+        try {
+          setMessage(
+            videoMessage,
+            'Saving video…'
+          );
+
+
+          const payload = {
+            album_id:
+              targetAlbum,
+
+            title,
+
+            video_url:
+              url,
+
+            thumbnail_url:
+              videoThumbnailUrl
+                ?.value
+                .trim() ||
+              getYouTubeThumbnail(
+                url
+              ) ||
+              null,
+
+            caption:
+              videoCaption
+                ?.value
+                .trim() ||
+              null,
+
+            featured:
+              Boolean(
+                videoFeatured
+                  ?.checked
+              ),
+
+            display_order:
+              Number(
+                videoDisplayOrder
+                  ?.value ||
+                0
+              ),
+
+            published:
+              Boolean(
+                videoPublished
+                  ?.checked
+              ),
+
+            uploaded_by:
+              currentUser.id
+          };
+
+
+          if (
+            payload.featured
+          ) {
+            await supabase
+              .from(
+                'gallery_videos'
+              )
+              .update({
+                featured: false
+              })
+              .eq(
+                'album_id',
+                targetAlbum
+              );
+          }
+
+
+          if (videoId?.value) {
+            const {
+              error
+            } = await supabase
+              .from(
+                'gallery_videos'
+              )
+              .update(payload)
+              .eq(
+                'id',
+                videoId.value
+              );
+
+            if (error) {
+              throw error;
+            }
+
+          } else {
+            const {
+              error
+            } = await supabase
+              .from(
+                'gallery_videos'
+              )
+              .insert(payload);
+
+            if (error) {
+              throw error;
+            }
+          }
+
+
+          resetVideoForm();
+
+          if (videoFormPanel) {
+            videoFormPanel.hidden =
+              true;
+          }
+
+
+          await Promise.all([
+            loadVideos(),
+            loadAdminCounts(),
+            loadPublicGallery()
+          ]);
+
+        } catch (error) {
+          console.error(
+            'Save video error:',
+            error
+          );
+
+          setMessage(
+            videoMessage,
+            error.message ||
+            'Unable to save video.',
+            true
+          );
+        }
+      }
+    );
+
+
+  const renderVideos = () => {
+    if (!galleryVideosList) {
+      return;
+    }
+
+
+    if (
+      galleryVideoLibraryCount
+    ) {
+      galleryVideoLibraryCount
+        .textContent =
+        adminVideos.length;
+    }
+
+
+    if (!adminVideos.length) {
+      galleryVideosList.innerHTML = `
+        <div
+          class="admin-video-empty"
+          id="galleryVideosEmpty"
+        >
+          <div>
+            <strong>
+              No videos added yet
+            </strong>
+
+            <span>
+              Use “+ Add Video”
+              to connect the first
+              YouTube video to an album.
+            </span>
+          </div>
         </div>
+      `;
+
+      return;
+    }
 
 
-        <span>
-          © 2026 Assam Association of Vancouver.
-          All rights reserved.
-        </span>
+    galleryVideosList.innerHTML =
+      adminVideos
+        .map((video) => {
 
-      </div>
+          const album =
+            getAlbumById(
+              video.album_id
+            );
 
-    </div>
+          const thumbnail =
+            video.thumbnail_url ||
+            getYouTubeThumbnail(
+              video.video_url
+            );
 
-  </footer>
+          return `
+            <article
+              class="admin-row"
+            >
+
+              <div
+                class="admin-row-main"
+                style="
+                  display:flex;
+                  align-items:center;
+                  gap:14px;
+                "
+              >
+
+                ${
+                  thumbnail
+                    ? `
+                      <img
+                        src="${escapeHtml(
+                          thumbnail
+                        )}"
+                        alt=""
+                        style="
+                          width:92px;
+                          height:56px;
+                          object-fit:cover;
+                          border-radius:9px;
+                          flex:0 0 auto;
+                        "
+                      >
+                    `
+                    : ''
+                }
+
+                <div>
+
+                  <strong>
+                    ${escapeHtml(
+                      video.title ||
+                      'Untitled video'
+                    )}
+                  </strong>
+
+                  <span>
+                    ${escapeHtml(
+                      album?.title ||
+                      'Album unavailable'
+                    )}
+                  </span>
+
+                </div>
+
+              </div>
 
 
+              <div
+                class="admin-row-meta"
+              >
 
-  <!-- ======================================================
-       SCRIPTS
-       ====================================================== -->
+                <span>
+                  Status
+                </span>
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-  ></script>
+                <span
+                  class="status-pill ${
+                    video.published
+                      ? 'published'
+                      : ''
+                  }"
+                >
+                  ${
+                    video.published
+                      ? 'Published'
+                      : 'Draft'
+                  }
+                </span>
 
-  <script src="js/supabase-config.js"></script>
-
-  <script src="js/gallery.js"></script>
+              </div>
 
 
-</body>
+              <div
+                class="admin-row-meta"
+              >
 
-</html>
+                <span>
+                  Type
+                </span>
+
+                <strong>
+                  ${
+                    video.featured
+                      ? 'Featured'
+                      : 'Video'
+                  }
+                </strong>
+
+              </div>
+
+
+              <div
+                class="admin-row-actions"
+              >
+
+                <a
+                  href="${escapeHtml(
+                    video.video_url
+                  )}"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  View
+                </a>
+
+                ${
+                  canEdit()
+                    ? `
+                      <button
+                        type="button"
+                        data-video-edit="${video.id}"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        type="button"
+                        class="danger"
+                        data-video-delete="${video.id}"
+                      >
+                        Delete
+                      </button>
+                    `
+                    : ''
+                }
+
+              </div>
+
+            </article>
+          `;
+        })
+        .join('');
+
+
+    attachVideoActions();
+  };
+
+
+  const loadVideos =
+    async () => {
+
+      if (!galleryVideosList) {
+        return;
+      }
+
+      galleryVideosList.innerHTML =
+        '<div class="admin-loading">Loading videos…</div>';
+
+
+      const {
+        data,
+        error
+      } = await supabase
+        .from('gallery_videos')
+        .select('*')
+        .order(
+          'featured',
+          {
+            ascending: false
+          }
+        )
+        .order(
+          'display_order',
+          {
+            ascending: true
+          }
+        )
+        .order(
+          'created_at',
+          {
+            ascending: false
+          }
+        );
+
+
+      if (error) {
+        console.error(
+          'Gallery videos error:',
+          error
+        );
+
+        galleryVideosList.innerHTML = `
+          <div class="admin-empty">
+            Unable to load videos.
+          </div>
+        `;
+
+        return;
+      }
+
+
+      adminVideos =
+        Array.isArray(data)
+          ? data
+          : [];
+
+      renderVideos();
+    };
+
+
+  const attachVideoActions =
+    () => {
+
+      document
+        .querySelectorAll(
+          '[data-video-edit]'
+        )
+        .forEach((button) => {
+
+          button.addEventListener(
+            'click',
+            () => {
+
+              const video =
+                adminVideos.find(
+                  (item) =>
+                    String(
+                      item.id
+                    ) ===
+                    String(
+                      button.dataset
+                        .videoEdit
+                    )
+                );
+
+              if (!video) {
+                return;
+              }
+
+              closeAdminEditors(
+                'video'
+              );
+
+              populateAdminAlbumSelects();
+
+              if (videoId) {
+                videoId.value =
+                  video.id || '';
+              }
+
+              if (
+                videoAlbumSelect
+              ) {
+                videoAlbumSelect.value =
+                  video.album_id ||
+                  '';
+              }
+
+              if (videoTitle) {
+                videoTitle.value =
+                  video.title || '';
+              }
+
+              if (videoUrl) {
+                videoUrl.value =
+                  video.video_url ||
+                  '';
+              }
+
+              if (
+                videoThumbnailUrl
+              ) {
+                videoThumbnailUrl.value =
+                  video.thumbnail_url ||
+                  '';
+              }
+
+              if (videoCaption) {
+                videoCaption.value =
+                  video.caption || '';
+              }
+
+              if (
+                videoDisplayOrder
+              ) {
+                videoDisplayOrder.value =
+                  Number(
+                    video.display_order ||
+                    0
+                  );
+              }
+
+              if (videoFeatured) {
+                videoFeatured.checked =
+                  Boolean(
+                    video.featured
+                  );
+              }
+
+              if (videoPublished) {
+                videoPublished.checked =
+                  Boolean(
+                    video.published
+                  );
+              }
+
+              if (videoFormTitle) {
+                videoFormTitle
+                  .textContent =
+                  'Edit video';
+              }
+
+              if (videoFormPanel) {
+                videoFormPanel.hidden =
+                  false;
+
+                videoFormPanel
+                  .scrollIntoView({
+                    behavior:
+                      'smooth',
+                    block:
+                      'start'
+                  });
+              }
+            }
+          );
+        });
+
+
+      document
+        .querySelectorAll(
+          '[data-video-delete]'
+        )
+        .forEach((button) => {
+
+          button.addEventListener(
+            'click',
+            async () => {
+
+              if (!canEdit()) {
+                return;
+              }
+
+              const video =
+                adminVideos.find(
+                  (item) =>
+                    String(
+                      item.id
+                    ) ===
+                    String(
+                      button.dataset
+                        .videoDelete
+                    )
+                );
+
+              if (!video) {
+                return;
+              }
+
+              const confirmed =
+                window.confirm(
+                  `Delete "${video.title}"?`
+                );
+
+              if (!confirmed) {
+                return;
+              }
+
+              const {
+                error
+              } = await supabase
+                .from(
+                  'gallery_videos'
+                )
+                .delete()
+                .eq(
+                  'id',
+                  video.id
+                );
+
+              if (error) {
+                window.alert(
+                  error.message
+                );
+
+                return;
+              }
+
+              await Promise.all([
+                loadVideos(),
+                loadAdminCounts(),
+                loadPublicGallery()
+              ]);
+            }
+          );
+        });
+    };
+
+
+  /* =========================================================
+     ADMIN LOAD
+     ========================================================= */
+
+  const loadAdmin =
+    async ({
+      user,
+      profile
+    } = {}) => {
+
+      setAdminContext({
+        user,
+        profile
+      });
+
+      await Promise.all([
+        loadAlbums(),
+        loadAdminEvents(),
+        loadVideos(),
+        loadAdminCounts()
+      ]);
+    };
+
+
+  /* =========================================================
+     INITIAL PUBLIC LOAD
+     ========================================================= */
+
+  loadPublicGallery();
+
+
+  /* =========================================================
+     PUBLIC API
+     ========================================================= */
+
+  window.AAVAN =
+    window.AAVAN || {};
+
+  window.AAVAN.gallery = {
+    reload:
+      loadPublicGallery,
+
+    setAdminContext,
+
+    loadAdmin
+  };
+
+})();
