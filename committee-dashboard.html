@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
 
@@ -12,16 +13,16 @@
 
   <link
     rel="stylesheet"
-    href="css/dashboard-v2.css"
+    href="css/dashboard-v2.css?v=20261027-3"
   >
 
   <style>
     /* =========================================================
-       AAVAN SIDEBAR — REFINED NAVIGATION
+       SIDEBAR
        ========================================================= */
 
     .app {
-      grid-template-columns: 238px minmax(0,1fr);
+      grid-template-columns: 238px minmax(0, 1fr);
     }
 
     .sidebar {
@@ -47,8 +48,6 @@
         Arial,
         sans-serif;
     }
-
-    /* ---------- Brand ---------- */
 
     .brand {
       display: flex;
@@ -79,17 +78,7 @@
     .brand-copy strong {
       display: block;
 
-      margin: 0;
-
       color: #fff;
-
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
 
       font-size: 15px;
       line-height: 1.15;
@@ -106,10 +95,10 @@
 
       font-size: 10.5px;
       line-height: 1.2;
-      font-weight: 400;
     }
 
-    /* ---------- Navigation ---------- */
+
+    /* Navigation */
 
     .nav {
       display: grid;
@@ -132,16 +121,8 @@
       background: transparent;
       color: #c2d3cd;
 
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-
+      font: inherit;
       font-size: 13.5px;
-      line-height: 1;
       font-weight: 500;
 
       text-align: left;
@@ -150,8 +131,7 @@
 
       transition:
         background-color .16s ease,
-        color .16s ease,
-        transform .16s ease;
+        color .16s ease;
     }
 
     .dashboard-nav svg {
@@ -166,12 +146,8 @@
     }
 
     .dashboard-nav:hover {
-      background: rgba(255,255,255,.065);
+      background: rgba(255, 255, 255, .065);
       color: #fff;
-    }
-
-    .dashboard-nav:hover svg {
-      opacity: 1;
     }
 
     .dashboard-nav.active {
@@ -181,98 +157,449 @@
       font-weight: 650;
 
       box-shadow:
-        0 2px 7px rgba(0,0,0,.08);
+        0 2px 7px rgba(0, 0, 0, .08);
     }
 
     .dashboard-nav.active svg {
-      opacity: 1;
       color: #b7202e;
+      opacity: 1;
     }
 
-    /* ---------- Bottom utilities ---------- */
 
-.side-bottom {
-  margin-top: auto;
+    /* Bottom utilities */
 
-  display: grid;
-  gap: 4px;
+    .side-bottom {
+      margin-top: auto;
 
-  padding-top: 18px;
+      display: grid;
+      gap: 4px;
 
-  border-top:
-    1px solid rgba(255,255,255,.08);
-}
+      padding-top: 18px;
 
-.side-bottom a,
-.side-bottom button {
-  width: 100%;
-  min-height: 42px;
+      border-top:
+        1px solid rgba(255, 255, 255, .08);
+    }
 
-  padding: 0 11px;
+    .side-bottom a,
+    .side-bottom button {
+      width: 100%;
+      min-height: 42px;
 
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 11px;
+      padding: 0 11px;
 
-  border: 0;
-  border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 11px;
 
-  background: transparent;
-  color: #c2d3cd;
+      border: 0;
+      border-radius: 10px;
 
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Arial,
-    sans-serif;
+      background: transparent;
+      color: #c2d3cd;
 
-  font-size: 13.5px;
-  line-height: 1;
-  font-weight: 500;
+      font: inherit;
+      font-size: 13.5px;
+      font-weight: 500;
 
-  text-align: left;
-  text-decoration: none;
+      text-align: left;
+      text-decoration: none;
 
-  cursor: pointer;
+      cursor: pointer;
+    }
 
-  transition:
-    background-color .16s ease,
-    color .16s ease;
-}
+    .side-bottom a:hover,
+    .side-bottom button:hover {
+      background: rgba(255, 255, 255, .065);
+      color: #fff;
+    }
 
-.side-bottom a:hover,
-.side-bottom button:hover {
-  background: rgba(255,255,255,.065);
-  color: #fff;
-}
+    .side-bottom svg {
+      width: 17px;
+      height: 17px;
 
-.side-bottom svg {
-  width: 17px;
-  height: 17px;
+      flex: 0 0 auto;
 
-  flex: 0 0 auto;
+      stroke: currentColor;
 
-  stroke: currentColor;
+      opacity: .82;
+    }
 
-  opacity: .82;
-}
 
-.side-bottom a:hover svg,
-.side-bottom button:hover svg {
-  opacity: 1;
-}
-    /* ---------- Responsive ---------- */
+    /* =========================================================
+       GALLERY / MEDIA WORKSPACE
+       ========================================================= */
+
+    #galleryPanel {
+      gap: 18px;
+    }
+
+    .gallery-workspace-head {
+      align-items: flex-end;
+    }
+
+    .gallery-header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .gallery-header-actions .btn {
+      min-width: 0;
+    }
+
+
+    /* Summary */
+
+    .media-summary-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 12px;
+    }
+
+    .media-summary-card {
+      position: relative;
+
+      min-height: 112px;
+
+      padding: 18px 20px;
+
+      overflow: hidden;
+
+      border:
+        1px solid #ded8cf;
+
+      border-radius: 14px;
+
+      background: #fff;
+    }
+
+    .media-summary-card::after {
+      content: "";
+
+      position: absolute;
+
+      width: 62px;
+      height: 62px;
+
+      right: -20px;
+      bottom: -24px;
+
+      border-radius: 50%;
+    }
+
+    .media-summary-card--albums {
+      background: #fff5d8;
+      border-color: #ead9a4;
+    }
+
+    .media-summary-card--albums::after {
+      background: #efd27e;
+    }
+
+    .media-summary-card--photos {
+      background: #eaf4fb;
+      border-color: #cce0ef;
+    }
+
+    .media-summary-card--photos::after {
+      background: #b4d7ed;
+    }
+
+    .media-summary-card--videos {
+      background: #fbecea;
+      border-color: #efcfca;
+    }
+
+    .media-summary-card--videos::after {
+      background: #efbeb5;
+    }
+
+    .media-summary-label {
+      position: relative;
+      z-index: 1;
+
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      color: #5e5953;
+
+      font-size: 10.5px;
+      line-height: 1.3;
+      font-weight: 800;
+
+      letter-spacing: .07em;
+
+      text-transform: uppercase;
+    }
+
+    .media-summary-label svg {
+      width: 16px;
+      height: 16px;
+
+      stroke: currentColor;
+    }
+
+    .media-summary-value {
+      position: relative;
+      z-index: 1;
+
+      display: block;
+
+      margin-top: 17px;
+
+      color: #1c1c1b;
+
+      font-size: 29px;
+      line-height: 1;
+
+      font-weight: 750;
+
+      letter-spacing: -.035em;
+    }
+
+
+    /* Media control rail */
+
+    .gallery-control-bar {
+      padding: 12px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+
+      border:
+        1px solid #ded8cf;
+
+      border-radius: 14px;
+
+      background: #fff;
+    }
+
+    .gallery-control-copy {
+      min-width: 0;
+    }
+
+    .gallery-control-copy strong {
+      display: block;
+
+      margin-bottom: 2px;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .gallery-control-copy span {
+      color: #777067;
+
+      font-size: 11.5px;
+      line-height: 1.4;
+    }
+
+    #galleryPanel .toolbar {
+      width: min(520px, 100%);
+
+      grid-template-columns:
+        160px minmax(220px, 1fr);
+
+      margin: 0;
+    }
+
+
+    /* Forms */
+
+    .media-editor-card {
+      border-color: #d9d2c9;
+    }
+
+    .media-editor-kicker {
+      display: block;
+
+      margin-bottom: 4px;
+
+      color: #b7202e;
+
+      font-size: 9.5px;
+      font-weight: 850;
+
+      letter-spacing: .11em;
+
+      text-transform: uppercase;
+    }
+
+    .video-form-layout {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+      gap: 14px 16px;
+    }
+
+    .video-form-layout .full {
+      grid-column: 1 / -1;
+    }
+
+    .video-options-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+
+      padding-top: 2px;
+    }
+
+    .video-options-row label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .video-options-row input {
+      width: 17px;
+      height: 17px;
+
+      min-height: 0;
+
+      margin: 0;
+    }
+
+    .media-form-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+
+    /* Media library sections */
+
+    .gallery-library-section {
+      display: grid;
+      gap: 12px;
+    }
+
+    .gallery-library-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+
+      padding-top: 4px;
+    }
+
+    .gallery-library-heading h2 {
+      margin: 0;
+
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 720;
+    }
+
+    .gallery-library-heading p {
+      margin: 4px 0 0;
+
+      color: #777067;
+
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .gallery-library-count {
+      min-width: 34px;
+      min-height: 28px;
+
+      padding: 0 9px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 999px;
+
+      background: #e8f1ed;
+      color: #123b32;
+
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+
+    /* Video library */
+
+    .admin-video-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .admin-video-empty {
+      min-height: 120px;
+
+      padding: 24px;
+
+      display: grid;
+      place-content: center;
+
+      border:
+        1px dashed #d8d0c6;
+
+      border-radius: 14px;
+
+      background: #fff;
+
+      color: #777067;
+
+      text-align: center;
+    }
+
+    .admin-video-empty strong {
+      display: block;
+
+      margin-bottom: 4px;
+
+      color: #1c1c1b;
+
+      font-size: 13px;
+    }
+
+    .admin-video-empty span {
+      font-size: 11.5px;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
 
     @media (max-width: 1180px) {
       .app {
-        grid-template-columns: 218px minmax(0,1fr);
+        grid-template-columns:
+          218px minmax(0, 1fr);
       }
 
       .sidebar {
         width: 218px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .media-summary-grid {
+        grid-template-columns:
+          repeat(3, minmax(0, 1fr));
+      }
+
+      .gallery-control-bar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      #galleryPanel .toolbar {
+        width: 100%;
       }
     }
 
@@ -291,7 +618,8 @@
       }
 
       .brand {
-        padding: 0 5px 18px;
+        padding:
+          0 5px 18px;
       }
 
       .brand img {
@@ -301,23 +629,65 @@
 
       .nav {
         grid-template-columns:
-          repeat(2,minmax(0,1fr));
-        gap: 5px;
-      }
+          repeat(2, minmax(0, 1fr));
 
-      .dashboard-nav {
-        min-height: 42px;
+        gap: 5px;
       }
 
       .side-bottom {
         margin-top: 18px;
 
         grid-template-columns:
-          repeat(2,minmax(0,1fr));
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .gallery-workspace-head {
+        align-items: flex-start;
+      }
+
+      .gallery-header-actions {
+        width: 100%;
+
+        justify-content: flex-start;
+      }
+
+      .media-summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #galleryPanel .toolbar,
+      .video-form-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .video-form-layout .full {
+        grid-column: auto;
+      }
+
+      .gallery-library-heading {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav,
+      .side-bottom {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-header-actions {
+        display: grid;
+
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-header-actions .btn {
+        width: 100%;
       }
     }
   </style>
 </head>
+
 
 <body>
 
@@ -325,6 +695,7 @@
   class="app"
   id="dashboard"
 >
+
 
   <!-- =====================================================
        SIDEBAR
@@ -349,10 +720,14 @@
 
     <nav class="nav">
 
+
+      <!-- Overview -->
+
       <button
         class="dashboard-nav active"
         data-panel="overviewPanel"
       >
+
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -367,13 +742,17 @@
         </svg>
 
         <span>Overview</span>
+
       </button>
 
+
+      <!-- Events -->
 
       <button
         class="dashboard-nav"
         data-panel="eventsPanel"
       >
+
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -386,13 +765,17 @@
         </svg>
 
         <span>Events</span>
+
       </button>
 
+
+      <!-- Gallery -->
 
       <button
         class="dashboard-nav"
         data-panel="galleryPanel"
       >
+
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -406,8 +789,11 @@
         </svg>
 
         <span>Gallery</span>
+
       </button>
 
+
+      <!-- Memberships -->
 
       <button
         class="dashboard-nav"
@@ -415,6 +801,7 @@
         id="membershipsTab"
         hidden
       >
+
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -429,8 +816,11 @@
         </svg>
 
         <span>Memberships</span>
+
       </button>
 
+
+      <!-- Access -->
 
       <button
         class="dashboard-nav"
@@ -438,6 +828,7 @@
         id="accessTab"
         hidden
       >
+
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -452,8 +843,11 @@
         </svg>
 
         <span>Access Management</span>
+
       </button>
 
+
+      <!-- Settings -->
 
       <button
         class="dashboard-nav"
@@ -461,6 +855,7 @@
         id="settingsTab"
         hidden
       >
+
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -473,6 +868,7 @@
         </svg>
 
         <span>Settings</span>
+
       </button>
 
     </nav>
@@ -522,14 +918,17 @@
   </aside>
 
 
+
   <!-- =====================================================
-       MAIN DASHBOARD
+       MAIN
        ===================================================== -->
 
   <main class="main">
 
 
-    <!-- OVERVIEW -->
+    <!-- ===================================================
+         OVERVIEW
+         =================================================== -->
 
     <section
       class="dashboard-panel"
@@ -539,6 +938,7 @@
       <div class="page-head">
 
         <div>
+
           <p class="eyebrow">
             OVERVIEW
           </p>
@@ -551,6 +951,7 @@
             A clear view of community activity
             and administration.
           </p>
+
         </div>
 
       </div>
@@ -559,22 +960,37 @@
       <div class="metric-grid">
 
         <article class="metric">
-          <span>Upcoming Events</span>
-          <strong id="metricEvents">0</strong>
+
+          <span>
+            Upcoming Events
+          </span>
+
+          <strong id="metricEvents">
+            0
+          </strong>
+
         </article>
 
 
         <article
           class="metric admin-only-metric"
         >
-          <span>Pending Access</span>
-          <strong id="metricAccess">0</strong>
+
+          <span>
+            Pending Access
+          </span>
+
+          <strong id="metricAccess">
+            0
+          </strong>
+
         </article>
 
 
         <article
           class="metric admin-only-metric"
         >
+
           <span>
             Membership Applications
           </span>
@@ -582,12 +998,20 @@
           <strong id="metricMemberships">
             0
           </strong>
+
         </article>
 
 
         <article class="metric">
-          <span>Your Role</span>
-          <strong id="metricRole">—</strong>
+
+          <span>
+            Your Role
+          </span>
+
+          <strong id="metricRole">
+            —
+          </strong>
+
         </article>
 
       </div>
@@ -595,7 +1019,9 @@
 
       <div class="card">
 
-        <h3>Permissions</h3>
+        <h3>
+          Permissions
+        </h3>
 
         <p
           id="permissionSummary"
@@ -607,7 +1033,10 @@
     </section>
 
 
-    <!-- EVENTS -->
+
+    <!-- ===================================================
+         EVENTS
+         =================================================== -->
 
     <section
       class="dashboard-panel"
@@ -618,7 +1047,10 @@
       <div class="page-head">
 
         <div>
-          <p class="eyebrow">EVENTS</p>
+
+          <p class="eyebrow">
+            EVENTS
+          </p>
 
           <h1>
             Event management
@@ -628,6 +1060,7 @@
             Create, edit, publish and remove
             community events.
           </p>
+
         </div>
 
 
@@ -650,6 +1083,7 @@
         <div class="card-head">
 
           <div>
+
             <h3 id="formTitle">
               Add event
             </h3>
@@ -658,6 +1092,7 @@
               Published events appear on
               the public site.
             </p>
+
           </div>
 
 
@@ -767,20 +1202,27 @@
           <div class="check-row">
 
             <label>
+
               <input
                 id="eventFeatured"
                 type="checkbox"
               >
+
               Featured event
+
             </label>
 
+
             <label>
+
               <input
                 id="eventPublished"
                 type="checkbox"
                 checked
               >
+
               Published
+
             </label>
 
           </div>
@@ -812,7 +1254,10 @@
     </section>
 
 
-    <!-- GALLERY -->
+
+    <!-- ===================================================
+         GALLERY / MEDIA ARCHIVE
+         =================================================== -->
 
     <section
       class="dashboard-panel"
@@ -820,21 +1265,29 @@
       hidden
     >
 
-      <div class="page-head">
+
+      <!-- Header -->
+
+      <div
+        class="
+          page-head
+          gallery-workspace-head
+        "
+      >
 
         <div>
 
           <p class="eyebrow">
-            GALLERY
+            MEDIA ARCHIVE
           </p>
 
           <h1>
-            Photo archive
+            Gallery management
           </h1>
 
           <p class="page-intro">
-            Organize albums and publish
-            community photos.
+            Manage albums, photographs and
+            videos across the AAVAN archive.
           </p>
 
         </div>
@@ -845,14 +1298,25 @@
           <button
             class="btn"
             id="uploadPhotosBtn"
+            type="button"
           >
             + Upload Photos
           </button>
 
 
           <button
+            class="btn"
+            id="addVideoBtn"
+            type="button"
+          >
+            + Add Video
+          </button>
+
+
+          <button
             class="btn btn-primary"
             id="newAlbumBtn"
+            type="button"
           >
             + New Album
           </button>
@@ -862,40 +1326,229 @@
       </div>
 
 
-      <div class="toolbar">
 
-        <select id="galleryYearFilter">
-          <option value="all">
-            All years
-          </option>
-        </select>
+      <!-- Archive summary -->
+
+      <div class="media-summary-grid">
 
 
-        <input
-          id="galleryAlbumSearch"
-          type="search"
-          placeholder="Search album or event"
+        <!-- Albums -->
+
+        <article
+          class="
+            media-summary-card
+            media-summary-card--albums
+          "
         >
+
+          <span class="media-summary-label">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="16"
+                rx="2"
+              />
+              <path d="M7 3h10"/>
+            </svg>
+
+            Published Albums
+
+          </span>
+
+          <strong
+            class="media-summary-value"
+            id="galleryAlbumCount"
+          >
+            0
+          </strong>
+
+        </article>
+
+
+
+        <!-- Photos -->
+
+        <article
+          class="
+            media-summary-card
+            media-summary-card--photos
+          "
+        >
+
+          <span class="media-summary-label">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect
+                x="3"
+                y="3"
+                width="18"
+                height="18"
+                rx="2"
+              />
+              <circle
+                cx="8.5"
+                cy="8.5"
+                r="1.5"
+              />
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+
+            Photos Archived
+
+          </span>
+
+          <strong
+            class="media-summary-value"
+            id="galleryPhotoCount"
+          >
+            0
+          </strong>
+
+        </article>
+
+
+
+        <!-- Videos -->
+
+        <article
+          class="
+            media-summary-card
+            media-summary-card--videos
+          "
+        >
+
+          <span class="media-summary-label">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="14"
+                rx="2"
+              />
+              <path d="M10 9l5 3-5 3z"/>
+            </svg>
+
+            Videos
+
+          </span>
+
+          <strong
+            class="media-summary-value"
+            id="galleryVideoCount"
+          >
+            0
+          </strong>
+
+        </article>
 
       </div>
 
 
+
+      <!-- Search / filtering -->
+
+      <div class="gallery-control-bar">
+
+        <div class="gallery-control-copy">
+
+          <strong>
+            Archive library
+          </strong>
+
+          <span>
+            Find albums by year,
+            event or title.
+          </span>
+
+        </div>
+
+
+        <div class="toolbar">
+
+          <select
+            id="galleryYearFilter"
+            aria-label="Filter gallery by year"
+          >
+
+            <option value="all">
+              All years
+            </option>
+
+          </select>
+
+
+          <input
+            id="galleryAlbumSearch"
+            type="search"
+            placeholder="Search album or event"
+          >
+
+        </div>
+
+      </div>
+
+
+
+      <!-- =================================================
+           QUICK PHOTO UPLOAD
+           ================================================= -->
+
       <div
-        class="card"
+        class="
+          card
+          media-editor-card
+        "
         id="quickPhotoUploadPanel"
         hidden
       >
 
         <div class="card-head">
 
-          <h3>
-            Upload photos
-          </h3>
+          <div>
+
+            <span class="media-editor-kicker">
+              PHOTOS
+            </span>
+
+            <h3>
+              Upload photos
+            </h3>
+
+            <p class="page-intro">
+              Add multiple photos to an
+              existing album.
+            </p>
+
+          </div>
 
 
           <button
             class="text-btn"
             id="cancelQuickPhotoUploadBtn"
+            type="button"
           >
             Cancel
           </button>
@@ -915,9 +1568,11 @@
               id="quickPhotoAlbumSelect"
               required
             >
+
               <option value="">
                 Select an album
               </option>
+
             </select>
           </label>
 
@@ -935,12 +1590,16 @@
           </label>
 
 
-          <button
-            class="btn btn-primary"
-            type="submit"
-          >
-            Upload Photos
-          </button>
+          <div class="media-form-actions">
+
+            <button
+              class="btn btn-primary"
+              type="submit"
+            >
+              Upload Photos
+            </button>
+
+          </div>
 
 
           <p
@@ -953,22 +1612,243 @@
       </div>
 
 
+
+      <!-- =================================================
+           ADD / EDIT VIDEO
+           ================================================= -->
+
       <div
-        class="card"
+        class="
+          card
+          media-editor-card
+        "
+        id="videoFormPanel"
+        hidden
+      >
+
+        <div class="card-head">
+
+          <div>
+
+            <span class="media-editor-kicker">
+              VIDEO
+            </span>
+
+            <h3 id="videoFormTitle">
+              Add video
+            </h3>
+
+            <p class="page-intro">
+              Add a YouTube video to an
+              existing gallery album.
+            </p>
+
+          </div>
+
+
+          <button
+            class="text-btn"
+            id="cancelVideoEditBtn"
+            type="button"
+          >
+            Cancel
+          </button>
+
+        </div>
+
+
+        <form
+          class="admin-form"
+          id="videoForm"
+        >
+
+          <input
+            id="videoId"
+            type="hidden"
+          >
+
+
+          <div class="video-form-layout">
+
+
+            <label>
+              Album
+
+              <select
+                id="videoAlbumSelect"
+                required
+              >
+
+                <option value="">
+                  Select an album
+                </option>
+
+              </select>
+
+            </label>
+
+
+
+            <label>
+              Video title
+
+              <input
+                id="videoTitle"
+                type="text"
+                maxlength="160"
+                required
+                placeholder="Example: Rongali Bihu 2026 highlights"
+              >
+
+            </label>
+
+
+
+            <label class="full">
+              YouTube URL
+
+              <input
+                id="videoUrl"
+                type="url"
+                required
+                placeholder="https://www.youtube.com/watch?v=..."
+              >
+
+            </label>
+
+
+
+            <label>
+              Thumbnail URL
+
+              <input
+                id="videoThumbnailUrl"
+                type="url"
+                placeholder="Optional — YouTube thumbnail can be generated automatically"
+              >
+
+            </label>
+
+
+
+            <label>
+              Display order
+
+              <input
+                id="videoDisplayOrder"
+                type="number"
+                min="0"
+                step="1"
+                value="0"
+              >
+
+            </label>
+
+
+
+            <label class="full">
+              Caption / description
+
+              <textarea
+                id="videoCaption"
+                placeholder="Optional description for the archive"
+              ></textarea>
+
+            </label>
+
+          </div>
+
+
+          <div class="video-options-row">
+
+            <label>
+
+              <input
+                id="videoFeatured"
+                type="checkbox"
+              >
+
+              Featured video
+
+            </label>
+
+
+            <label>
+
+              <input
+                id="videoPublished"
+                type="checkbox"
+                checked
+              >
+
+              Published
+
+            </label>
+
+          </div>
+
+
+          <div class="media-form-actions">
+
+            <button
+              class="btn btn-primary"
+              id="saveVideoBtn"
+              type="submit"
+            >
+              Save Video
+            </button>
+
+          </div>
+
+
+          <p
+            id="videoMessage"
+            class="form-message"
+          ></p>
+
+        </form>
+
+      </div>
+
+
+
+      <!-- =================================================
+           CREATE / EDIT ALBUM
+           ================================================= -->
+
+      <div
+        class="
+          card
+          media-editor-card
+        "
         id="albumFormPanel"
         hidden
       >
 
         <div class="card-head">
 
-          <h3 id="albumFormTitle">
-            Create album
-          </h3>
+          <div>
+
+            <span class="media-editor-kicker">
+              ALBUM
+            </span>
+
+            <h3 id="albumFormTitle">
+              Create album
+            </h3>
+
+            <p class="page-intro">
+              Organize memories by year
+              and event.
+            </p>
+
+          </div>
 
 
           <button
             class="text-btn"
             id="cancelAlbumEditBtn"
+            type="button"
           >
             Cancel
           </button>
@@ -1023,10 +1903,13 @@
               Link to event
 
               <select id="albumEventId">
+
                 <option value="">
                   No linked event
                 </option>
+
               </select>
+
             </label>
 
           </div>
@@ -1041,14 +1924,20 @@
           </label>
 
 
-          <label>
-            <input
-              id="albumPublished"
-              type="checkbox"
-            >
+          <div class="check-row">
 
-            Published
-          </label>
+            <label>
+
+              <input
+                id="albumPublished"
+                type="checkbox"
+              >
+
+              Published
+
+            </label>
+
+          </div>
 
 
           <label>
@@ -1069,12 +1958,16 @@
           ></div>
 
 
-          <button
-            class="btn btn-primary"
-            type="submit"
-          >
-            Save Album & Photos
-          </button>
+          <div class="media-form-actions">
+
+            <button
+              class="btn btn-primary"
+              type="submit"
+            >
+              Save Album & Photos
+            </button>
+
+          </div>
 
 
           <p
@@ -1087,28 +1980,80 @@
       </div>
 
 
-      <div
-        class="admin-list"
-        id="albumsList"
-      ></div>
+
+      <!-- =================================================
+           ALBUM LIBRARY
+           ================================================= -->
+
+      <div class="gallery-library-section">
+
+        <div class="gallery-library-heading">
+
+          <div>
+
+            <h2>
+              Albums
+            </h2>
+
+            <p>
+              Year-by-year archive of AAVAN
+              events and community memories.
+            </p>
+
+          </div>
 
 
+          <span
+            class="gallery-library-count"
+            id="galleryAlbumLibraryCount"
+          >
+            0
+          </span>
+
+        </div>
+
+
+        <div
+          class="admin-list"
+          id="albumsList"
+        ></div>
+
+      </div>
+
+
+
+      <!-- =================================================
+           ALBUM PHOTOS
+           ================================================= -->
+
       <div
-        class="card"
+        class="
+          card
+          media-editor-card
+        "
         id="albumPhotosPanel"
         hidden
       >
 
         <div class="card-head">
 
-          <h3 id="albumPhotosTitle">
-            Photos
-          </h3>
+          <div>
+
+            <span class="media-editor-kicker">
+              PHOTO LIBRARY
+            </span>
+
+            <h3 id="albumPhotosTitle">
+              Photos
+            </h3>
+
+          </div>
 
 
           <button
             class="text-btn"
             id="closeAlbumPhotosBtn"
+            type="button"
           >
             Close
           </button>
@@ -1141,10 +2086,76 @@
 
       </div>
 
+
+
+      <!-- =================================================
+           VIDEO LIBRARY
+           ================================================= -->
+
+      <div class="gallery-library-section">
+
+        <div class="gallery-library-heading">
+
+          <div>
+
+            <h2>
+              Videos
+            </h2>
+
+            <p>
+              YouTube highlights connected
+              to AAVAN gallery albums.
+            </p>
+
+          </div>
+
+
+          <span
+            class="gallery-library-count"
+            id="galleryVideoLibraryCount"
+          >
+            0
+          </span>
+
+        </div>
+
+
+        <div
+          class="admin-video-list"
+          id="galleryVideosList"
+        >
+
+          <div
+            class="admin-video-empty"
+            id="galleryVideosEmpty"
+          >
+
+            <div>
+
+              <strong>
+                No videos added yet
+              </strong>
+
+              <span>
+                Use “+ Add Video” to connect
+                the first YouTube video to an album.
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </section>
 
 
-    <!-- MEMBERSHIPS -->
+
+    <!-- ===================================================
+         MEMBERSHIPS
+         =================================================== -->
 
     <section
       class="dashboard-panel"
@@ -1214,7 +2225,10 @@
     </section>
 
 
-    <!-- ACCESS -->
+
+    <!-- ===================================================
+         ACCESS
+         =================================================== -->
 
     <section
       class="dashboard-panel"
@@ -1274,6 +2288,7 @@
           <button
             class="text-btn"
             id="cancelAddCommitteeUserBtn"
+            type="button"
           >
             Cancel
           </button>
@@ -1330,6 +2345,7 @@
                 </option>
 
               </select>
+
             </label>
 
           </div>
@@ -1352,6 +2368,9 @@
 
       </div>
 
+
+
+      <!-- Pending -->
 
       <div>
 
@@ -1385,6 +2404,9 @@
       </div>
 
 
+
+      <!-- Users -->
+
       <div>
 
         <div class="card-head">
@@ -1414,7 +2436,10 @@
     </section>
 
 
-    <!-- SETTINGS -->
+
+    <!-- ===================================================
+         SETTINGS
+         =================================================== -->
 
     <section
       class="dashboard-panel"
@@ -1446,6 +2471,9 @@
 
       <div class="settings-grid">
 
+
+        <!-- Plans -->
+
         <div class="card">
 
           <div class="card-head">
@@ -1469,6 +2497,9 @@
 
         </div>
 
+
+
+        <!-- Payments -->
 
         <div class="card">
 
@@ -1527,14 +2558,23 @@
 </div>
 
 
+
+<!-- =======================================================
+     SCRIPTS
+     ======================================================= -->
+
 <script
   src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
 ></script>
 
 <script src="js/supabase-config.js"></script>
+
 <script src="js/admin.js?v=20261027-2"></script>
-<script src="js/gallery.js"></script>
+
+<script src="js/gallery.js?v=20261027-2"></script>
+
 <script src="js/dashboard-v2.js"></script>
+
 
 </body>
 </html>
