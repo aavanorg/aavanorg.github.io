@@ -2373,3 +2373,341 @@ input:checked + label {
   }
 
   .hero
+  /* =========================================================
+   FINAL MOBILE LAYOUT REPAIR
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .container {
+    width: calc(100% - 28px);
+    max-width: 100%;
+  }
+
+  /* -----------------------------------------
+     SECTION HEADINGS
+     ----------------------------------------- */
+
+  .section-head {
+    display: block !important;
+    width: 100%;
+  }
+
+  .section-head > div,
+  .section-head > p {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .section-head > p {
+    margin-top: 18px !important;
+  }
+
+  .section h2 {
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+
+  /* -----------------------------------------
+     ABOUT
+     ----------------------------------------- */
+
+  #about .cards {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  #about .card {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+  }
+
+  #about .card h3,
+  #about .card p {
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+
+  /* -----------------------------------------
+     EVENTS
+     ----------------------------------------- */
+
+  #events .section-head {
+    display: block !important;
+  }
+
+  #events .section-head > div,
+  #events .section-head > p {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #events .section-head > p {
+    margin-top: 18px !important;
+  }
+
+  #events h2 {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .event-feature,
+  .event-feature-image-only {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+
+  /* -----------------------------------------
+     DISCOVER ASSAM
+     ----------------------------------------- */
+
+  .section.dark .section-head {
+    display: block !important;
+  }
+
+  .section.dark .section-head > div {
+    width: 100% !important;
+  }
+
+  .section.dark .section-head .btn {
+    display: inline-flex !important;
+    margin-top: 24px !important;
+    position: static !important;
+  }
+
+  .section.dark h2 {
+    width: 100%;
+    max-width: 100%;
+  }
+
+
+  /* -----------------------------------------
+     MEMBERSHIP
+     ----------------------------------------- */
+
+  #membership {
+    overflow: hidden;
+  }
+
+  #membership .section-head {
+    display: block !important;
+    max-width: 100% !important;
+  }
+
+  #membership .section-head h2 {
+    max-width: 100% !important;
+    font-size: clamp(38px, 10vw, 48px) !important;
+    line-height: 1 !important;
+  }
+
+  .membership-intro {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .membership-benefits {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    width: 100%;
+    gap: 10px !important;
+  }
+
+  .membership-benefits span {
+    width: 100% !important;
+    min-width: 0 !important;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .membership-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .membership-row {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+
+    min-height: 0 !important;
+
+    padding: 24px 22px !important;
+  }
+
+  .membership-row-plan,
+  .membership-row-description,
+  .membership-row-price {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .membership-row-plan {
+    margin-bottom: 18px;
+  }
+
+  .membership-row-description {
+    margin-bottom: 20px;
+  }
+
+  .membership-row-description > span:last-child {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    overflow-wrap: break-word;
+  }
+
+  .membership-row-price {
+    padding-right: 54px;
+  }
+
+  .membership-row-arrow {
+    position: absolute !important;
+
+    right: 20px !important;
+    bottom: 24px !important;
+
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .membership-row-label {
+    color: #746c62 !important;
+  }
+
+  .membership-cta {
+    display: block !important;
+
+    width: 100% !important;
+
+    padding: 24px 22px !important;
+  }
+
+  .membership-cta > div {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .membership-cta span {
+    display: block;
+    width: 100%;
+
+    margin-top: 8px;
+  }
+
+  .membership-cta .btn {
+    width: 100% !important;
+
+    margin-top: 20px;
+  }
+
+
+  /* -----------------------------------------
+     CONTACT
+     ----------------------------------------- */
+
+  .contact-wrap {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+
+    width: calc(100% - 28px) !important;
+    max-width: 100% !important;
+
+    gap: 18px !important;
+  }
+
+  .contact-copy,
+  .contact-card {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    min-width: 0 !important;
+
+    padding: 26px 22px !important;
+  }
+
+  .contact-copy {
+    overflow: hidden !important;
+  }
+
+  .contact-copy h2 {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    font-size: clamp(40px, 10vw, 48px) !important;
+    line-height: 1 !important;
+
+    overflow-wrap: break-word;
+  }
+
+  .contact-copy p {
+    width: 100%;
+    max-width: 100%;
+
+    font-size: 16px;
+    line-height: 1.6;
+
+    overflow-wrap: break-word;
+  }
+
+  .contact-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+
+    width: 100%;
+  }
+
+  .contact-actions .btn {
+    width: 100%;
+  }
+
+  .contact-card {
+    overflow: hidden;
+  }
+
+  .contact-item,
+  .contact-item strong,
+  .contact-item a {
+    width: 100%;
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+  }
+}
+
+
+@media (max-width: 560px) {
+
+  .membership-benefits {
+    grid-template-columns: 1fr !important;
+  }
+
+  .membership-row-plan strong {
+    font-size: 27px !important;
+  }
+
+  .membership-row-description > span:last-child {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+  }
+
+  .membership-row-price strong {
+    font-size: 31px !important;
+  }
+
+  .contact-actions {
+    grid-template-columns: 1fr !important;
+  }
+}
