@@ -1,47 +1,843 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Assam Association Vancouver</title>
-  <link rel="stylesheet" href="css/public-v2.css?v=20261026-2">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="Assam Association of Vancouver brings the Assamese community across British Columbia together through culture, events, friendship, family and shared experiences."
+  >
+
+  <title>Assam Association of Vancouver | AAVAN</title>
+
+  <link
+    rel="stylesheet"
+    href="css/public-v2.css?v=20261026-2"
+  >
 </head>
+
 <body>
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="index.html"><img src="assets/images/logo.png" alt="AAVAN"><span>Assam Association Vancouver</span></a>
-    <nav class="nav"><a href="#about">About</a><a href="#events">Events</a><a href="discover-assam.html">Discover Assam</a><a href="#gallery">Gallery</a><a href="membership.html">Membership</a><a href="#contact">Contact</a></nav>
-    <div class="nav-actions"><a class="btn" href="committee-login.html">Committee Login</a><a class="btn btn-primary" href="membership.html">Join Us</a></div>
-  </div>
-</header>
-<main>
-  <section class="hero"><div class="container hero-grid"><div><p class="eyebrow">ASSAM · VANCOUVER · COMMUNITY</p><h1>Rooted in Assam.<br><span>Growing together</span><br>in Vancouver.</h1><p>A home for Assamese culture, friendship, family and community life across British Columbia.</p><div class="nav-actions"><a class="btn btn-primary" href="#events">Explore Events</a><a class="btn" href="membership.html">Become a Member</a></div></div><div class="hero-media"><img src="assets/images/hero-bihu.jpg" alt="AAVAN community celebration"><div class="hero-card"><strong>AAVAN COMMUNITY</strong><span>Culture feels closer when we celebrate it together.</span></div></div></div></section>
 
-  <section class="section" id="about"><div class="container"><div class="section-head"><div><p class="eyebrow">ABOUT AAVAN</p><h2>Culture, connection and belonging.</h2></div><p>We bring Assamese families, students and friends together through cultural celebrations, community support and shared experiences.</p></div><div class="cards"><article class="card"><h3>Culture</h3><p>Celebrate Assamese traditions, music, food and festivals.</p></article><article class="card"><h3>Connection</h3><p>Build friendships across generations and across British Columbia.</p></article><article class="card"><h3>Community</h3><p>Create a welcoming space for families, newcomers and students.</p></article></div></div></section>
+  <!-- ======================================================
+       HEADER
+       ====================================================== -->
 
-  <section class="section alt" id="events"><div class="container"><div class="section-head"><div><p class="eyebrow">EVENTS</p><h2>What’s happening.</h2></div></div><div id="featured-event-slot"></div><div id="dynamic-events" class="cards"></div><div id="events-empty" class="card" hidden>No upcoming events right now.</div></div></section>
+  <header class="site-header">
 
-  <section class="section dark"><div class="container"><div class="section-head"><div><p class="eyebrow">DISCOVER ASSAM</p><h2>Explore the place we call home.</h2></div><a class="btn" href="discover-assam.html">Discover Assam</a></div><p>Tea gardens, river landscapes, music, food, textiles and traditions — discover Assam beyond the map.</p></div></section>
+    <div class="container header-inner">
 
-  <section class="section" id="gallery"><div class="container"><div class="section-head"><div><p class="eyebrow">GALLERY</p><h2>Community in moments.</h2></div></div><div class="gallery-grid"><img src="assets/images/community-group.jpg" alt="Community"><img src="assets/images/performance.jpg" alt="Performance"><img src="assets/images/community-picnic.jpg" alt="Picnic"><img src="assets/images/drama.jpg" alt="Drama"><img src="assets/images/assam-food.jpg" alt="Assamese food"></div></div></section>
+      <a
+        class="brand"
+        href="index.html"
+        aria-label="Assam Association of Vancouver home"
+      >
+        <img
+          src="assets/images/logo.png"
+          alt="AAVAN"
+        >
 
-  <section class="section alt"><div class="container"><div class="section-head"><div><p class="eyebrow">MEMBERSHIP</p><h2>Be part of AAVAN.</h2></div><a class="btn btn-accent" href="membership.html">Start Membership Application</a></div><div class="cards"><article class="card"><h3>Family</h3><p>$40 per year</p></article><article class="card"><h3>Working Adult</h3><p>$25 per year</p></article><article class="card"><h3>Independent Student</h3><p>$15 per year</p></article></div></div></section>
+        <span>
+          Assam Association Vancouver
+        </span>
+      </a>
 
-  <section class="section" id="contact"><div class="container contact-wrap"><div class="contact-copy"><p class="eyebrow" style="color:#f1a48d">CONTACT</p><h2>Stay connected with AAVAN.</h2><p>Questions about membership, events or the community? Reach out to the Assam Association of Vancouver committee.</p><div class="contact-actions"><a class="btn" href="mailto:aavandir@gmail.com">Email us</a><a class="btn" href="tel:+16046490469">Call us</a></div></div><div class="contact-card"><div class="contact-item"><span>Organization</span><strong>Assam Association of Vancouver</strong></div><div class="contact-item"><span>Address</span><strong>17147 85A Ave, Surrey, BC V4N 0B1</strong></div><div class="contact-item"><span>Phone</span><a href="tel:+16046490469">604-649-0469</a></div><div class="contact-item"><span>Email</span><a href="mailto:aavandir@gmail.com">aavandir@gmail.com</a></div></div></div></section>
-</main>
+      <nav
+        class="nav"
+        aria-label="Main navigation"
+      >
+        <a href="#about">
+          About
+        </a>
 
-<footer class="footer">
-  <div class="container footer-grid">
-    <div class="footer-brand"><img src="assets/images/logo.png" alt="AAVAN"><h3>Assam Association of Vancouver</h3><p>Connecting the Assamese community across British Columbia through culture, friendship, family and shared experiences.</p></div>
-    <div class="footer-col"><h4>Explore</h4><a href="#about">About</a><a href="#events">Events</a><a href="discover-assam.html">Discover Assam</a><a href="#gallery">Gallery</a><a href="membership.html">Membership</a></div>
-    <div class="footer-col"><h4>Community</h4><a href="membership.html">Join AAVAN</a><a href="committee-login.html">Committee Login</a><span>Member Directory / Leaderboards</span><a href="#contact">Contact</a></div>
-    <div class="footer-col"><h4>Contact</h4><div class="footer-contact"><span>17147 85A Ave</span><span>Surrey, BC V4N 0B1</span><a href="tel:+16046490469">604-649-0469</a><a href="mailto:aavandir@gmail.com">aavandir@gmail.com</a></div></div>
-  </div>
-  <div class="footer-bottom"><div class="container footer-bottom-inner"><span>© 2026 Assam Association of Vancouver</span><div class="footer-legal"><span>Privacy Policy</span><span>Terms & Community Guidelines</span></div></div></div>
-</footer>
+        <a href="#events">
+          Events
+        </a>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js"></script>
-<script src="js/events.js"></script>
+        <a href="discover-assam.html">
+          Discover Assam
+        </a>
+
+        <a href="#gallery">
+          Gallery
+        </a>
+
+        <a href="#membership">
+          Membership
+        </a>
+
+        <a href="#contact">
+          Contact
+        </a>
+      </nav>
+
+      <div class="nav-actions">
+
+        <a
+          class="btn"
+          href="committee-login.html"
+        >
+          Committee Login
+        </a>
+
+        <a
+          class="btn btn-primary"
+          href="membership.html"
+        >
+          Join Us
+        </a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- ======================================================
+       MAIN
+       ====================================================== -->
+
+  <main>
+
+
+    <!-- ====================================================
+         HERO
+         ==================================================== -->
+
+    <section class="hero">
+
+      <div class="container hero-grid">
+
+        <div class="hero-copy">
+
+          <p class="eyebrow">
+            ASSAM · VANCOUVER · COMMUNITY
+          </p>
+
+          <h1>
+            Rooted in Assam.
+            <br>
+
+            <span>
+              Growing together
+            </span>
+
+            <br>
+            in Vancouver.
+          </h1>
+
+          <p>
+            A home for Assamese culture, friendship,
+            family and community life across
+            British Columbia.
+          </p>
+
+          <div class="nav-actions">
+
+            <a
+              class="btn btn-primary"
+              href="#events"
+            >
+              Explore Events
+            </a>
+
+            <a
+              class="btn"
+              href="membership.html"
+            >
+              Become a Member
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="hero-media">
+
+          <img
+            src="assets/images/hero-bihu.jpg"
+            alt="AAVAN community celebration"
+          >
+
+          <div class="hero-card">
+
+            <strong>
+              AAVAN COMMUNITY
+            </strong>
+
+            <span>
+              Culture feels closer when we
+              celebrate it together.
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================
+         ABOUT
+         ==================================================== -->
+
+    <section
+      class="section"
+      id="about"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <p class="eyebrow">
+              ABOUT AAVAN
+            </p>
+
+            <h2>
+              Culture, connection
+              and belonging.
+            </h2>
+
+          </div>
+
+          <p>
+            We bring Assamese families, students,
+            newcomers and friends together through
+            cultural celebrations, community support
+            and shared experiences across
+            British Columbia.
+          </p>
+
+        </div>
+
+
+        <div class="cards">
+
+          <article class="card">
+
+            <h3>
+              Culture
+            </h3>
+
+            <p>
+              Celebrate Assamese traditions,
+              music, food, festivals and the
+              heritage that connects generations.
+            </p>
+
+          </article>
+
+
+          <article class="card">
+
+            <h3>
+              Connection
+            </h3>
+
+            <p>
+              Build friendships across generations
+              and create meaningful connections
+              throughout British Columbia.
+            </p>
+
+          </article>
+
+
+          <article class="card">
+
+            <h3>
+              Community
+            </h3>
+
+            <p>
+              Create a welcoming space for families,
+              newcomers, students and everyone who
+              wants to stay connected with Assam.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================
+         EVENTS
+         ==================================================== -->
+
+    <section
+      class="section alt"
+      id="events"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <p class="eyebrow">
+              EVENTS
+            </p>
+
+            <h2>
+              What’s happening.
+            </h2>
+
+          </div>
+
+          <p>
+            Gather with the community for
+            celebrations, cultural programs,
+            social events and special occasions.
+          </p>
+
+        </div>
+
+
+        <!-- Featured event is loaded dynamically
+             by js/events.js -->
+
+        <div id="featured-event-slot"></div>
+
+
+        <!-- Additional events are loaded dynamically -->
+
+        <div
+          id="dynamic-events"
+          class="cards"
+        ></div>
+
+
+        <!-- Shown by JavaScript when no events exist -->
+
+        <div
+          id="events-empty"
+          class="card"
+          hidden
+        >
+          No upcoming events right now.
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================
+         DISCOVER ASSAM
+         ==================================================== -->
+
+    <section class="section dark">
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <p class="eyebrow">
+              DISCOVER ASSAM
+            </p>
+
+            <h2>
+              Explore the place
+              we call home.
+            </h2>
+
+          </div>
+
+          <a
+            class="btn"
+            href="discover-assam.html"
+          >
+            Discover Assam
+          </a>
+
+        </div>
+
+        <p>
+          Tea gardens, river landscapes, music,
+          food, textiles and traditions — discover
+          the culture, beauty and stories of Assam
+          beyond the map.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================
+         GALLERY
+         ==================================================== -->
+
+    <section
+      class="section"
+      id="gallery"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <p class="eyebrow">
+              GALLERY
+            </p>
+
+            <h2>
+              Community in moments.
+            </h2>
+
+          </div>
+
+          <p>
+            A glimpse into the celebrations,
+            performances, gatherings and friendships
+            that make AAVAN feel like home.
+          </p>
+
+        </div>
+
+
+        <div class="gallery-grid">
+
+          <img
+            src="assets/images/community-group.jpg"
+            alt="AAVAN community gathering"
+            loading="lazy"
+          >
+
+          <img
+            src="assets/images/performance.jpg"
+            alt="Cultural performance at an AAVAN event"
+            loading="lazy"
+          >
+
+          <img
+            src="assets/images/community-picnic.jpg"
+            alt="AAVAN community picnic"
+            loading="lazy"
+          >
+
+          <img
+            src="assets/images/drama.jpg"
+            alt="Drama performance at an AAVAN gathering"
+            loading="lazy"
+          >
+
+          <img
+            src="assets/images/assam-food.jpg"
+            alt="Traditional Assamese food"
+            loading="lazy"
+          >
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================
+         MEMBERSHIP
+         ==================================================== -->
+
+    <section
+      class="section alt"
+      id="membership"
+    >
+
+      <div class="container">
+
+        <div class="section-head">
+
+          <div>
+
+            <p class="eyebrow">
+              MEMBERSHIP
+            </p>
+
+            <h2>
+              Be part of AAVAN.
+            </h2>
+
+          </div>
+
+          <a
+            class="btn btn-accent"
+            href="membership.html"
+          >
+            Start Membership Application
+          </a>
+
+        </div>
+
+
+        <p>
+          Membership helps strengthen our community,
+          support cultural programs and keep Assamese
+          families, students and friends connected
+          across British Columbia.
+        </p>
+
+
+        <div class="cards">
+
+          <article class="card">
+
+            <h3>
+              Family
+            </h3>
+
+            <p>
+              <strong>
+                $40 per year
+              </strong>
+            </p>
+
+            <p>
+              For families who want to participate,
+              connect and grow with the AAVAN
+              community.
+            </p>
+
+          </article>
+
+
+          <article class="card">
+
+            <h3>
+              Working Adult
+            </h3>
+
+            <p>
+              <strong>
+                $25 per year
+              </strong>
+            </p>
+
+            <p>
+              For individual working adults who
+              want to stay connected and participate
+              in community life.
+            </p>
+
+          </article>
+
+
+          <article class="card">
+
+            <h3>
+              Independent Student
+            </h3>
+
+            <p>
+              <strong>
+                $15 per year
+              </strong>
+            </p>
+
+            <p>
+              An accessible membership option for
+              independent students building community
+              in British Columbia.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ====================================================
+         CONTACT
+         ==================================================== -->
+
+    <section
+      class="section"
+      id="contact"
+    >
+
+      <div class="container contact-wrap">
+
+
+        <div class="contact-copy">
+
+          <p
+            class="eyebrow"
+            style="color:#f1a48d"
+          >
+            CONTACT
+          </p>
+
+          <h2>
+            Stay connected
+            with AAVAN.
+          </h2>
+
+          <p>
+            Questions about membership, events
+            or the community? Reach out to the
+            Assam Association of Vancouver
+            committee.
+          </p>
+
+          <div class="contact-actions">
+
+            <a
+              class="btn"
+              href="mailto:aavandir@gmail.com"
+            >
+              Email us
+            </a>
+
+            <a
+              class="btn"
+              href="tel:+16046490469"
+            >
+              Call us
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="contact-card">
+
+          <div class="contact-item">
+
+            <span>
+              Organization
+            </span>
+
+            <strong>
+              Assam Association of Vancouver
+            </strong>
+
+          </div>
+
+
+          <div class="contact-item">
+
+            <span>
+              Address
+            </span>
+
+            <strong>
+              17147 85A Ave,
+              Surrey, BC V4N 0B1
+            </strong>
+
+          </div>
+
+
+          <div class="contact-item">
+
+            <span>
+              Phone
+            </span>
+
+            <a href="tel:+16046490469">
+              604-649-0469
+            </a>
+
+          </div>
+
+
+          <div class="contact-item">
+
+            <span>
+              Email
+            </span>
+
+            <a href="mailto:aavandir@gmail.com">
+              aavandir@gmail.com
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ======================================================
+       FOOTER
+       ====================================================== -->
+
+  <footer class="footer">
+
+    <div class="container footer-grid">
+
+
+      <div class="footer-brand">
+
+        <img
+          src="assets/images/logo.png"
+          alt="AAVAN"
+        >
+
+        <h3>
+          Assam Association of Vancouver
+        </h3>
+
+        <p>
+          Connecting the Assamese community across
+          British Columbia through culture,
+          friendship, family and shared experiences.
+        </p>
+
+      </div>
+
+
+      <div class="footer-col">
+
+        <h4>
+          Explore
+        </h4>
+
+        <a href="#about">
+          About
+        </a>
+
+        <a href="#events">
+          Events
+        </a>
+
+        <a href="discover-assam.html">
+          Discover Assam
+        </a>
+
+        <a href="#gallery">
+          Gallery
+        </a>
+
+        <a href="#membership">
+          Membership
+        </a>
+
+      </div>
+
+
+      <div class="footer-col">
+
+        <h4>
+          Community
+        </h4>
+
+        <a href="membership.html">
+          Join AAVAN
+        </a>
+
+        <a href="committee-login.html">
+          Committee Login
+        </a>
+
+        <span>
+          Member Directory / Leaderboards
+        </span>
+
+        <a href="#contact">
+          Contact
+        </a>
+
+      </div>
+
+
+      <div class="footer-col">
+
+        <h4>
+          Contact
+        </h4>
+
+        <div class="footer-contact">
+
+          <span>
+            17147 85A Ave
+          </span>
+
+          <span>
+            Surrey, BC V4N 0B1
+          </span>
+
+          <a href="tel:+16046490469">
+            604-649-0469
+          </a>
+
+          <a href="mailto:aavandir@gmail.com">
+            aavandir@gmail.com
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+      <div class="container footer-bottom-inner">
+
+        <span>
+          © 2026 Assam Association of Vancouver
+        </span>
+
+        <div class="footer-legal">
+
+          <span>
+            Privacy Policy
+          </span>
+
+          <span>
+            Terms &amp; Community Guidelines
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- ======================================================
+       SCRIPTS
+       ====================================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="js/supabase-config.js"></script>
+
+  <script src="js/events.js"></script>
+
 </body>
+
 </html>
