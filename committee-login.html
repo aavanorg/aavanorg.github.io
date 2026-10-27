@@ -1,8 +1,220 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Committee Login | AAVAN</title><link rel="stylesheet" href="css/login-v2.css"></head><body>
-<main class="login-page">
-<section class="login-visual"><div class="login-copy"><img src="assets/images/logo.png" alt="AAVAN"><h1>Committee workspace.</h1><p>Secure access for AAVAN committee members to manage events, gallery, memberships and community administration.</p></div></section>
-<section class="login-panel"><div class="auth-card"><p class="muted">ASSAM ASSOCIATION VANCOUVER</p><h2 id="authModeTitle">Sign in.</h2><p class="muted" id="authModeCopy">Use your approved committee email and password.</p><div class="auth-tabs"><button class="active" id="loginTab" type="button">Sign in</button><button id="signupTab" type="button">Request access</button></div>
-<form id="loginForm"><label>Email<input id="loginEmail" type="email" required autocomplete="email"></label><label>Password<input id="loginPassword" type="password" required autocomplete="current-password"></label><button class="primary" type="submit">Sign in</button><button class="linkbtn" id="forgotPasswordBtn" type="button">Forgot password?</button><p class="message" id="loginMessage"></p></form>
-<form id="signupForm" hidden><label>Full name<input id="signupName" required></label><label>Email<input id="signupEmail" type="email" required></label><label>Password<input id="signupPassword" type="password" minlength="8" required></label><label>Confirm password<input id="signupPasswordConfirm" type="password" minlength="8" required></label><button class="primary" type="submit">Request committee access</button><p class="message" id="signupMessage"></p></form>
-<a class="back-home" href="index.html">← Back to AAVAN</a></div></section></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/login-v2.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <title>Committee Login | AAVAN</title>
+
+  <link
+    rel="stylesheet"
+    href="css/login-v2.css?v=20261027-1"
+  >
+</head>
+
+<body>
+
+  <main class="login-page">
+
+    <section class="login-visual">
+
+      <div class="login-copy">
+
+        <img
+          src="assets/images/logo.png"
+          alt="AAVAN"
+        >
+
+        <h1>
+          Committee workspace.
+        </h1>
+
+        <p>
+          Secure access for AAVAN committee members
+          to manage events, gallery, memberships
+          and community administration.
+        </p>
+
+      </div>
+
+    </section>
+
+    <section class="login-panel">
+
+      <div class="auth-card">
+
+        <p class="muted">
+          ASSAM ASSOCIATION VANCOUVER
+        </p>
+
+        <h2 id="authModeTitle">
+          Sign in.
+        </h2>
+
+        <p
+          class="muted"
+          id="authModeCopy"
+        >
+          Use your approved committee email
+          and password.
+        </p>
+
+        <div class="auth-tabs">
+
+          <button
+            class="active"
+            id="loginTab"
+            type="button"
+          >
+            Sign in
+          </button>
+
+          <button
+            id="signupTab"
+            type="button"
+          >
+            Request access
+          </button>
+
+        </div>
+
+        <form id="loginForm">
+
+          <label>
+            Email
+
+            <input
+              id="loginEmail"
+              type="email"
+              required
+              autocomplete="email"
+              inputmode="email"
+            >
+          </label>
+
+          <label>
+            Password
+
+            <input
+              id="loginPassword"
+              type="password"
+              required
+              autocomplete="current-password"
+            >
+          </label>
+
+          <button
+            class="primary"
+            type="submit"
+          >
+            Sign in
+          </button>
+
+          <button
+            class="linkbtn"
+            id="forgotPasswordBtn"
+            type="button"
+          >
+            Forgot password?
+          </button>
+
+          <p
+            class="message"
+            id="loginMessage"
+          ></p>
+
+        </form>
+
+        <form
+          id="signupForm"
+          hidden
+        >
+
+          <label>
+            Full name
+
+            <input
+              id="signupName"
+              type="text"
+              required
+              autocomplete="name"
+            >
+          </label>
+
+          <label>
+            Email
+
+            <input
+              id="signupEmail"
+              type="email"
+              required
+              autocomplete="email"
+              inputmode="email"
+            >
+          </label>
+
+          <label>
+            Password
+
+            <input
+              id="signupPassword"
+              type="password"
+              minlength="8"
+              required
+              autocomplete="new-password"
+            >
+          </label>
+
+          <label>
+            Confirm password
+
+            <input
+              id="signupPasswordConfirm"
+              type="password"
+              minlength="8"
+              required
+              autocomplete="new-password"
+            >
+          </label>
+
+          <button
+            class="primary"
+            type="submit"
+          >
+            Request committee access
+          </button>
+
+          <p
+            class="message"
+            id="signupMessage"
+          ></p>
+
+        </form>
+
+        <a
+          class="back-home"
+          href="index.html"
+        >
+          ← Back to AAVAN
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+  <script src="js/supabase-config.js"></script>
+
+  <script src="js/login-v2.js"></script>
+
+</body>
+</html>
