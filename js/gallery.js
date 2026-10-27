@@ -8,7 +8,6 @@
 
   let currentUser = null;
   let currentProfile = null;
-
   let activeAlbumId = null;
 
   let adminAlbums = [];
@@ -18,9 +17,11 @@
   let publicAlbums = [];
   let publicPhotos = [];
   let publicVideos = [];
-
   let activePublicMedia = 'all';
 
+  const publicCarouselControllers = [];
+  const reduceMotion =
+    window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
 
   /* =========================================================
      DOM — PUBLIC GALLERY
@@ -47,7 +48,6 @@
   const galleryVideosCount =
     document.getElementById('galleryVideosCount');
 
-
   /* =========================================================
      DOM — ADMIN GALLERY
      ========================================================= */
@@ -60,9 +60,6 @@
 
   const addVideoBtn =
     document.getElementById('addVideoBtn');
-
-
-  /* Quick photo upload */
 
   const quickPhotoUploadPanel =
     document.getElementById('quickPhotoUploadPanel');
@@ -82,17 +79,11 @@
   const quickPhotoUploadMessage =
     document.getElementById('quickPhotoUploadMessage');
 
-
-  /* Gallery filters */
-
   const galleryYearFilter =
     document.getElementById('galleryYearFilter');
 
   const galleryAlbumSearch =
     document.getElementById('galleryAlbumSearch');
-
-
-  /* Album form */
 
   const albumFormPanel =
     document.getElementById('albumFormPanel');
@@ -139,9 +130,6 @@
   const albumsList =
     document.getElementById('albumsList');
 
-
-  /* Album photo manager */
-
   const albumPhotosPanel =
     document.getElementById('albumPhotosPanel');
 
@@ -159,9 +147,6 @@
 
   const albumPhotosGrid =
     document.getElementById('albumPhotosGrid');
-
-
-  /* Video form */
 
   const videoFormPanel =
     document.getElementById('videoFormPanel');
@@ -208,12 +193,6 @@
   const galleryVideosList =
     document.getElementById('galleryVideosList');
 
-  const galleryVideosEmpty =
-    document.getElementById('galleryVideosEmpty');
-
-
-  /* Admin counters */
-
   const galleryAlbumCount =
     document.getElementById('galleryAlbumCount');
 
@@ -229,7 +208,6 @@
   const galleryVideoLibraryCount =
     document.getElementById('galleryVideoLibraryCount');
 
-
   /* =========================================================
      HELPERS
      ========================================================= */
@@ -242,11 +220,9 @@
       .replaceAll('"', '&quot;')
       .replaceAll("'", '&#039;');
 
-
   const canEdit = () =>
     ['admin', 'editor'].includes(currentProfile?.role) &&
     currentProfile?.status === 'active';
-
 
   const setMessage = (
     element,
@@ -256,99 +232,14 @@
     if (!element) return;
 
     element.textContent = text;
-
     element.classList.toggle(
       'error',
       Boolean(isError)
     );
   };
 
-
   const currentYear =
     new Date().getFullYear();
-
-
-  const getCoverImage = (album) => {
-  if (album.cover_image_url) {
-    return album.cover_image_url;
-  }
-
-  const albumVideo =
-    publicVideos.find(
-      (video) =>
-        String(video.album_id) ===
-        String(album.id)
-    );
-
-  if (albumVideo) {
-    return (
-      albumVideo.thumbnail_url ||
-      getYouTubeThumbnail(
-        albumVideo.video_url
-      ) ||
-      'assets/images/bihu-community.jpg'
-    );
-  }
-
-  const albumPhoto =
-    publicPhotos.find(
-      (photo) =>
-        String(photo.album_id) ===
-        String(album.id)
-    );
-
-  if (albumPhoto?.image_url) {
-    return albumPhoto.image_url;
-  }
-
-  return 'assets/images/bihu-community.jpg';
-};
-
-
-  const refreshYearSelect = (
-    select,
-    albums,
-    firstLabel = 'All years'
-  ) => {
-    if (!select) return;
-
-    const selected =
-      select.value || 'all';
-
-    const years = [
-      ...new Set(
-        albums
-          .map((album) =>
-            Number(album.album_year)
-          )
-          .filter(Boolean)
-      )
-    ].sort((a, b) => b - a);
-
-    select.innerHTML = `
-      <option value="all">
-        ${escapeHtml(firstLabel)}
-      </option>
-
-      ${years
-        .map(
-          (year) => `
-            <option value="${year}">
-              ${year}
-            </option>
-          `
-        )
-        .join('')}
-    `;
-
-    if (
-      selected === 'all' ||
-      years.includes(Number(selected))
-    ) {
-      select.value = selected;
-    }
-  };
-
 
   const getYouTubeId = (url = '') => {
     const value =
@@ -395,13 +286,13 @@
           return parts[1] || '';
         }
       }
+
     } catch (error) {
       return '';
     }
 
     return '';
   };
-
 
   const getYouTubeThumbnail = (
     url = ''
@@ -414,7 +305,6 @@
       : '';
   };
 
-
   const getYouTubeEmbed = (
     url = ''
   ) => {
@@ -426,6 +316,100 @@
       : '';
   };
 
+  const getCoverImage = (album) => {
+    if (album.cover_image_url) {
+      return album.cover_image_url;
+    }
+
+    const albumPhotos =
+      publicPhotos.filter(
+        (photo) =>
+          String(photo.album_id) ===
+          String(album.id)
+      );
+
+    const featuredPhoto =
+      albumPhotos.find(
+        (photo) => photo.featured
+      ) ||
+      albumPhotos[0];
+
+    if (featuredPhoto?.image_url) {
+      return featuredPhoto.image_url;
+    }
+
+    const albumVideos =
+      publicVideos.filter(
+        (video) =>
+          String(video.album_id) ===
+          String(album.id)
+      );
+
+    const featuredVideo =
+      albumVideos.find(
+        (video) => video.featured
+      ) ||
+      albumVideos[0];
+
+    if (featuredVideo) {
+      return (
+        featuredVideo.thumbnail_url ||
+        getYouTubeThumbnail(
+          featuredVideo.video_url
+        ) ||
+        'assets/images/bihu-community.jpg'
+      );
+    }
+
+    return 'assets/images/bihu-community.jpg';
+  };
+
+  const refreshYearSelect = (
+    select,
+    albums,
+    firstLabel = 'All years'
+  ) => {
+    if (!select) return;
+
+    const selected =
+      select.value || 'all';
+
+    const years = [
+      ...new Set(
+        albums
+          .map(
+            (album) =>
+              Number(album.album_year)
+          )
+          .filter(Boolean)
+      )
+    ].sort((a, b) => b - a);
+
+    select.innerHTML = `
+      <option value="all">
+        ${escapeHtml(firstLabel)}
+      </option>
+
+      ${years
+        .map(
+          (year) => `
+            <option value="${year}">
+              ${year}
+            </option>
+          `
+        )
+        .join('')}
+    `;
+
+    if (
+      selected === 'all' ||
+      years.includes(
+        Number(selected)
+      )
+    ) {
+      select.value = selected;
+    }
+  };
 
   const getAlbumById = (
     id,
@@ -436,7 +420,6 @@
         String(album.id) ===
         String(id)
     );
-
 
   const closeAdminEditors = (
     except = ''
@@ -463,9 +446,8 @@
     }
   };
 
-
   /* =========================================================
-     COUNTERS
+     ADMIN COUNTERS
      ========================================================= */
 
   const loadAdminCounts = async () => {
@@ -492,7 +474,10 @@
               head: true
             }
           )
-          .eq('published', true),
+          .eq(
+            'published',
+            true
+          ),
 
         supabase
           .from('gallery_photos')
@@ -538,100 +523,114 @@
     }
   };
 
-
   /* =========================================================
-     PUBLIC GALLERY VIEWER
+     PUBLIC ALBUM VIEWER
      ========================================================= */
 
-  const createPublicAlbumModal = () => {
-    let modal =
-      document.getElementById(
-        'publicGalleryModal'
-      );
+  const createPublicAlbumModal =
+    () => {
 
-    if (modal) return modal;
+      let modal =
+        document.getElementById(
+          'publicGalleryModal'
+        );
 
-    modal =
-      document.createElement('div');
+      if (modal) return modal;
 
-    modal.id =
-      'publicGalleryModal';
+      modal =
+        document.createElement('div');
 
-    modal.className =
-      'gallery-viewer';
+      modal.id =
+        'publicGalleryModal';
 
-    modal.hidden = true;
+      modal.className =
+        'gallery-viewer';
 
-    modal.innerHTML = `
-      <div
-        class="gallery-viewer-backdrop"
-        data-gallery-viewer-close
-      ></div>
+      modal.hidden = true;
 
-      <section
-        class="gallery-viewer-shell"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="galleryViewerTitle"
-      >
-
-        <header
-          class="gallery-viewer-header"
-        >
-
-          <div>
-
-            <span
-              id="galleryViewerMeta"
-            ></span>
-
-            <h2
-              id="galleryViewerTitle"
-            >
-              Gallery
-            </h2>
-
-          </div>
-
-          <button
-            type="button"
-            data-gallery-viewer-close
-            aria-label="Close gallery"
-          >
-            ×
-          </button>
-
-        </header>
-
+      modal.innerHTML = `
         <div
-          id="galleryViewerContent"
-          class="gallery-viewer-grid"
+          class="gallery-viewer-backdrop"
+          data-gallery-viewer-close
         ></div>
 
-      </section>
-    `;
+        <section
+          class="gallery-viewer-shell"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="galleryViewerTitle"
+        >
 
-    document.body.appendChild(modal);
+          <header
+            class="gallery-viewer-header"
+          >
 
-    modal
-      .querySelectorAll(
-        '[data-gallery-viewer-close]'
-      )
-      .forEach((button) => {
-        button.addEventListener(
-          'click',
-          () => {
-            modal.hidden = true;
+            <div>
+              <span
+                id="galleryViewerMeta"
+              ></span>
 
-            document.body.style
-              .overflow = '';
+              <h2
+                id="galleryViewerTitle"
+              >
+                Gallery
+              </h2>
+            </div>
+
+            <button
+              type="button"
+              data-gallery-viewer-close
+              aria-label="Close gallery"
+            >
+              ×
+            </button>
+
+          </header>
+
+          <div
+            id="galleryViewerContent"
+            class="gallery-viewer-grid"
+          ></div>
+
+        </section>
+      `;
+
+      document.body.appendChild(
+        modal
+      );
+
+      const closeModal = () => {
+        modal.hidden = true;
+
+        document.body.style
+          .overflow = '';
+      };
+
+      modal
+        .querySelectorAll(
+          '[data-gallery-viewer-close]'
+        )
+        .forEach((button) => {
+          button.addEventListener(
+            'click',
+            closeModal
+          );
+        });
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (
+            event.key === 'Escape' &&
+            !modal.hidden
+          ) {
+            closeModal();
           }
-        );
-      });
+        }
+      );
 
-    return modal;
-  };
-
+      return modal;
+    };
 
   const openPublicAlbum =
     async (album) => {
@@ -671,14 +670,13 @@
 
       if (content) {
         content.innerHTML =
-          '<div class="admin-loading">Loading memories…</div>';
+          '<div class="gallery-viewer-loading">Loading memories…</div>';
       }
 
       modal.hidden = false;
 
       document.body.style
         .overflow = 'hidden';
-
 
       const [
         photoResult,
@@ -687,7 +685,10 @@
         supabase
           .from('gallery_photos')
           .select('*')
-          .eq('album_id', album.id)
+          .eq(
+            'album_id',
+            album.id
+          )
           .order(
             'featured',
             {
@@ -710,8 +711,14 @@
         supabase
           .from('gallery_videos')
           .select('*')
-          .eq('album_id', album.id)
-          .eq('published', true)
+          .eq(
+            'album_id',
+            album.id
+          )
+          .eq(
+            'published',
+            true
+          )
           .order(
             'featured',
             {
@@ -724,7 +731,27 @@
               ascending: true
             }
           )
+          .order(
+            'created_at',
+            {
+              ascending: true
+            }
+          )
       ]);
+
+      if (photoResult.error) {
+        console.error(
+          'Album photo viewer error:',
+          photoResult.error
+        );
+      }
+
+      if (videoResult.error) {
+        console.error(
+          'Album video viewer error:',
+          videoResult.error
+        );
+      }
 
       const photos =
         Array.isArray(
@@ -740,11 +767,22 @@
           ? videoResult.data
           : [];
 
-      if (!photos.length && !videos.length) {
+      if (
+        !photos.length &&
+        !videos.length
+      ) {
         content.innerHTML = `
-          <div class="admin-empty">
-            Memories for this album
-            are coming soon.
+          <div class="gallery-viewer-empty">
+
+            <strong>
+              More memories are coming.
+            </strong>
+
+            <span>
+              This album does not have
+              published photos or videos yet.
+            </span>
+
           </div>
         `;
 
@@ -752,38 +790,44 @@
       }
 
       const photoMarkup =
-        photos.map((photo) => `
-          <figure>
-
-            <img
-              src="${escapeHtml(
-                photo.image_url
-              )}"
-              alt="${escapeHtml(
-                photo.alt_text ||
-                photo.caption ||
-                album.title
-              )}"
+        photos.map(
+          (photo) => `
+            <figure
+              class="gallery-viewer-photo"
             >
 
-            ${
-              photo.caption
-                ? `
-                  <figcaption>
-                    ${escapeHtml(
-                      photo.caption
-                    )}
-                  </figcaption>
-                `
-                : ''
-            }
+              <img
+                src="${escapeHtml(
+                  photo.image_url
+                )}"
+                alt="${escapeHtml(
+                  photo.alt_text ||
+                  photo.caption ||
+                  album.title
+                )}"
+                loading="lazy"
+              >
 
-          </figure>
-        `).join('');
+              ${
+                photo.caption
+                  ? `
+                    <figcaption>
+                      ${escapeHtml(
+                        photo.caption
+                      )}
+                    </figcaption>
+                  `
+                  : ''
+              }
 
+            </figure>
+          `
+        )
+        .join('');
 
       const videoMarkup =
         videos.map((video) => {
+
           const embed =
             getYouTubeEmbed(
               video.video_url
@@ -797,14 +841,7 @@
             >
 
               <div
-                style="
-                  position:relative;
-                  width:100%;
-                  aspect-ratio:16/9;
-                  overflow:hidden;
-                  border-radius:14px;
-                  background:#111;
-                "
+                class="gallery-video-frame"
               >
 
                 <iframe
@@ -816,333 +853,880 @@
                   loading="lazy"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen
-                  style="
-                    position:absolute;
-                    inset:0;
-                    width:100%;
-                    height:100%;
-                    border:0;
-                  "
                 ></iframe>
 
               </div>
 
-              ${
-                video.title
-                  ? `
-                    <strong>
-                      ${escapeHtml(
-                        video.title
-                      )}
-                    </strong>
-                  `
-                  : ''
-              }
+              <div
+                class="gallery-video-copy"
+              >
 
-              ${
-                video.caption
-                  ? `
-                    <p>
-                      ${escapeHtml(
-                        video.caption
-                      )}
-                    </p>
-                  `
-                  : ''
-              }
+                ${
+                  video.title
+                    ? `
+                      <strong>
+                        ${escapeHtml(
+                          video.title
+                        )}
+                      </strong>
+                    `
+                    : ''
+                }
+
+                ${
+                  video.caption
+                    ? `
+                      <p>
+                        ${escapeHtml(
+                          video.caption
+                        )}
+                      </p>
+                    `
+                    : ''
+                }
+
+              </div>
 
             </article>
           `;
-        }).join('');
-
+        })
+        .join('');
 
       content.innerHTML =
         photoMarkup +
         videoMarkup;
     };
 
-
   /* =========================================================
-     PUBLIC ARCHIVE
+     PUBLIC CAROUSEL
      ========================================================= */
 
-  const renderPublicAlbums = () => {
-    if (!publicGalleryAlbums) {
-      return;
+  const destroyPublicCarousels =
+    () => {
+
+      publicCarouselControllers
+        .splice(0)
+        .forEach(
+          (controller) => {
+            try {
+              controller.destroy?.();
+
+            } catch (error) {
+              console.warn(
+                'Gallery carousel cleanup warning:',
+                error
+              );
+            }
+          }
+        );
+    };
+
+  const setupCarousel = (
+    root
+  ) => {
+
+    const viewport =
+      root.querySelector(
+        '[data-carousel-viewport]'
+      );
+
+    const cards =
+      Array.from(
+        root.querySelectorAll(
+          '.gallery-album-card'
+        )
+      );
+
+    const prevButton =
+      root.querySelector(
+        '[data-carousel-prev]'
+      );
+
+    const nextButton =
+      root.querySelector(
+        '[data-carousel-next]'
+      );
+
+    const status =
+      root.querySelector(
+        '[data-carousel-status]'
+      );
+
+    if (
+      !viewport ||
+      !cards.length
+    ) {
+      return null;
     }
 
-    const year =
-      publicGalleryYear?.value ||
-      'all';
+    let activeIndex = 0;
+    let timer = null;
+    let isPointerInside = false;
+    let isFocusedInside = false;
+    let touchStartX = null;
 
-    const filtered =
-      publicAlbums.filter((album) => {
+    const setCardClasses =
+      () => {
 
-        const matchesYear =
-          year === 'all' ||
-          String(
-            album.album_year
-          ) === String(year);
+        cards.forEach(
+          (card, index) => {
 
-        const photoCount =
-          publicPhotos.filter(
-            (photo) =>
-              String(
-                photo.album_id
-              ) ===
-              String(album.id)
-          ).length;
+            const count =
+              cards.length;
 
-        const videoCount =
-          publicVideos.filter(
-            (video) =>
-              String(
-                video.album_id
-              ) ===
-              String(album.id)
-          ).length;
+            const previous =
+              (
+                activeIndex -
+                1 +
+                count
+              ) % count;
 
-        let matchesMedia = true;
+            const next =
+              (
+                activeIndex +
+                1
+              ) % count;
 
-        if (
-          activePublicMedia ===
-          'photos'
-        ) {
-          matchesMedia =
-            photoCount > 0;
-        }
+            card.classList.toggle(
+              'is-active',
+              index === activeIndex
+            );
 
-        if (
-          activePublicMedia ===
-          'videos'
-        ) {
-          matchesMedia =
-            videoCount > 0;
-        }
+            card.classList.toggle(
+              'is-prev',
+              count > 1 &&
+              index === previous
+            );
 
-        return (
-          matchesYear &&
-          matchesMedia
+            card.classList.toggle(
+              'is-next',
+              count > 1 &&
+              index === next
+            );
+
+            card.setAttribute(
+              'aria-current',
+              index === activeIndex
+                ? 'true'
+                : 'false'
+            );
+
+            card.tabIndex =
+              index === activeIndex
+                ? 0
+                : -1;
+          }
         );
+
+        if (status) {
+          status.textContent =
+            `${activeIndex + 1} / ${cards.length}`;
+        }
+      };
+
+    const centerActiveCard = (
+      behavior = 'smooth'
+    ) => {
+
+      const card =
+        cards[activeIndex];
+
+      if (!card) return;
+
+      const left =
+        card.offsetLeft -
+        (
+          (
+            viewport.clientWidth -
+            card.offsetWidth
+          ) / 2
+        );
+
+      viewport.scrollTo({
+        left:
+          Math.max(
+            0,
+            left
+          ),
+
+        behavior:
+          reduceMotion
+            ? 'auto'
+            : behavior
       });
+    };
 
+    const goTo = (
+      nextIndex,
+      behavior = 'smooth'
+    ) => {
 
-    if (!filtered.length) {
-      publicGalleryAlbums.innerHTML =
-        '';
+      if (!cards.length) {
+        return;
+      }
+
+      activeIndex =
+        (
+          nextIndex +
+          cards.length
+        ) %
+        cards.length;
+
+      setCardClasses();
+
+      centerActiveCard(
+        behavior
+      );
+    };
+
+    const stopAutoplay = () => {
+      if (timer) {
+        window.clearInterval(
+          timer
+        );
+
+        timer = null;
+      }
+    };
+
+    const startAutoplay = () => {
+      stopAutoplay();
+
+      if (
+        reduceMotion ||
+        cards.length < 2 ||
+        isPointerInside ||
+        isFocusedInside
+      ) {
+        return;
+      }
+
+      timer =
+        window.setInterval(
+          () => {
+            goTo(
+              activeIndex + 1
+            );
+          },
+          4500
+        );
+    };
+
+    const previous = () => {
+      goTo(
+        activeIndex - 1
+      );
+
+      startAutoplay();
+    };
+
+    const next = () => {
+      goTo(
+        activeIndex + 1
+      );
+
+      startAutoplay();
+    };
+
+    prevButton?.addEventListener(
+      'click',
+      previous
+    );
+
+    nextButton?.addEventListener(
+      'click',
+      next
+    );
+
+    cards.forEach(
+      (card, index) => {
+
+        card.addEventListener(
+          'mouseenter',
+          () => {
+            if (
+              index !== activeIndex
+            ) {
+              goTo(index);
+            }
+          }
+        );
+
+        card.addEventListener(
+          'focus',
+          () => {
+            if (
+              index !== activeIndex
+            ) {
+              goTo(index);
+            }
+          }
+        );
+      }
+    );
+
+    root.addEventListener(
+      'mouseenter',
+      () => {
+        isPointerInside = true;
+
+        stopAutoplay();
+      }
+    );
+
+    root.addEventListener(
+      'mouseleave',
+      () => {
+        isPointerInside = false;
+
+        startAutoplay();
+      }
+    );
+
+    root.addEventListener(
+      'focusin',
+      () => {
+        isFocusedInside = true;
+
+        stopAutoplay();
+      }
+    );
+
+    root.addEventListener(
+      'focusout',
+      () => {
+
+        window.setTimeout(
+          () => {
+            isFocusedInside =
+              root.contains(
+                document.activeElement
+              );
+
+            if (
+              !isFocusedInside
+            ) {
+              startAutoplay();
+            }
+          },
+          0
+        );
+      }
+    );
+
+    viewport.addEventListener(
+      'touchstart',
+      (event) => {
+
+        touchStartX =
+          event.touches?.[0]
+            ?.clientX ??
+          null;
+
+        stopAutoplay();
+      },
+      {
+        passive: true
+      }
+    );
+
+    viewport.addEventListener(
+      'touchend',
+      (event) => {
+
+        const touchEndX =
+          event.changedTouches?.[0]
+            ?.clientX ??
+          null;
+
+        if (
+          touchStartX !== null &&
+          touchEndX !== null
+        ) {
+
+          const delta =
+            touchEndX -
+            touchStartX;
+
+          if (
+            Math.abs(delta) >
+            45
+          ) {
+            if (delta < 0) {
+              next();
+            } else {
+              previous();
+            }
+          }
+        }
+
+        touchStartX = null;
+
+        startAutoplay();
+      },
+      {
+        passive: true
+      }
+    );
+
+    const handleResize =
+      () =>
+        centerActiveCard(
+          'auto'
+        );
+
+    window.addEventListener(
+      'resize',
+      handleResize
+    );
+
+    setCardClasses();
+
+    window.requestAnimationFrame(
+      () =>
+        centerActiveCard(
+          'auto'
+        )
+    );
+
+    startAutoplay();
+
+    if (
+      cards.length < 2
+    ) {
+      root.classList.add(
+        'is-single'
+      );
+    }
+
+    return {
+      destroy() {
+        stopAutoplay();
+
+        window.removeEventListener(
+          'resize',
+          handleResize
+        );
+      }
+    };
+  };
+
+  const initializePublicCarousels =
+    () => {
+
+      destroyPublicCarousels();
+
+      publicGalleryAlbums
+        ?.querySelectorAll(
+          '[data-gallery-carousel]'
+        )
+        .forEach(
+          (carousel) => {
+
+            const controller =
+              setupCarousel(
+                carousel
+              );
+
+            if (controller) {
+              publicCarouselControllers
+                .push(
+                  controller
+                );
+            }
+          }
+        );
+    };
+
+  /* =========================================================
+     PUBLIC ARCHIVE RENDER
+     ========================================================= */
+
+  const renderPublicAlbums =
+    () => {
+
+      if (
+        !publicGalleryAlbums
+      ) {
+        return;
+      }
+
+      const year =
+        publicGalleryYear
+          ?.value ||
+        'all';
+
+      const filtered =
+        publicAlbums.filter(
+          (album) => {
+
+            const matchesYear =
+              year === 'all' ||
+              String(
+                album.album_year
+              ) ===
+              String(year);
+
+            const photoCount =
+              publicPhotos.filter(
+                (photo) =>
+                  String(
+                    photo.album_id
+                  ) ===
+                  String(
+                    album.id
+                  )
+              ).length;
+
+            const videoCount =
+              publicVideos.filter(
+                (video) =>
+                  String(
+                    video.album_id
+                  ) ===
+                  String(
+                    album.id
+                  )
+              ).length;
+
+            let matchesMedia =
+              true;
+
+            if (
+              activePublicMedia ===
+              'photos'
+            ) {
+              matchesMedia =
+                photoCount > 0;
+            }
+
+            if (
+              activePublicMedia ===
+              'videos'
+            ) {
+              matchesMedia =
+                videoCount > 0;
+            }
+
+            return (
+              matchesYear &&
+              matchesMedia
+            );
+          }
+        );
+
+      destroyPublicCarousels();
+
+      if (!filtered.length) {
+        publicGalleryAlbums.innerHTML =
+          '';
+
+        if (galleryFallback) {
+          galleryFallback.hidden =
+            false;
+        }
+
+        return;
+      }
 
       if (galleryFallback) {
         galleryFallback.hidden =
-          false;
+          true;
       }
 
-      return;
-    }
+      const grouped = {};
 
+      filtered.forEach(
+        (album) => {
 
-    if (galleryFallback) {
-      galleryFallback.hidden =
-        true;
-    }
+          const yearKey =
+            String(
+              album.album_year ||
+              'Archive'
+            );
 
+          grouped[yearKey] =
+            grouped[yearKey] ||
+            [];
 
-    const grouped = {};
+          grouped[yearKey]
+            .push(album);
+        }
+      );
 
-    filtered.forEach((album) => {
-      const yearKey =
-        String(
-          album.album_year ||
-          'Archive'
-        );
+      publicGalleryAlbums.innerHTML =
+        Object.entries(grouped)
+          .sort(
+            ([a], [b]) =>
+              Number(b) -
+              Number(a)
+          )
+          .map(
+            (
+              [
+                yearLabel,
+                albums
+              ]
+            ) => {
 
-      grouped[yearKey] =
-        grouped[yearKey] || [];
+              const cardsMarkup =
+                albums
+                  .map(
+                    (album) => {
 
-      grouped[yearKey].push(album);
-    });
+                      const photoCount =
+                        publicPhotos
+                          .filter(
+                            (photo) =>
+                              String(
+                                photo.album_id
+                              ) ===
+                              String(
+                                album.id
+                              )
+                          )
+                          .length;
 
+                      const videoCount =
+                        publicVideos
+                          .filter(
+                            (video) =>
+                              String(
+                                video.album_id
+                              ) ===
+                              String(
+                                album.id
+                              )
+                          )
+                          .length;
 
-    publicGalleryAlbums.innerHTML =
-      Object.entries(grouped)
-        .sort(
-          ([a], [b]) =>
-            Number(b) - Number(a)
-        )
-        .map(
-          ([yearLabel, albums]) => `
-
-            <section
-              class="gallery-year-group"
-            >
-
-              <div
-                class="gallery-year-heading"
-              >
-                <h3>
-                  ${escapeHtml(
-                    yearLabel
-                  )}
-                </h3>
-
-                <span>
-                  ${albums.length}
-                  album${
-                    albums.length === 1
-                      ? ''
-                      : 's'
-                  }
-                </span>
-              </div>
-
-              <div
-                class="gallery-year-grid"
-              >
-
-                ${albums
-                  .map((album) => {
-
-                    const photoCount =
-                      publicPhotos
-                        .filter(
-                          (photo) =>
-                            String(
-                              photo.album_id
-                            ) ===
-                            String(
-                              album.id
-                            )
-                        )
-                        .length;
-
-                    const videoCount =
-                      publicVideos
-                        .filter(
-                          (video) =>
-                            String(
-                              video.album_id
-                            ) ===
-                            String(
-                              album.id
-                            )
-                        )
-                        .length;
-
-                    return `
-                      <button
-                        class="gallery-album-card"
-                        type="button"
-                        data-public-album="${album.id}"
-                      >
-
-                        <img
-                          src="${escapeHtml(
-                            getCoverImage(
-                              album
-                            )
-                          )}"
-                          alt="${escapeHtml(
+                      return `
+                        <button
+                          class="gallery-album-card"
+                          type="button"
+                          data-public-album="${album.id}"
+                          aria-label="Open ${escapeHtml(
                             album.title
                           )}"
                         >
 
-                        <span
-                          class="gallery-album-card-copy"
-                        >
+                          <span
+                            class="gallery-album-media"
+                          >
 
-                          <small>
-                            ${escapeHtml(
-                              album.event_name ||
-                              album.album_year ||
-                              'AAVAN'
-                            )}
-                          </small>
-
-                          <strong>
-                            ${escapeHtml(
-                              album.title
-                            )}
-                          </strong>
-
-                          <span>
-                            ${photoCount}
-                            photo${
-                              photoCount === 1
-                                ? ''
-                                : 's'
-                            }
+                            <img
+                              src="${escapeHtml(
+                                getCoverImage(
+                                  album
+                                )
+                              )}"
+                              alt="${escapeHtml(
+                                album.title
+                              )}"
+                              loading="lazy"
+                            >
 
                             ${
                               videoCount
-                                ? ` • ${videoCount} video${
-                                    videoCount === 1
-                                      ? ''
-                                      : 's'
-                                  }`
+                                ? `
+                                  <span
+                                    class="gallery-album-video-badge"
+                                    aria-hidden="true"
+                                  >
+                                    ▶
+                                  </span>
+                                `
                                 : ''
                             }
+
                           </span>
 
-                        </span>
+                          <span
+                            class="gallery-album-card-copy"
+                          >
 
-                      </button>
-                    `;
-                  })
-                  .join('')}
+                            <small>
+                              ${escapeHtml(
+                                album.event_name ||
+                                album.album_year ||
+                                'AAVAN'
+                              )}
+                            </small>
 
-              </div>
+                            <strong>
+                              ${escapeHtml(
+                                album.title
+                              )}
+                            </strong>
 
-            </section>
-          `
-        )
-        .join('');
+                            <span>
+                              ${photoCount}
+                              photo${
+                                photoCount === 1
+                                  ? ''
+                                  : 's'
+                              }
 
+                              ${
+                                videoCount
+                                  ? ` • ${videoCount} video${
+                                      videoCount === 1
+                                        ? ''
+                                        : 's'
+                                    }`
+                                  : ''
+                              }
+                            </span>
 
-    publicGalleryAlbums
-      .querySelectorAll(
-        '[data-public-album]'
-      )
-      .forEach((button) => {
+                          </span>
 
-        button.addEventListener(
-          'click',
-          () => {
-
-            const album =
-              publicAlbums.find(
-                (item) =>
-                  String(item.id) ===
-                  String(
-                    button.dataset
-                      .publicAlbum
+                        </button>
+                      `;
+                    }
                   )
-              );
+                  .join('');
 
-            if (album) {
-              openPublicAlbum(album);
+              return `
+                <section
+                  class="gallery-year-group"
+                >
+
+                  <div
+                    class="gallery-year-heading"
+                  >
+
+                    <h3>
+                      ${escapeHtml(
+                        yearLabel
+                      )}
+                    </h3>
+
+                    <span>
+                      ${albums.length}
+                      album${
+                        albums.length === 1
+                          ? ''
+                          : 's'
+                      }
+                    </span>
+
+                  </div>
+
+                  <div
+                    class="gallery-carousel"
+                    data-gallery-carousel
+                  >
+
+                    <button
+                      class="gallery-carousel-arrow gallery-carousel-arrow--prev"
+                      type="button"
+                      data-carousel-prev
+                      aria-label="Previous album"
+                    >
+                      ←
+                    </button>
+
+                    <div
+                      class="gallery-carousel-viewport"
+                      data-carousel-viewport
+                    >
+
+                      <div
+                        class="gallery-carousel-track"
+                      >
+                        ${cardsMarkup}
+                      </div>
+
+                    </div>
+
+                    <button
+                      class="gallery-carousel-arrow gallery-carousel-arrow--next"
+                      type="button"
+                      data-carousel-next
+                      aria-label="Next album"
+                    >
+                      →
+                    </button>
+
+                    <div
+                      class="gallery-carousel-meta"
+                      aria-hidden="true"
+                    >
+                      <span
+                        data-carousel-status
+                      >
+                        1 / ${albums.length}
+                      </span>
+                    </div>
+
+                  </div>
+
+                </section>
+              `;
             }
+          )
+          .join('');
+
+      publicGalleryAlbums
+        .querySelectorAll(
+          '[data-public-album]'
+        )
+        .forEach(
+          (button) => {
+
+            button.addEventListener(
+              'click',
+              () => {
+
+                const album =
+                  publicAlbums.find(
+                    (item) =>
+                      String(
+                        item.id
+                      ) ===
+                      String(
+                        button.dataset
+                          .publicAlbum
+                      )
+                  );
+
+                if (album) {
+                  openPublicAlbum(
+                    album
+                  );
+                }
+              }
+            );
           }
         );
-      });
-  };
 
+      initializePublicCarousels();
+    };
 
   const loadPublicGallery =
     async () => {
 
-      if (!publicGalleryAlbums) {
+      if (
+        !publicGalleryAlbums
+      ) {
         return;
       }
 
       try {
+
         const [
           albumResult,
           photoResult,
           videoResult
         ] = await Promise.all([
+
           supabase
             .from('gallery_albums')
             .select('*')
-            .eq('published', true)
+            .eq(
+              'published',
+              true
+            )
             .order(
               'album_year',
               {
@@ -1154,35 +1738,48 @@
               {
                 ascending: true
               }
+            )
+            .order(
+              'created_at',
+              {
+                ascending: false
+              }
             ),
 
           supabase
             .from('gallery_photos')
             .select(
-              'id,album_id,image_url,featured,display_order'
+              'id,album_id,image_url,alt_text,caption,featured,display_order,created_at'
             ),
 
           supabase
             .from('gallery_videos')
             .select(
-              'id,album_id,title,video_url,thumbnail_url,caption,featured,display_order,published'
+              'id,album_id,title,video_url,thumbnail_url,caption,featured,display_order,published,created_at'
             )
-            .eq('published', true)
+            .eq(
+              'published',
+              true
+            )
         ]);
 
-
-        if (albumResult.error) {
+        if (
+          albumResult.error
+        ) {
           throw albumResult.error;
         }
 
-        if (photoResult.error) {
+        if (
+          photoResult.error
+        ) {
           throw photoResult.error;
         }
 
-        if (videoResult.error) {
+        if (
+          videoResult.error
+        ) {
           throw videoResult.error;
         }
-
 
         publicAlbums =
           Array.isArray(
@@ -1205,36 +1802,55 @@
             ? videoResult.data
             : [];
 
-
         refreshYearSelect(
           publicGalleryYear,
           publicAlbums,
           'All years'
         );
 
-
-        if (galleryAlbumsCount) {
+        if (
+          galleryAlbumsCount
+        ) {
           galleryAlbumsCount
             .textContent =
             publicAlbums.length;
         }
 
-        if (galleryPhotosCount) {
+        if (
+          galleryPhotosCount
+        ) {
           galleryPhotosCount
             .textContent =
             publicPhotos.length;
         }
 
-        if (galleryVideosCount) {
+        if (
+          galleryVideosCount
+        ) {
           galleryVideosCount
             .textContent =
             publicVideos.length;
         }
 
+        if (
+          galleryYearsCount
+        ) {
+          galleryYearsCount
+            .textContent =
+            new Set(
+              publicAlbums
+                .map(
+                  (album) =>
+                    album.album_year
+                )
+                .filter(Boolean)
+            ).size;
+        }
 
         renderPublicAlbums();
 
       } catch (error) {
+
         console.error(
           'Public gallery error:',
           error
@@ -1247,48 +1863,50 @@
       }
     };
 
-
   publicGalleryYear
     ?.addEventListener(
       'change',
       renderPublicAlbums
     );
 
-
   document
     .querySelectorAll(
       '[data-gallery-media]'
     )
-    .forEach((button) => {
+    .forEach(
+      (button) => {
 
-      button.addEventListener(
-        'click',
-        () => {
+        button.addEventListener(
+          'click',
+          () => {
 
-          activePublicMedia =
-            button.dataset
-              .galleryMedia ||
-            'all';
+            activePublicMedia =
+              button.dataset
+                .galleryMedia ||
+              'all';
 
-          document
-            .querySelectorAll(
-              '[data-gallery-media]'
-            )
-            .forEach((item) =>
-              item.classList.remove(
-                'active'
+            document
+              .querySelectorAll(
+                '[data-gallery-media]'
               )
+              .forEach(
+                (item) => {
+                  item.classList
+                    .remove(
+                      'active'
+                    );
+                }
+              );
+
+            button.classList.add(
+              'active'
             );
 
-          button.classList.add(
-            'active'
-          );
-
-          renderPublicAlbums();
-        }
-      );
-    });
-
+            renderPublicAlbums();
+          }
+        );
+      }
+    );
 
   /* =========================================================
      ADMIN CONTEXT
@@ -1300,11 +1918,12 @@
   } = {}) => {
 
     currentUser =
-      user || currentUser;
+      user ||
+      currentUser;
 
     currentProfile =
-      profile || currentProfile;
-
+      profile ||
+      currentProfile;
 
     if (newAlbumBtn) {
       newAlbumBtn.hidden =
@@ -1322,9 +1941,8 @@
     }
   };
 
-
   /* =========================================================
-     ALBUM FORM
+     ADMIN — ALBUMS
      ========================================================= */
 
   const resetAlbumForm = () => {
@@ -1362,9 +1980,10 @@
         'Create album';
     }
 
-    setMessage(albumMessage);
+    setMessage(
+      albumMessage
+    );
   };
-
 
   const loadAdminEvents =
     async () => {
@@ -1403,7 +2022,8 @@
           : [];
 
       const current =
-        albumEventId.value || '';
+        albumEventId.value ||
+        '';
 
       albumEventId.innerHTML = `
         <option value="">
@@ -1419,7 +2039,6 @@
                 ${escapeHtml(
                   event.title
                 )}
-
                 ${
                   event.event_date
                     ? ` — ${escapeHtml(
@@ -1437,55 +2056,57 @@
         current;
     };
 
+  const populateAlbumSelect =
+    (select) => {
 
-  const populateAlbumSelect = (
-    select
-  ) => {
-    if (!select) return;
+      if (!select) return;
 
-    const current =
-      select.value || '';
+      const current =
+        select.value ||
+        '';
 
-    select.innerHTML = `
-      <option value="">
-        Select an album
-      </option>
+      select.innerHTML = `
+        <option value="">
+          Select an album
+        </option>
 
-      ${adminAlbums
-        .map(
-          (album) => `
-            <option
-              value="${album.id}"
-            >
-              ${escapeHtml(
-                album.title
-              )}
+        ${adminAlbums
+          .map(
+            (album) => `
+              <option
+                value="${album.id}"
+              >
+                ${escapeHtml(
+                  album.title
+                )}
 
-              ${
-                album.album_year
-                  ? ` — ${escapeHtml(
-                      album.album_year
-                    )}`
-                  : ''
-              }
-            </option>
-          `
+                ${
+                  album.album_year
+                    ? ` — ${escapeHtml(
+                        album.album_year
+                      )}`
+                    : ''
+                }
+              </option>
+            `
+          )
+          .join('')}
+      `;
+
+      if (
+        current &&
+        adminAlbums.some(
+          (album) =>
+            String(
+              album.id
+            ) ===
+            String(current)
         )
-        .join('')}
-    `;
-
-    if (
-      current &&
-      adminAlbums.some(
-        (album) =>
-          String(album.id) ===
-          String(current)
-      )
-    ) {
-      select.value = current;
-    }
-  };
-
+      ) {
+        select.value =
+          current;
+      }
+    };
 
   const populateAdminAlbumSelects =
     () => {
@@ -1499,184 +2120,192 @@
       );
     };
 
+  const renderAdminAlbums =
+    () => {
 
-  const renderAdminAlbums = () => {
-    if (!albumsList) return;
+      if (!albumsList) {
+        return;
+      }
 
-    const year =
-      galleryYearFilter?.value ||
-      'all';
+      const year =
+        galleryYearFilter
+          ?.value ||
+        'all';
 
-    const search =
-      galleryAlbumSearch?.value
-        .trim()
-        .toLowerCase() ||
-      '';
+      const search =
+        galleryAlbumSearch
+          ?.value
+          .trim()
+          .toLowerCase() ||
+        '';
 
-    const filtered =
-      adminAlbums.filter(
-        (album) => {
+      const filtered =
+        adminAlbums.filter(
+          (album) => {
 
-          const matchesYear =
-            year === 'all' ||
-            String(
-              album.album_year
-            ) ===
-            String(year);
-
-          const haystack =
-            `${
-              album.title || ''
-            } ${
-              album.event_name || ''
-            }`
-              .toLowerCase();
-
-          const matchesSearch =
-            !search ||
-            haystack.includes(search);
-
-          return (
-            matchesYear &&
-            matchesSearch
-          );
-        }
-      );
-
-
-    if (
-      galleryAlbumLibraryCount
-    ) {
-      galleryAlbumLibraryCount
-        .textContent =
-        filtered.length;
-    }
-
-
-    if (!filtered.length) {
-      albumsList.innerHTML = `
-        <div class="admin-empty">
-          No gallery albums
-          match this view.
-        </div>
-      `;
-
-      return;
-    }
-
-
-    albumsList.innerHTML =
-      filtered.map((album) => `
-
-        <article class="admin-row">
-
-          <div
-            class="admin-row-main"
-          >
-
-            <strong>
-              ${escapeHtml(
-                album.title
-              )}
-            </strong>
-
-            <span>
-              ${escapeHtml(
-                album.event_name ||
-                'General gallery'
-              )}
-            </span>
-
-          </div>
-
-
-          <div
-            class="admin-row-meta"
-          >
-
-            <span>
-              Year
-            </span>
-
-            <strong>
-              ${escapeHtml(
+            const matchesYear =
+              year === 'all' ||
+              String(
                 album.album_year
-              )}
-            </strong>
+              ) ===
+              String(year);
 
+            const haystack =
+              `${
+                album.title ||
+                ''
+              } ${
+                album.event_name ||
+                ''
+              }`
+                .toLowerCase();
+
+            return (
+              matchesYear &&
+              (
+                !search ||
+                haystack.includes(
+                  search
+                )
+              )
+            );
+          }
+        );
+
+      if (
+        galleryAlbumLibraryCount
+      ) {
+        galleryAlbumLibraryCount
+          .textContent =
+          filtered.length;
+      }
+
+      if (!filtered.length) {
+        albumsList.innerHTML = `
+          <div class="admin-empty">
+            No gallery albums
+            match this view.
           </div>
+        `;
 
+        return;
+      }
 
-          <div
-            class="admin-row-meta"
-          >
+      albumsList.innerHTML =
+        filtered
+          .map(
+            (album) => `
+              <article
+                class="admin-row"
+              >
 
-            <span>
-              Status
-            </span>
+                <div
+                  class="admin-row-main"
+                >
 
-            <span
-              class="status-pill ${
-                album.published
-                  ? 'published'
-                  : ''
-              }"
-            >
-              ${
-                album.published
-                  ? 'Published'
-                  : 'Draft'
-              }
-            </span>
+                  <strong>
+                    ${escapeHtml(
+                      album.title
+                    )}
+                  </strong>
 
-          </div>
+                  <span>
+                    ${escapeHtml(
+                      album.event_name ||
+                      'General gallery'
+                    )}
+                  </span>
 
+                </div>
 
-          <div
-            class="admin-row-actions"
-          >
+                <div
+                  class="admin-row-meta"
+                >
 
-            <button
-              type="button"
-              data-album-photos="${album.id}"
-            >
-              Manage Photos
-            </button>
+                  <span>
+                    Year
+                  </span>
 
-            ${
-              canEdit()
-                ? `
+                  <strong>
+                    ${escapeHtml(
+                      album.album_year
+                    )}
+                  </strong>
+
+                </div>
+
+                <div
+                  class="admin-row-meta"
+                >
+
+                  <span>
+                    Status
+                  </span>
+
+                  <span
+                    class="status-pill ${
+                      album.published
+                        ? 'published'
+                        : ''
+                    }"
+                  >
+                    ${
+                      album.published
+                        ? 'Published'
+                        : 'Draft'
+                    }
+                  </span>
+
+                </div>
+
+                <div
+                  class="admin-row-actions"
+                >
+
                   <button
                     type="button"
-                    data-album-edit="${album.id}"
+                    data-album-photos="${album.id}"
                   >
-                    Edit
+                    Manage Photos
                   </button>
 
-                  <button
-                    type="button"
-                    class="danger"
-                    data-album-delete="${album.id}"
-                  >
-                    Delete
-                  </button>
-                `
-                : ''
-            }
+                  ${
+                    canEdit()
+                      ? `
+                        <button
+                          type="button"
+                          data-album-edit="${album.id}"
+                        >
+                          Edit
+                        </button>
 
-          </div>
+                        <button
+                          type="button"
+                          class="danger"
+                          data-album-delete="${album.id}"
+                        >
+                          Delete
+                        </button>
+                      `
+                      : ''
+                  }
 
-        </article>
-      `).join('');
+                </div>
 
-    attachAlbumActions();
-  };
+              </article>
+            `
+          )
+          .join('');
 
+      attachAlbumActions();
+    };
 
   const loadAlbums =
     async () => {
 
-      if (!albumsList) return;
+      if (!albumsList) {
+        return;
+      }
 
       albumsList.innerHTML =
         '<div class="admin-loading">Loading albums…</div>';
@@ -1738,13 +2367,14 @@
       renderAdminAlbums();
     };
 
-
   uploadPhotosBtn
     ?.addEventListener(
       'click',
       async () => {
 
-        if (!canEdit()) return;
+        if (!canEdit()) {
+          return;
+        }
 
         closeAdminEditors(
           'photos'
@@ -1757,7 +2387,9 @@
         quickPhotoUploadForm
           ?.reset();
 
-        if (!adminAlbums.length) {
+        if (
+          !adminAlbums.length
+        ) {
           await loadAlbums();
         }
 
@@ -1777,7 +2409,6 @@
         }
       }
     );
-
 
   cancelQuickPhotoUploadBtn
     ?.addEventListener(
@@ -1800,13 +2431,14 @@
       }
     );
 
-
   newAlbumBtn
     ?.addEventListener(
       'click',
       async () => {
 
-        if (!canEdit()) return;
+        if (!canEdit()) {
+          return;
+        }
 
         closeAdminEditors(
           'album'
@@ -1829,7 +2461,6 @@
       }
     );
 
-
   cancelAlbumEditBtn
     ?.addEventListener(
       'click',
@@ -1843,7 +2474,6 @@
         }
       }
     );
-
 
   albumEventId
     ?.addEventListener(
@@ -1859,7 +2489,9 @@
               )
           );
 
-        if (!selected) return;
+        if (!selected) {
+          return;
+        }
 
         if (
           albumEventName &&
@@ -1867,7 +2499,8 @@
             .trim()
         ) {
           albumEventName.value =
-            selected.title || '';
+            selected.title ||
+            '';
         }
 
         if (
@@ -1881,7 +2514,6 @@
         }
       }
     );
-
 
   albumPhotoUpload
     ?.addEventListener(
@@ -1930,7 +2562,10 @@
 
             ${files
               .map(
-                (file, index) => `
+                (
+                  file,
+                  index
+                ) => `
                   <span>
                     ${index + 1}.
                     ${escapeHtml(
@@ -1946,7 +2581,6 @@
       }
     );
 
-
   albumForm
     ?.addEventListener(
       'submit',
@@ -1954,10 +2588,13 @@
 
         event.preventDefault();
 
-        if (!canEdit()) return;
+        if (!canEdit()) {
+          return;
+        }
 
         const title =
-          albumTitle.value.trim();
+          albumTitle.value
+            .trim();
 
         const year =
           Number(
@@ -1971,7 +2608,10 @@
             []
           );
 
-        if (!title || !year) {
+        if (
+          !title ||
+          !year
+        ) {
           setMessage(
             albumMessage,
             'Album title and year are required.',
@@ -1982,6 +2622,7 @@
         }
 
         try {
+
           setMessage(
             albumMessage,
             selectedFiles.length
@@ -2016,21 +2657,22 @@
               null,
 
             published:
-              albumPublished.checked,
+              albumPublished
+                .checked,
 
             updated_by:
               currentUser.id
           };
 
-
           let savedAlbumId =
             albumId.value ||
             null;
 
-
           if (savedAlbumId) {
+
             const {
-              error: updateError
+              error:
+                updateError
             } = await supabase
               .from(
                 'gallery_albums'
@@ -2046,12 +2688,15 @@
             }
 
           } else {
+
             payload.created_by =
               currentUser.id;
 
             const {
-              data: insertedAlbum,
-              error: insertError
+              data:
+                insertedAlbum,
+              error:
+                insertError
             } = await supabase
               .from(
                 'gallery_albums'
@@ -2074,7 +2719,6 @@
             }
           }
 
-
           if (
             selectedFiles.length
           ) {
@@ -2090,7 +2734,6 @@
             );
           }
 
-
           resetAlbumForm();
 
           if (albumFormPanel) {
@@ -2100,11 +2743,13 @@
 
           await Promise.all([
             loadAlbums(),
+            loadVideos(),
             loadAdminCounts(),
             loadPublicGallery()
           ]);
 
         } catch (error) {
+
           console.error(
             'Save album error:',
             error
@@ -2120,20 +2765,17 @@
       }
     );
 
-
   galleryYearFilter
     ?.addEventListener(
       'change',
       renderAdminAlbums
     );
 
-
   galleryAlbumSearch
     ?.addEventListener(
       'input',
       renderAdminAlbums
     );
-
 
   const attachAlbumActions =
     () => {
@@ -2142,184 +2784,193 @@
         .querySelectorAll(
           '[data-album-edit]'
         )
-        .forEach((button) => {
+        .forEach(
+          (button) => {
 
-          button.addEventListener(
-            'click',
-            async () => {
+            button.addEventListener(
+              'click',
+              async () => {
 
-              const album =
-                getAlbumById(
-                  button.dataset
-                    .albumEdit
+                const album =
+                  getAlbumById(
+                    button.dataset
+                      .albumEdit
+                  );
+
+                if (!album) {
+                  return;
+                }
+
+                closeAdminEditors(
+                  'album'
                 );
 
-              if (!album) return;
+                await loadAdminEvents();
 
-              closeAdminEditors(
-                'album'
-              );
+                albumId.value =
+                  album.id ||
+                  '';
 
-              await loadAdminEvents();
+                albumTitle.value =
+                  album.title ||
+                  '';
 
-              albumId.value =
-                album.id || '';
+                albumYear.value =
+                  album.album_year ||
+                  currentYear;
 
-              albumTitle.value =
-                album.title || '';
+                albumEventName.value =
+                  album.event_name ||
+                  '';
 
-              albumYear.value =
-                album.album_year ||
-                currentYear;
+                albumEventId.value =
+                  album.event_id ||
+                  '';
 
-              albumEventName.value =
-                album.event_name ||
-                '';
+                albumDescription.value =
+                  album.description ||
+                  '';
 
-              albumEventId.value =
-                album.event_id ||
-                '';
+                albumPublished.checked =
+                  Boolean(
+                    album.published
+                  );
 
-              albumDescription.value =
-                album.description ||
-                '';
+                if (
+                  albumFormTitle
+                ) {
+                  albumFormTitle
+                    .textContent =
+                    'Edit album';
+                }
 
-              albumPublished.checked =
-                Boolean(
-                  album.published
-                );
+                if (
+                  albumFormPanel
+                ) {
+                  albumFormPanel.hidden =
+                    false;
 
-              if (albumFormTitle) {
-                albumFormTitle
-                  .textContent =
-                  'Edit album';
+                  albumFormPanel
+                    .scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                }
               }
-
-              if (albumFormPanel) {
-                albumFormPanel.hidden =
-                  false;
-
-                albumFormPanel
-                  .scrollIntoView({
-                    behavior:
-                      'smooth',
-                    block:
-                      'start'
-                  });
-              }
-            }
-          );
-        });
-
+            );
+          }
+        );
 
       document
         .querySelectorAll(
           '[data-album-delete]'
         )
-        .forEach((button) => {
+        .forEach(
+          (button) => {
 
-          button.addEventListener(
-            'click',
-            async () => {
+            button.addEventListener(
+              'click',
+              async () => {
 
-              if (!canEdit()) {
-                return;
+                if (!canEdit()) {
+                  return;
+                }
+
+                const confirmed =
+                  window.confirm(
+                    'Delete this album and all of its photos and videos?'
+                  );
+
+                if (!confirmed) {
+                  return;
+                }
+
+                const {
+                  error
+                } = await supabase
+                  .from(
+                    'gallery_albums'
+                  )
+                  .delete()
+                  .eq(
+                    'id',
+                    button.dataset
+                      .albumDelete
+                  );
+
+                if (error) {
+                  window.alert(
+                    error.message
+                  );
+
+                  return;
+                }
+
+                await Promise.all([
+                  loadAlbums(),
+                  loadVideos(),
+                  loadAdminCounts(),
+                  loadPublicGallery()
+                ]);
               }
-
-              const confirmed =
-                window.confirm(
-                  'Delete this album and all of its photos and videos?'
-                );
-
-              if (!confirmed) {
-                return;
-              }
-
-              const {
-                error
-              } = await supabase
-                .from(
-                  'gallery_albums'
-                )
-                .delete()
-                .eq(
-                  'id',
-                  button.dataset
-                    .albumDelete
-                );
-
-              if (error) {
-                window.alert(
-                  error.message
-                );
-
-                return;
-              }
-
-              await Promise.all([
-                loadAlbums(),
-                loadVideos(),
-                loadAdminCounts(),
-                loadPublicGallery()
-              ]);
-            }
-          );
-        });
-
+            );
+          }
+        );
 
       document
         .querySelectorAll(
           '[data-album-photos]'
         )
-        .forEach((button) => {
+        .forEach(
+          (button) => {
 
-          button.addEventListener(
-            'click',
-            async () => {
+            button.addEventListener(
+              'click',
+              async () => {
 
-              const album =
-                getAlbumById(
-                  button.dataset
-                    .albumPhotos
-                );
+                const album =
+                  getAlbumById(
+                    button.dataset
+                      .albumPhotos
+                  );
 
-              if (!album) return;
+                if (!album) {
+                  return;
+                }
 
-              activeAlbumId =
-                album.id;
+                activeAlbumId =
+                  album.id;
 
-              if (
-                albumPhotosTitle
-              ) {
-                albumPhotosTitle
-                  .textContent =
-                  album.title;
+                if (
+                  albumPhotosTitle
+                ) {
+                  albumPhotosTitle
+                    .textContent =
+                    album.title;
+                }
+
+                if (
+                  albumPhotosPanel
+                ) {
+                  albumPhotosPanel.hidden =
+                    false;
+
+                  albumPhotosPanel
+                    .scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                }
+
+                await loadAlbumPhotos();
               }
-
-              if (
-                albumPhotosPanel
-              ) {
-                albumPhotosPanel
-                  .hidden = false;
-
-                albumPhotosPanel
-                  .scrollIntoView({
-                    behavior:
-                      'smooth',
-                    block:
-                      'start'
-                  });
-              }
-
-              await loadAlbumPhotos();
-            }
-          );
-        });
+            );
+          }
+        );
     };
 
-
   /* =========================================================
-     PHOTO UPLOAD
+     ADMIN — PHOTO UPLOADS
      ========================================================= */
 
   const uploadGalleryPhoto =
@@ -2345,7 +2996,9 @@
         error
       } = await supabase
         .storage
-        .from('gallery-images')
+        .from(
+          'gallery-images'
+        )
         .upload(
           path,
           file,
@@ -2365,7 +3018,9 @@
       const {
         data
       } = supabase.storage
-        .from('gallery-images')
+        .from(
+          'gallery-images'
+        )
         .getPublicUrl(path);
 
       return {
@@ -2378,7 +3033,6 @@
       };
     };
 
-
   const uploadFilesToAlbum =
     async (
       albumIdValue,
@@ -2388,7 +3042,8 @@
 
       const selectedFiles =
         Array.from(
-          files || []
+          files ||
+          []
         );
 
       if (
@@ -2398,11 +3053,14 @@
       }
 
       const {
-        data: existingPhotos,
+        data:
+          existingPhotos,
         error:
           existingPhotosError
       } = await supabase
-        .from('gallery_photos')
+        .from(
+          'gallery_photos'
+        )
         .select('id')
         .eq(
           'album_id',
@@ -2419,7 +3077,6 @@
       const albumHasNoPhotos =
         !existingPhotos?.length;
 
-
       for (
         let index = 0;
         index <
@@ -2428,17 +3085,17 @@
       ) {
 
         const file =
-          selectedFiles[index];
+          selectedFiles[
+            index
+          ];
 
-        if (onProgress) {
-          onProgress(
-            `Uploading photo ${
-              index + 1
-            } of ${
-              selectedFiles.length
-            }…`
-          );
-        }
+        onProgress?.(
+          `Uploading photo ${
+            index + 1
+          } of ${
+            selectedFiles.length
+          }…`
+        );
 
         const uploaded =
           await uploadGalleryPhoto(
@@ -2501,8 +3158,8 @@
           throw insertError;
         }
 
-
         if (isCover) {
+
           const {
             error:
               coverError
@@ -2529,7 +3186,6 @@
       }
     };
 
-
   quickPhotoUploadForm
     ?.addEventListener(
       'submit',
@@ -2553,7 +3209,6 @@
             []
           );
 
-
         if (!targetAlbumId) {
           setMessage(
             quickPhotoUploadMessage,
@@ -2563,7 +3218,6 @@
 
           return;
         }
-
 
         if (!files.length) {
           setMessage(
@@ -2575,8 +3229,8 @@
           return;
         }
 
-
         try {
+
           await uploadFilesToAlbum(
             targetAlbumId,
             files,
@@ -2603,6 +3257,7 @@
           ]);
 
         } catch (error) {
+
           console.error(
             'Quick gallery upload error:',
             error
@@ -2617,7 +3272,6 @@
         }
       }
     );
-
 
   const loadAlbumPhotos =
     async () => {
@@ -2636,7 +3290,9 @@
         data,
         error
       } = await supabase
-        .from('gallery_photos')
+        .from(
+          'gallery_photos'
+        )
         .select('*')
         .eq(
           'album_id',
@@ -2661,7 +3317,6 @@
           }
         );
 
-
       if (error) {
         albumPhotosGrid.innerHTML = `
           <div class="admin-empty">
@@ -2673,12 +3328,10 @@
         return;
       }
 
-
       const photos =
         Array.isArray(data)
           ? data
           : [];
-
 
       if (!photos.length) {
         albumPhotosGrid.innerHTML = `
@@ -2691,111 +3344,99 @@
         return;
       }
 
-
       albumPhotosGrid.innerHTML =
-        photos.map(
-          (photo) => `
-
-            <article
-              class="admin-gallery-photo"
-            >
-
-              <img
-                src="${escapeHtml(
-                  photo.image_url
-                )}"
-                alt="${escapeHtml(
-                  photo.alt_text ||
-                  photo.caption ||
-                  'Gallery photo'
-                )}"
+        photos
+          .map(
+            (photo) => `
+              <article
+                class="admin-gallery-photo"
               >
 
-              <div>
-
-                <span
-                  class="status-pill ${
-                    photo.featured
-                      ? 'published'
-                      : ''
-                  }"
+                <img
+                  src="${escapeHtml(
+                    photo.image_url
+                  )}"
+                  alt="${escapeHtml(
+                    photo.alt_text ||
+                    photo.caption ||
+                    'Gallery photo'
+                  )}"
                 >
+
+                <div>
+
+                  <span
+                    class="status-pill ${
+                      photo.featured
+                        ? 'published'
+                        : ''
+                    }"
+                  >
+                    ${
+                      photo.featured
+                        ? 'Cover'
+                        : 'Photo'
+                    }
+                  </span>
+
+                  <p>
+                    ${escapeHtml(
+                      photo.caption ||
+                      'No caption'
+                    )}
+                  </p>
+
                   ${
-                    photo.featured
-                      ? 'Cover'
-                      : 'Photo'
+                    canEdit()
+                      ? `
+                        <div
+                          class="admin-row-actions"
+                        >
+
+                          <button
+                            type="button"
+                            data-photo-caption="${photo.id}"
+                          >
+                            Caption
+                          </button>
+
+                          ${
+                            !photo.featured
+                              ? `
+                                <button
+                                  type="button"
+                                  data-photo-cover="${photo.id}"
+                                >
+                                  Make Cover
+                                </button>
+                              `
+                              : ''
+                          }
+
+                          <button
+                            type="button"
+                            class="danger"
+                            data-photo-delete="${photo.id}"
+                          >
+                            Delete
+                          </button>
+
+                        </div>
+                      `
+                      : ''
                   }
-                </span>
 
-                ${
-                  photo.caption
-                    ? `
-                      <p>
-                        ${escapeHtml(
-                          photo.caption
-                        )}
-                      </p>
-                    `
-                    : `
-                      <p>
-                        No caption
-                      </p>
-                    `
-                }
+                </div>
 
-                ${
-                  canEdit()
-                    ? `
-                      <div
-                        class="admin-row-actions"
-                      >
-
-                        <button
-                          type="button"
-                          data-photo-caption="${photo.id}"
-                        >
-                          Caption
-                        </button>
-
-                        ${
-                          !photo.featured
-                            ? `
-                              <button
-                                type="button"
-                                data-photo-cover="${photo.id}"
-                              >
-                                Make Cover
-                              </button>
-                            `
-                            : ''
-                        }
-
-                        <button
-                          type="button"
-                          class="danger"
-                          data-photo-delete="${photo.id}"
-                        >
-                          Delete
-                        </button>
-
-                      </div>
-                    `
-                    : ''
-                }
-
-              </div>
-
-            </article>
-          `
-        )
-        .join('');
-
+              </article>
+            `
+          )
+          .join('');
 
       attachPhotoActions(
         photos
       );
     };
-
 
   galleryPhotoUpload
     ?.addEventListener(
@@ -2820,8 +3461,8 @@
           return;
         }
 
-
         try {
+
           await uploadFilesToAlbum(
             activeAlbumId,
             files,
@@ -2849,6 +3490,7 @@
           ]);
 
         } catch (error) {
+
           console.error(
             'Gallery upload error:',
             error
@@ -2864,7 +3506,6 @@
       }
     );
 
-
   const attachPhotoActions =
     (photos) => {
 
@@ -2872,388 +3513,411 @@
         .querySelectorAll(
           '[data-photo-caption]'
         )
-        .forEach((button) => {
+        .forEach(
+          (button) => {
 
-          button.addEventListener(
-            'click',
-            async () => {
+            button.addEventListener(
+              'click',
+              async () => {
 
-              const photo =
-                photos.find(
-                  (item) =>
-                    String(
-                      item.id
-                    ) ===
-                    String(
-                      button.dataset
-                        .photoCaption
-                    )
-                );
+                const photo =
+                  photos.find(
+                    (item) =>
+                      String(
+                        item.id
+                      ) ===
+                      String(
+                        button.dataset
+                          .photoCaption
+                      )
+                  );
 
-              if (!photo) {
-                return;
+                if (!photo) {
+                  return;
+                }
+
+                const caption =
+                  window.prompt(
+                    'Photo caption',
+                    photo.caption ||
+                    ''
+                  );
+
+                if (
+                  caption === null
+                ) {
+                  return;
+                }
+
+                const {
+                  error
+                } = await supabase
+                  .from(
+                    'gallery_photos'
+                  )
+                  .update({
+                    caption:
+                      caption
+                        .trim() ||
+                      null
+                  })
+                  .eq(
+                    'id',
+                    photo.id
+                  );
+
+                if (error) {
+                  window.alert(
+                    error.message
+                  );
+
+                  return;
+                }
+
+                await Promise.all([
+                  loadAlbumPhotos(),
+                  loadPublicGallery()
+                ]);
               }
-
-              const caption =
-                window.prompt(
-                  'Photo caption',
-                  photo.caption || ''
-                );
-
-              if (
-                caption === null
-              ) {
-                return;
-              }
-
-              const {
-                error
-              } = await supabase
-                .from(
-                  'gallery_photos'
-                )
-                .update({
-                  caption:
-                    caption
-                      .trim() ||
-                    null
-                })
-                .eq(
-                  'id',
-                  photo.id
-                );
-
-              if (error) {
-                window.alert(
-                  error.message
-                );
-
-                return;
-              }
-
-              await Promise.all([
-                loadAlbumPhotos(),
-                loadPublicGallery()
-              ]);
-            }
-          );
-        });
-
+            );
+          }
+        );
 
       document
         .querySelectorAll(
           '[data-photo-cover]'
         )
-        .forEach((button) => {
+        .forEach(
+          (button) => {
 
-          button.addEventListener(
-            'click',
-            async () => {
+            button.addEventListener(
+              'click',
+              async () => {
 
-              const photo =
-                photos.find(
-                  (item) =>
-                    String(
-                      item.id
-                    ) ===
-                    String(
-                      button.dataset
-                        .photoCover
-                    )
-                );
+                const photo =
+                  photos.find(
+                    (item) =>
+                      String(
+                        item.id
+                      ) ===
+                      String(
+                        button.dataset
+                          .photoCover
+                      )
+                  );
 
-              if (!photo) return;
+                if (!photo) {
+                  return;
+                }
 
+                const {
+                  error:
+                    clearError
+                } = await supabase
+                  .from(
+                    'gallery_photos'
+                  )
+                  .update({
+                    featured:
+                      false
+                  })
+                  .eq(
+                    'album_id',
+                    activeAlbumId
+                  );
 
-              const {
-                error:
-                  clearError
-              } = await supabase
-                .from(
-                  'gallery_photos'
-                )
-                .update({
-                  featured: false
-                })
-                .eq(
-                  'album_id',
-                  activeAlbumId
-                );
+                if (clearError) {
+                  window.alert(
+                    clearError.message
+                  );
 
-              if (clearError) {
-                window.alert(
-                  clearError.message
-                );
+                  return;
+                }
 
-                return;
+                const {
+                  error:
+                    featureError
+                } = await supabase
+                  .from(
+                    'gallery_photos'
+                  )
+                  .update({
+                    featured:
+                      true
+                  })
+                  .eq(
+                    'id',
+                    photo.id
+                  );
+
+                if (featureError) {
+                  window.alert(
+                    featureError.message
+                  );
+
+                  return;
+                }
+
+                const {
+                  error:
+                    albumError
+                } = await supabase
+                  .from(
+                    'gallery_albums'
+                  )
+                  .update({
+                    cover_image_url:
+                      photo.image_url,
+
+                    updated_by:
+                      currentUser.id
+                  })
+                  .eq(
+                    'id',
+                    activeAlbumId
+                  );
+
+                if (albumError) {
+                  window.alert(
+                    albumError.message
+                  );
+
+                  return;
+                }
+
+                await Promise.all([
+                  loadAlbumPhotos(),
+                  loadAlbums(),
+                  loadPublicGallery()
+                ]);
               }
-
-
-              const {
-                error:
-                  featureError
-              } = await supabase
-                .from(
-                  'gallery_photos'
-                )
-                .update({
-                  featured: true
-                })
-                .eq(
-                  'id',
-                  photo.id
-                );
-
-              if (featureError) {
-                window.alert(
-                  featureError.message
-                );
-
-                return;
-              }
-
-
-              const {
-                error:
-                  albumError
-              } = await supabase
-                .from(
-                  'gallery_albums'
-                )
-                .update({
-                  cover_image_url:
-                    photo.image_url,
-
-                  updated_by:
-                    currentUser.id
-                })
-                .eq(
-                  'id',
-                  activeAlbumId
-                );
-
-              if (albumError) {
-                window.alert(
-                  albumError.message
-                );
-
-                return;
-              }
-
-
-              await Promise.all([
-                loadAlbumPhotos(),
-                loadAlbums(),
-                loadPublicGallery()
-              ]);
-            }
-          );
-        });
-
+            );
+          }
+        );
 
       document
         .querySelectorAll(
           '[data-photo-delete]'
         )
-        .forEach((button) => {
+        .forEach(
+          (button) => {
 
-          button.addEventListener(
-            'click',
-            async () => {
+            button.addEventListener(
+              'click',
+              async () => {
 
-              const photo =
-                photos.find(
-                  (item) =>
-                    String(
-                      item.id
-                    ) ===
-                    String(
-                      button.dataset
-                        .photoDelete
-                    )
-                );
+                const photo =
+                  photos.find(
+                    (item) =>
+                      String(
+                        item.id
+                      ) ===
+                      String(
+                        button.dataset
+                          .photoDelete
+                      )
+                  );
 
-              if (!photo) return;
+                if (!photo) {
+                  return;
+                }
 
+                const confirmed =
+                  window.confirm(
+                    'Delete this photo from the album?'
+                  );
 
-              const confirmed =
-                window.confirm(
-                  'Delete this photo from the album?'
-                );
+                if (!confirmed) {
+                  return;
+                }
 
-              if (!confirmed) {
-                return;
-              }
-
-
-              const {
-                error
-              } = await supabase
-                .from(
-                  'gallery_photos'
-                )
-                .delete()
-                .eq(
-                  'id',
-                  photo.id
-                );
-
-              if (error) {
-                window.alert(
-                  error.message
-                );
-
-                return;
-              }
-
-
-              if (photo.featured) {
                 const {
-                  data: remaining
+                  error
                 } = await supabase
                   .from(
                     'gallery_photos'
                   )
-                  .select('*')
+                  .delete()
                   .eq(
-                    'album_id',
-                    activeAlbumId
-                  )
-                  .order(
-                    'created_at',
-                    {
-                      ascending:
-                        true
-                    }
-                  )
-                  .limit(1);
+                    'id',
+                    photo.id
+                  );
 
+                if (error) {
+                  window.alert(
+                    error.message
+                  );
 
-                const next =
-                  remaining?.[0];
+                  return;
+                }
 
+                if (
+                  photo.featured
+                ) {
 
-                if (next) {
-                  await supabase
+                  const {
+                    data:
+                      remaining
+                  } = await supabase
                     .from(
                       'gallery_photos'
                     )
-                    .update({
-                      featured: true
-                    })
+                    .select('*')
                     .eq(
-                      'id',
-                      next.id
-                    );
-
-                  await supabase
-                    .from(
-                      'gallery_albums'
-                    )
-                    .update({
-                      cover_image_url:
-                        next.image_url,
-
-                      updated_by:
-                        currentUser.id
-                    })
-                    .eq(
-                      'id',
+                      'album_id',
                       activeAlbumId
-                    );
-
-                } else {
-                  await supabase
-                    .from(
-                      'gallery_albums'
                     )
-                    .update({
-                      cover_image_url:
-                        null,
+                    .order(
+                      'created_at',
+                      {
+                        ascending:
+                          true
+                      }
+                    )
+                    .limit(1);
 
-                      updated_by:
-                        currentUser.id
-                    })
-                    .eq(
-                      'id',
-                      activeAlbumId
-                    );
+                  const next =
+                    remaining?.[0];
+
+                  if (next) {
+
+                    await supabase
+                      .from(
+                        'gallery_photos'
+                      )
+                      .update({
+                        featured:
+                          true
+                      })
+                      .eq(
+                        'id',
+                        next.id
+                      );
+
+                    await supabase
+                      .from(
+                        'gallery_albums'
+                      )
+                      .update({
+                        cover_image_url:
+                          next.image_url,
+
+                        updated_by:
+                          currentUser.id
+                      })
+                      .eq(
+                        'id',
+                        activeAlbumId
+                      );
+
+                  } else {
+
+                    await supabase
+                      .from(
+                        'gallery_albums'
+                      )
+                      .update({
+                        cover_image_url:
+                          null,
+
+                        updated_by:
+                          currentUser.id
+                      })
+                      .eq(
+                        'id',
+                        activeAlbumId
+                      );
+                  }
                 }
+
+                await Promise.all([
+                  loadAlbumPhotos(),
+                  loadAlbums(),
+                  loadAdminCounts(),
+                  loadPublicGallery()
+                ]);
               }
-
-
-              await Promise.all([
-                loadAlbumPhotos(),
-                loadAlbums(),
-                loadAdminCounts(),
-                loadPublicGallery()
-              ]);
-            }
-          );
-        });
+            );
+          }
+        );
     };
-
 
   closeAlbumPhotosBtn
     ?.addEventListener(
       'click',
       () => {
 
-        activeAlbumId = null;
+        activeAlbumId =
+          null;
 
         setMessage(
           galleryUploadMessage
         );
 
-        if (albumPhotosPanel) {
+        if (
+          albumPhotosPanel
+        ) {
           albumPhotosPanel.hidden =
             true;
         }
       }
     );
 
-
   /* =========================================================
-     VIDEO MANAGEMENT
+     ADMIN — VIDEOS
      ========================================================= */
 
-  const resetVideoForm = () => {
-    videoForm?.reset();
+  const resetVideoForm =
+    () => {
 
-    if (videoId) {
-      videoId.value = '';
-    }
+      videoForm?.reset();
 
-    if (videoDisplayOrder) {
-      videoDisplayOrder.value =
-        '0';
-    }
+      if (videoId) {
+        videoId.value =
+          '';
+      }
 
-    if (videoPublished) {
-      videoPublished.checked =
-        true;
-    }
+      if (
+        videoDisplayOrder
+      ) {
+        videoDisplayOrder.value =
+          '0';
+      }
 
-    if (videoFeatured) {
-      videoFeatured.checked =
-        false;
-    }
+      if (
+        videoPublished
+      ) {
+        videoPublished.checked =
+          true;
+      }
 
-    if (videoFormTitle) {
-      videoFormTitle.textContent =
-        'Add video';
-    }
+      if (
+        videoFeatured
+      ) {
+        videoFeatured.checked =
+          false;
+      }
 
-    setMessage(videoMessage);
-  };
+      if (
+        videoFormTitle
+      ) {
+        videoFormTitle.textContent =
+          'Add video';
+      }
 
+      setMessage(
+        videoMessage
+      );
+    };
 
   addVideoBtn
     ?.addEventListener(
       'click',
       async () => {
 
-        if (!canEdit()) return;
+        if (!canEdit()) {
+          return;
+        }
 
         closeAdminEditors(
           'video'
@@ -3261,13 +3925,17 @@
 
         resetVideoForm();
 
-        if (!adminAlbums.length) {
+        if (
+          !adminAlbums.length
+        ) {
           await loadAlbums();
         }
 
         populateAdminAlbumSelects();
 
-        if (videoFormPanel) {
+        if (
+          videoFormPanel
+        ) {
           videoFormPanel.hidden =
             false;
 
@@ -3280,7 +3948,6 @@
       }
     );
 
-
   cancelVideoEditBtn
     ?.addEventListener(
       'click',
@@ -3288,13 +3955,14 @@
 
         resetVideoForm();
 
-        if (videoFormPanel) {
+        if (
+          videoFormPanel
+        ) {
           videoFormPanel.hidden =
             true;
         }
       }
     );
-
 
   videoUrl
     ?.addEventListener(
@@ -3322,7 +3990,6 @@
       }
     );
 
-
   videoForm
     ?.addEventListener(
       'submit',
@@ -3330,8 +3997,9 @@
 
         event.preventDefault();
 
-        if (!canEdit()) return;
-
+        if (!canEdit()) {
+          return;
+        }
 
         const targetAlbum =
           videoAlbumSelect
@@ -3350,7 +4018,6 @@
             .trim() ||
           '';
 
-
         if (!targetAlbum) {
           setMessage(
             videoMessage,
@@ -3361,7 +4028,6 @@
           return;
         }
 
-
         if (!title) {
           setMessage(
             videoMessage,
@@ -3371,7 +4037,6 @@
 
           return;
         }
-
 
         if (
           !getYouTubeId(url)
@@ -3385,13 +4050,12 @@
           return;
         }
 
-
         try {
+
           setMessage(
             videoMessage,
             'Saving video…'
           );
-
 
           const payload = {
             album_id:
@@ -3440,25 +4104,37 @@
               currentUser.id
           };
 
-
           if (
             payload.featured
           ) {
-            await supabase
+
+            const {
+              error:
+                clearFeaturedError
+            } = await supabase
               .from(
                 'gallery_videos'
               )
               .update({
-                featured: false
+                featured:
+                  false
               })
               .eq(
                 'album_id',
                 targetAlbum
               );
+
+            if (
+              clearFeaturedError
+            ) {
+              throw clearFeaturedError;
+            }
           }
 
+          if (
+            videoId?.value
+          ) {
 
-          if (videoId?.value) {
             const {
               error
             } = await supabase
@@ -3476,6 +4152,7 @@
             }
 
           } else {
+
             const {
               error
             } = await supabase
@@ -3489,14 +4166,14 @@
             }
           }
 
-
           resetVideoForm();
 
-          if (videoFormPanel) {
+          if (
+            videoFormPanel
+          ) {
             videoFormPanel.hidden =
               true;
           }
-
 
           await Promise.all([
             loadVideos(),
@@ -3505,6 +4182,7 @@
           ]);
 
         } catch (error) {
+
           console.error(
             'Save video error:',
             error
@@ -3520,243 +4198,251 @@
       }
     );
 
+  const renderVideos =
+    () => {
 
-  const renderVideos = () => {
-    if (!galleryVideosList) {
-      return;
-    }
+      if (
+        !galleryVideosList
+      ) {
+        return;
+      }
 
+      if (
+        galleryVideoLibraryCount
+      ) {
+        galleryVideoLibraryCount
+          .textContent =
+          adminVideos.length;
+      }
 
-    if (
-      galleryVideoLibraryCount
-    ) {
-      galleryVideoLibraryCount
-        .textContent =
-        adminVideos.length;
-    }
+      if (
+        !adminVideos.length
+      ) {
+        galleryVideosList.innerHTML = `
+          <div
+            class="admin-video-empty"
+            id="galleryVideosEmpty"
+          >
 
+            <div>
 
-    if (!adminVideos.length) {
-      galleryVideosList.innerHTML = `
-        <div
-          class="admin-video-empty"
-          id="galleryVideosEmpty"
-        >
-          <div>
-            <strong>
-              No videos added yet
-            </strong>
+              <strong>
+                No videos added yet
+              </strong>
 
-            <span>
-              Use “+ Add Video”
-              to connect the first
-              YouTube video to an album.
-            </span>
+              <span>
+                Use “+ Add Video”
+                to connect the first
+                YouTube video to an album.
+              </span>
+
+            </div>
+
           </div>
-        </div>
-      `;
+        `;
 
-      return;
-    }
+        return;
+      }
 
+      galleryVideosList.innerHTML =
+        adminVideos
+          .map(
+            (video) => {
 
-    galleryVideosList.innerHTML =
-      adminVideos
-        .map((video) => {
+              const album =
+                getAlbumById(
+                  video.album_id
+                );
 
-          const album =
-            getAlbumById(
-              video.album_id
-            );
+              const thumbnail =
+                video.thumbnail_url ||
+                getYouTubeThumbnail(
+                  video.video_url
+                );
 
-          const thumbnail =
-            video.thumbnail_url ||
-            getYouTubeThumbnail(
-              video.video_url
-            );
-
-          return `
-            <article
-              class="admin-row"
-            >
-
-              <div
-                class="admin-row-main"
-                style="
-                  display:flex;
-                  align-items:center;
-                  gap:14px;
-                "
-              >
-
-                ${
-                  thumbnail
-                    ? `
-                      <img
-                        src="${escapeHtml(
-                          thumbnail
-                        )}"
-                        alt=""
-                        style="
-                          width:92px;
-                          height:56px;
-                          object-fit:cover;
-                          border-radius:9px;
-                          flex:0 0 auto;
-                        "
-                      >
-                    `
-                    : ''
-                }
-
-                <div>
-
-                  <strong>
-                    ${escapeHtml(
-                      video.title ||
-                      'Untitled video'
-                    )}
-                  </strong>
-
-                  <span>
-                    ${escapeHtml(
-                      album?.title ||
-                      'Album unavailable'
-                    )}
-                  </span>
-
-                </div>
-
-              </div>
-
-
-              <div
-                class="admin-row-meta"
-              >
-
-                <span>
-                  Status
-                </span>
-
-                <span
-                  class="status-pill ${
-                    video.published
-                      ? 'published'
-                      : ''
-                  }"
+              return `
+                <article
+                  class="admin-row"
                 >
-                  ${
-                    video.published
-                      ? 'Published'
-                      : 'Draft'
-                  }
-                </span>
 
-              </div>
+                  <div
+                    class="admin-row-main"
+                    style="
+                      display:flex;
+                      align-items:center;
+                      gap:14px;
+                    "
+                  >
 
+                    ${
+                      thumbnail
+                        ? `
+                          <img
+                            src="${escapeHtml(
+                              thumbnail
+                            )}"
+                            alt=""
+                            style="
+                              width:92px;
+                              height:56px;
+                              object-fit:cover;
+                              border-radius:9px;
+                              flex:0 0 auto;
+                            "
+                          >
+                        `
+                        : ''
+                    }
 
-              <div
-                class="admin-row-meta"
-              >
+                    <div>
 
-                <span>
-                  Type
-                </span>
+                      <strong>
+                        ${escapeHtml(
+                          video.title ||
+                          'Untitled video'
+                        )}
+                      </strong>
 
-                <strong>
-                  ${
-                    video.featured
-                      ? 'Featured'
-                      : 'Video'
-                  }
-                </strong>
+                      <span>
+                        ${escapeHtml(
+                          album?.title ||
+                          'Album unavailable'
+                        )}
+                      </span>
 
-              </div>
+                    </div>
 
+                  </div>
 
-              <div
-                class="admin-row-actions"
-              >
+                  <div
+                    class="admin-row-meta"
+                  >
 
-                <a
-                  href="${escapeHtml(
-                    video.video_url
-                  )}"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  View
-                </a>
+                    <span>
+                      Status
+                    </span>
 
-                ${
-                  canEdit()
-                    ? `
-                      <button
-                        type="button"
-                        data-video-edit="${video.id}"
-                      >
-                        Edit
-                      </button>
+                    <span
+                      class="status-pill ${
+                        video.published
+                          ? 'published'
+                          : ''
+                      }"
+                    >
+                      ${
+                        video.published
+                          ? 'Published'
+                          : 'Draft'
+                      }
+                    </span>
 
-                      <button
-                        type="button"
-                        class="danger"
-                        data-video-delete="${video.id}"
-                      >
-                        Delete
-                      </button>
-                    `
-                    : ''
-                }
+                  </div>
 
-              </div>
+                  <div
+                    class="admin-row-meta"
+                  >
 
-            </article>
-          `;
-        })
-        .join('');
+                    <span>
+                      Type
+                    </span>
 
+                    <strong>
+                      ${
+                        video.featured
+                          ? 'Featured'
+                          : 'Video'
+                      }
+                    </strong>
 
-    attachVideoActions();
-  };
+                  </div>
 
+                  <div
+                    class="admin-row-actions"
+                  >
+
+                    <a
+                      href="${escapeHtml(
+                        video.video_url
+                      )}"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      View
+                    </a>
+
+                    ${
+                      canEdit()
+                        ? `
+                          <button
+                            type="button"
+                            data-video-edit="${video.id}"
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            type="button"
+                            class="danger"
+                            data-video-delete="${video.id}"
+                          >
+                            Delete
+                          </button>
+                        `
+                        : ''
+                    }
+
+                  </div>
+
+                </article>
+              `;
+            }
+          )
+          .join('');
+
+      attachVideoActions();
+    };
 
   const loadVideos =
     async () => {
 
-      if (!galleryVideosList) {
+      if (
+        !galleryVideosList
+      ) {
         return;
       }
 
       galleryVideosList.innerHTML =
         '<div class="admin-loading">Loading videos…</div>';
 
-
       const {
         data,
         error
       } = await supabase
-        .from('gallery_videos')
+        .from(
+          'gallery_videos'
+        )
         .select('*')
         .order(
           'featured',
           {
-            ascending: false
+            ascending:
+              false
           }
         )
         .order(
           'display_order',
           {
-            ascending: true
+            ascending:
+              true
           }
         )
         .order(
           'created_at',
           {
-            ascending: false
+            ascending:
+              false
           }
         );
-
 
       if (error) {
         console.error(
@@ -3765,14 +4451,15 @@
         );
 
         galleryVideosList.innerHTML = `
-          <div class="admin-empty">
+          <div
+            class="admin-empty"
+          >
             Unable to load videos.
           </div>
         `;
 
         return;
       }
-
 
       adminVideos =
         Array.isArray(data)
@@ -3782,7 +4469,6 @@
       renderVideos();
     };
 
-
   const attachVideoActions =
     () => {
 
@@ -3790,190 +4476,201 @@
         .querySelectorAll(
           '[data-video-edit]'
         )
-        .forEach((button) => {
+        .forEach(
+          (button) => {
 
-          button.addEventListener(
-            'click',
-            () => {
+            button.addEventListener(
+              'click',
+              () => {
 
-              const video =
-                adminVideos.find(
-                  (item) =>
-                    String(
-                      item.id
-                    ) ===
-                    String(
-                      button.dataset
-                        .videoEdit
-                    )
+                const video =
+                  adminVideos.find(
+                    (item) =>
+                      String(
+                        item.id
+                      ) ===
+                      String(
+                        button.dataset
+                          .videoEdit
+                      )
+                  );
+
+                if (!video) {
+                  return;
+                }
+
+                closeAdminEditors(
+                  'video'
                 );
 
-              if (!video) {
-                return;
+                populateAdminAlbumSelects();
+
+                if (videoId) {
+                  videoId.value =
+                    video.id ||
+                    '';
+                }
+
+                if (
+                  videoAlbumSelect
+                ) {
+                  videoAlbumSelect.value =
+                    video.album_id ||
+                    '';
+                }
+
+                if (videoTitle) {
+                  videoTitle.value =
+                    video.title ||
+                    '';
+                }
+
+                if (videoUrl) {
+                  videoUrl.value =
+                    video.video_url ||
+                    '';
+                }
+
+                if (
+                  videoThumbnailUrl
+                ) {
+                  videoThumbnailUrl.value =
+                    video.thumbnail_url ||
+                    '';
+                }
+
+                if (videoCaption) {
+                  videoCaption.value =
+                    video.caption ||
+                    '';
+                }
+
+                if (
+                  videoDisplayOrder
+                ) {
+                  videoDisplayOrder.value =
+                    Number(
+                      video.display_order ||
+                      0
+                    );
+                }
+
+                if (
+                  videoFeatured
+                ) {
+                  videoFeatured.checked =
+                    Boolean(
+                      video.featured
+                    );
+                }
+
+                if (
+                  videoPublished
+                ) {
+                  videoPublished.checked =
+                    Boolean(
+                      video.published
+                    );
+                }
+
+                if (
+                  videoFormTitle
+                ) {
+                  videoFormTitle
+                    .textContent =
+                    'Edit video';
+                }
+
+                if (
+                  videoFormPanel
+                ) {
+                  videoFormPanel.hidden =
+                    false;
+
+                  videoFormPanel
+                    .scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                }
               }
-
-              closeAdminEditors(
-                'video'
-              );
-
-              populateAdminAlbumSelects();
-
-              if (videoId) {
-                videoId.value =
-                  video.id || '';
-              }
-
-              if (
-                videoAlbumSelect
-              ) {
-                videoAlbumSelect.value =
-                  video.album_id ||
-                  '';
-              }
-
-              if (videoTitle) {
-                videoTitle.value =
-                  video.title || '';
-              }
-
-              if (videoUrl) {
-                videoUrl.value =
-                  video.video_url ||
-                  '';
-              }
-
-              if (
-                videoThumbnailUrl
-              ) {
-                videoThumbnailUrl.value =
-                  video.thumbnail_url ||
-                  '';
-              }
-
-              if (videoCaption) {
-                videoCaption.value =
-                  video.caption || '';
-              }
-
-              if (
-                videoDisplayOrder
-              ) {
-                videoDisplayOrder.value =
-                  Number(
-                    video.display_order ||
-                    0
-                  );
-              }
-
-              if (videoFeatured) {
-                videoFeatured.checked =
-                  Boolean(
-                    video.featured
-                  );
-              }
-
-              if (videoPublished) {
-                videoPublished.checked =
-                  Boolean(
-                    video.published
-                  );
-              }
-
-              if (videoFormTitle) {
-                videoFormTitle
-                  .textContent =
-                  'Edit video';
-              }
-
-              if (videoFormPanel) {
-                videoFormPanel.hidden =
-                  false;
-
-                videoFormPanel
-                  .scrollIntoView({
-                    behavior:
-                      'smooth',
-                    block:
-                      'start'
-                  });
-              }
-            }
-          );
-        });
-
+            );
+          }
+        );
 
       document
         .querySelectorAll(
           '[data-video-delete]'
         )
-        .forEach((button) => {
+        .forEach(
+          (button) => {
 
-          button.addEventListener(
-            'click',
-            async () => {
+            button.addEventListener(
+              'click',
+              async () => {
 
-              if (!canEdit()) {
-                return;
+                if (!canEdit()) {
+                  return;
+                }
+
+                const video =
+                  adminVideos.find(
+                    (item) =>
+                      String(
+                        item.id
+                      ) ===
+                      String(
+                        button.dataset
+                          .videoDelete
+                      )
+                  );
+
+                if (!video) {
+                  return;
+                }
+
+                const confirmed =
+                  window.confirm(
+                    `Delete "${video.title}"?`
+                  );
+
+                if (!confirmed) {
+                  return;
+                }
+
+                const {
+                  error
+                } = await supabase
+                  .from(
+                    'gallery_videos'
+                  )
+                  .delete()
+                  .eq(
+                    'id',
+                    video.id
+                  );
+
+                if (error) {
+                  window.alert(
+                    error.message
+                  );
+
+                  return;
+                }
+
+                await Promise.all([
+                  loadVideos(),
+                  loadAdminCounts(),
+                  loadPublicGallery()
+                ]);
               }
-
-              const video =
-                adminVideos.find(
-                  (item) =>
-                    String(
-                      item.id
-                    ) ===
-                    String(
-                      button.dataset
-                        .videoDelete
-                    )
-                );
-
-              if (!video) {
-                return;
-              }
-
-              const confirmed =
-                window.confirm(
-                  `Delete "${video.title}"?`
-                );
-
-              if (!confirmed) {
-                return;
-              }
-
-              const {
-                error
-              } = await supabase
-                .from(
-                  'gallery_videos'
-                )
-                .delete()
-                .eq(
-                  'id',
-                  video.id
-                );
-
-              if (error) {
-                window.alert(
-                  error.message
-                );
-
-                return;
-              }
-
-              await Promise.all([
-                loadVideos(),
-                loadAdminCounts(),
-                loadPublicGallery()
-              ]);
-            }
-          );
-        });
+            );
+          }
+        );
     };
 
-
   /* =========================================================
-     ADMIN LOAD
+     ADMIN LOAD + PUBLIC API
      ========================================================= */
 
   const loadAdmin =
@@ -3995,20 +4692,11 @@
       ]);
     };
 
-
-  /* =========================================================
-     INITIAL PUBLIC LOAD
-     ========================================================= */
-
   loadPublicGallery();
 
-
-  /* =========================================================
-     PUBLIC API
-     ========================================================= */
-
   window.AAVAN =
-    window.AAVAN || {};
+    window.AAVAN ||
+    {};
 
   window.AAVAN.gallery = {
     reload:
