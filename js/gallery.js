@@ -189,6 +189,44 @@
      PUBLIC GALLERY
      ========================================================= */
 
+  const publicGalleryMediaTabs =
+    Array.from(
+      document.querySelectorAll('[data-gallery-media]')
+    );
+
+  let publicAlbums = [];
+  let publicMediaFilter = 'all';
+
+  const getAlbumMediaType = (album) => {
+    const declaredType =
+      String(
+        album.media_type ||
+        album.album_type ||
+        ''
+      )
+        .trim()
+        .toLowerCase();
+
+    if (
+      declaredType === 'video' ||
+      declaredType === 'videos'
+    ) {
+      return 'videos';
+    }
+
+    return 'photos';
+  };
+
+  const closePublicAlbumModal = () => {
+    const modal =
+      document.getElementById('publicGalleryModal');
+
+    if (!modal) return;
+
+    modal.hidden = true;
+    document.body.style.overflow = '';
+  };
+
   const createPublicAlbumModal = () => {
     let modal =
       document.getElementById('publicGalleryModal');
@@ -239,17 +277,32 @@
     modal
       .querySelectorAll('[data-gallery-viewer-close]')
       .forEach((button) => {
-        button.addEventListener('click', () => {
-          modal.hidden = true;
-          document.body.style.overflow = '';
-        });
+        button.addEventListener(
+          'click',
+          closePublicAlbumModal
+        );
       });
 
     return modal;
   };
 
+  document.addEventListener(
+    'keydown',
+    (event) => {
+      if (event.key !== 'Escape') return;
+
+      const modal =
+        document.getElementById('publicGalleryModal');
+
+      if (!modal || modal.hidden) return;
+
+      closePublicAlbumModal();
+    }
+  );
+
   const openPublicAlbum = async (album) => {
-    const modal = createPublicAlbumModal();
+    const modal =
+      createPublicAlbumModal();
 
     const title =
       modal.querySelector('#galleryViewerTitle');
@@ -261,23 +314,47 @@
       modal.querySelector('#galleryViewerPhotos');
 
     if (title) {
-      title.textContent = album.title;
+      title.textContent =
+        album.title || 'Gallery';
     }
 
     if (meta) {
       meta.textContent =
-        [album.event_name, album.album_year]
+        [
+          album.event_name,
+          album.album_year
+        ]
           .filter(Boolean)
           .join(' • ');
     }
 
     if (photosGrid) {
-      photosGrid.innerHTML =
-        '<div class="admin-loading">Loading photos…</div>';
+      photosGrid.innerHTML = `
+        <div class="admin-loading">
+          Loading memories…
+        </div>
+      `;
     }
 
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
+
+    const mediaType =
+      getAlbumMediaType(album);
+
+    if (mediaType === 'videos') {
+      if (photosGrid) {
+        photosGrid.innerHTML = `
+          <div class="admin-empty">
+            Video viewing will appear here once
+            video records are connected to the
+            AAVAN gallery archive.
+          </div>
+        `;
+      }
+
+      return;
+    }
 
     const {
       data,
@@ -297,6 +374,11 @@
       });
 
     if (error) {
+      console.error(
+        'Public album photos error:',
+        error
+      );
+
       if (photosGrid) {
         photosGrid.innerHTML = `
           <div class="admin-empty">
@@ -304,6 +386,7 @@
           </div>
         `;
       }
+
       return;
     }
 
@@ -320,90 +403,126 @@
           </div>
         `;
       }
+
       return;
     }
+
+    if (!photosGrid) return;
 
     photosGrid.innerHTML =
-      photos.map((photo) => `
-        <figure>
-          <img
-            src="${escapeHtml(photo.image_url)}"
-            alt="${escapeHtml(
-              photo.alt_text ||
-              photo.caption ||
-              album.title
-            )}"
-          >
-          ${
-            photo.caption
-              ? `<figcaption>${escapeHtml(photo.caption)}</figcaption>`
-              : ''
-          }
-        </figure>
-      `).join('');
-  };
-
-  const renderPublicAlbums = (
-    albums
-  ) => {
-    if (!publicGalleryAlbums) return;
-
-    const year =
-      publicGalleryYear?.value || 'all';
-
-    const filtered = albums.filter(
-      (album) =>
-        year === 'all' ||
-        String(album.album_year) === year
-    );
-
-    if (!filtered.length) {
-      publicGalleryAlbums.innerHTML = '';
-
-      if (galleryFallback) {
-        galleryFallback.hidden = false;
-      }
-
-      return;
-    }
-
-    if (galleryFallback) {
-      galleryFallback.hidden = true;
-    }
-
-    publicGalleryAlbums.innerHTML =
-      filtered.map((album) => `
-        <button
-          class="gallery-album-card"
-          type="button"
-          data-public-album="${album.id}"
-        >
-          <img
-            src="${escapeHtml(getCoverImage(album))}"
-            alt="${escapeHtml(album.title)}"
-          >
-
-          <span class="gallery-album-card-copy">
-            <small>
-              ${escapeHtml(
-                [album.event_name, album.album_year]
-                  .filter(Boolean)
-                  .join(' • ')
-              )}
-            </small>
-
-            <strong>
-              ${escapeHtml(album.title)}
-            </strong>
+      photos
+        .map((photo) => `
+          <figure>
+            <img
+              src="${escapeHtml(photo.image_url)}"
+              alt="${escapeHtml(
+                photo.alt_text ||
+                photo.caption ||
+                album.title ||
+                'AAVAN gallery photo'
+              )}"
+              loading="lazy"
+            >
 
             ${
-              album.description
-                ? `<span>${escapeHtml(album.description)}</span>`
+              photo.caption
+                ? `
+                    <figcaption>
+                      ${escapeHtml(photo.caption)}
+                    </figcaption>
+                  `
                 : ''
             }
-          </span>
-        </button>
-      `).join('');
+          </figure>
+        `)
+        .join('');
+  };
+
+  const getPublicFilteredAlbums = () => {
+    const selectedYear =
+      publicGalleryYear?.value ||
+      'all';
+
+    return publicAlbums.filter(
+      (album) => {
+        const matchesYear =
+          selectedYear === 'all' ||
+          String(album.album_year) ===
+            String(selectedYear);
+
+        const mediaType =
+          getAlbumMediaType(album);
+
+        const matchesMedia =
+          publicMediaFilter === 'all' ||
+          mediaType === publicMediaFilter;
+
+        return matchesYear && matchesMedia;
+      }
+    );
+  };
+
+  const renderPublicAlbumCard = (album) => {
+    const mediaType =
+      getAlbumMediaType(album);
+
+    const mediaLabel =
+      mediaType === 'videos'
+        ? 'Video'
+        : 'Photos';
+
+    return `
+      <button
+        class="gallery-album-card"
+        type="button"
+        data-public-album="${escapeHtml(album.id)}"
+      >
+        <img
+          src="${escapeHtml(getCoverImage(album))}"
+          alt="${escapeHtml(
+            album.title ||
+            'AAVAN gallery album'
+          )}"
+          loading="lazy"
+        >
+
+        <span class="gallery-album-card-copy">
+          <small>
+            ${escapeHtml(
+              [
+                album.event_name ||
+                  'AAVAN Community',
+                album.album_year,
+                mediaLabel
+              ]
+                .filter(Boolean)
+                .join(' • ')
+            )}
+          </small>
+
+          <strong>
+            ${escapeHtml(
+              album.title ||
+              'Community memories'
+            )}
+          </strong>
+
+          ${
+            album.description
+              ? `
+                  <span>
+                    ${escapeHtml(album.description)}
+                  </span>
+                `
+              : ''
+          }
+        </span>
+      </button>
+    `;
+  };
+
+  const attachPublicAlbumActions = () => {
+    if (!publicGalleryAlbums) return;
 
     publicGalleryAlbums
       .querySelectorAll('[data-public-album]')
@@ -412,10 +531,12 @@
           'click',
           () => {
             const album =
-              albums.find(
+              publicAlbums.find(
                 (item) =>
                   String(item.id) ===
-                  String(button.dataset.publicAlbum)
+                  String(
+                    button.dataset.publicAlbum
+                  )
               );
 
             if (album) {
@@ -426,8 +547,181 @@
       });
   };
 
+  const renderPublicAlbums = () => {
+    if (!publicGalleryAlbums) return;
+
+    const filtered =
+      getPublicFilteredAlbums();
+
+    if (!filtered.length) {
+      publicGalleryAlbums.innerHTML = '';
+
+      if (galleryFallback) {
+        galleryFallback.hidden = false;
+
+        const heading =
+          galleryFallback.querySelector('h3');
+
+        const copy =
+          galleryFallback.querySelector('p');
+
+        if (publicMediaFilter === 'videos') {
+          if (heading) {
+            heading.textContent =
+              'Video memories are coming.';
+          }
+
+          if (copy) {
+            copy.textContent =
+              'The archive is ready for video collections once video records are added to the gallery system.';
+          }
+        } else {
+          if (heading) {
+            heading.textContent =
+              'More memories are coming.';
+          }
+
+          if (copy) {
+            copy.textContent =
+              'Photos and videos from our community archive will appear here as albums are published.';
+          }
+        }
+      }
+
+      return;
+    }
+
+    if (galleryFallback) {
+      galleryFallback.hidden = true;
+    }
+
+    const groupedByYear =
+      filtered.reduce(
+        (groups, album) => {
+          const year =
+            Number(album.album_year) ||
+            'Archive';
+
+          if (!groups[year]) {
+            groups[year] = [];
+          }
+
+          groups[year].push(album);
+          return groups;
+        },
+        {}
+      );
+
+    const years =
+      Object.keys(groupedByYear)
+        .sort((a, b) => {
+          if (a === 'Archive') return 1;
+          if (b === 'Archive') return -1;
+
+          return Number(b) - Number(a);
+        });
+
+    publicGalleryAlbums.innerHTML =
+      years
+        .map((year) => {
+          const albums =
+            groupedByYear[year];
+
+          return `
+            <section
+              class="gallery-year-group"
+              data-gallery-year="${escapeHtml(year)}"
+            >
+              <header class="gallery-year-heading">
+                <span>
+                  ${
+                    year === 'Archive'
+                      ? 'ARCHIVE'
+                      : escapeHtml(year)
+                  }
+                </span>
+
+                <div>
+                  <h3>
+                    ${
+                      year === 'Archive'
+                        ? 'Community archive'
+                        : `${escapeHtml(year)} memories`
+                    }
+                  </h3>
+
+                  <p>
+                    ${albums.length}
+                    ${albums.length === 1
+                      ? 'event album'
+                      : 'event albums'}
+                  </p>
+                </div>
+              </header>
+
+              <div class="gallery-year-grid">
+                ${albums
+                  .map(renderPublicAlbumCard)
+                  .join('')}
+              </div>
+            </section>
+          `;
+        })
+        .join('');
+
+    attachPublicAlbumActions();
+  };
+
+  const setPublicMediaFilter = (filter) => {
+    publicMediaFilter =
+      ['all', 'photos', 'videos']
+        .includes(filter)
+        ? filter
+        : 'all';
+
+    publicGalleryMediaTabs
+      .forEach((button) => {
+        const isActive =
+          button.dataset.galleryMedia ===
+          publicMediaFilter;
+
+        button.classList.toggle(
+          'active',
+          isActive
+        );
+
+        button.setAttribute(
+          'aria-pressed',
+          isActive
+            ? 'true'
+            : 'false'
+        );
+      });
+
+    renderPublicAlbums();
+  };
+
+  publicGalleryMediaTabs
+    .forEach((button) => {
+      button.addEventListener(
+        'click',
+        () => {
+          setPublicMediaFilter(
+            button.dataset.galleryMedia ||
+            'all'
+          );
+        }
+      );
+    });
+
   const loadPublicGallery = async () => {
     if (!publicGalleryAlbums) return;
+
+    publicGalleryAlbums.innerHTML = `
+      <div class="admin-loading">
+        Loading community memories…
+      </div>
+    `;
 
     try {
       const {
@@ -449,34 +743,32 @@
 
       if (error) throw error;
 
-      const albums =
+      publicAlbums =
         Array.isArray(data)
           ? data
           : [];
 
       refreshYearSelect(
         publicGalleryYear,
-        albums,
+        publicAlbums,
         'All years'
       );
 
-      renderPublicAlbums(albums);
+      if (publicGalleryYear) {
+        publicGalleryYear.onchange =
+          renderPublicAlbums;
+      }
 
-      publicGalleryYear
-        ?.addEventListener(
-          'change',
-          () => renderPublicAlbums(albums),
-          { once: true }
-        );
-
-      publicGalleryYear.onchange =
-        () => renderPublicAlbums(albums);
+      renderPublicAlbums();
 
     } catch (error) {
       console.error(
         'Public gallery error:',
         error
       );
+
+      publicAlbums = [];
+      publicGalleryAlbums.innerHTML = '';
 
       if (galleryFallback) {
         galleryFallback.hidden = false;
