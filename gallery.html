@@ -11,10 +11,12 @@
 
   <meta
     name="description"
-    content="Explore a decade of Assam Association of Vancouver community memories, cultural celebrations, gatherings, photos and videos."
+    content="Explore photos, videos and community memories from the Assam Association of Vancouver, organized by year and event."
   >
 
-  <title>Gallery | Assam Association of Vancouver</title>
+  <title>
+    Gallery | Assam Association of Vancouver
+  </title>
 
   <link
     rel="stylesheet"
@@ -23,7 +25,7 @@
 
   <link
     rel="stylesheet"
-    href="css/gallery-page.css?v=20261027-1"
+    href="css/gallery-page.css?v=20261027-2"
   >
 </head>
 
@@ -123,7 +125,7 @@
 
 
     <!-- ====================================================
-         GALLERY HERO
+         HERO
          ==================================================== -->
 
     <section class="gallery-hero">
@@ -134,7 +136,7 @@
         <div class="gallery-hero-copy">
 
           <p class="eyebrow">
-            AAVAN ARCHIVES
+            AAVAN ARCHIVE
           </p>
 
           <h1>
@@ -143,64 +145,46 @@
           </h1>
 
           <p class="gallery-hero-lead">
-            A decade of celebrations, friendships,
-            traditions and shared moments from the
-            Assam Association of Vancouver community.
+            More than a decade of celebrations,
+            friendships, traditions and shared
+            moments from the Assam Association
+            of Vancouver community.
           </p>
 
-
-          <div class="gallery-hero-meta">
-
-            <div>
-              <strong>
-                10+
-              </strong>
-
-              <span>
-                Years of community
-              </span>
-            </div>
-
-
-            <div>
-              <strong>
-                Photos
-              </strong>
-
-              <span>
-                Moments worth remembering
-              </span>
-            </div>
-
-
-            <div>
-              <strong>
-                Videos
-              </strong>
-
-              <span>
-                Celebrations brought to life
-              </span>
-            </div>
-
-          </div>
+          <a
+            class="gallery-hero-link"
+            href="#archive"
+          >
+            Explore the archive
+            <span aria-hidden="true">↓</span>
+          </a>
 
         </div>
 
 
         <div class="gallery-hero-visual">
 
-          <div class="gallery-hero-image gallery-hero-image-main">
+          <div
+            class="
+              gallery-hero-image
+              gallery-hero-image-main
+            "
+          >
 
             <img
               src="assets/images/hero-bihu.jpg"
-              alt="AAVAN community celebration"
+              alt="AAVAN community cultural celebration"
             >
 
           </div>
 
 
-          <div class="gallery-hero-image gallery-hero-image-secondary">
+          <div
+            class="
+              gallery-hero-image
+              gallery-hero-image-secondary
+            "
+          >
 
             <img
               src="assets/images/community-group.jpg"
@@ -213,7 +197,7 @@
           <div class="gallery-hero-note">
 
             <span>
-              SINCE OUR BEGINNING
+              AAVAN COMMUNITY
             </span>
 
             <strong>
@@ -231,61 +215,15 @@
 
 
     <!-- ====================================================
-         ARCHIVE INTRO
+         ARCHIVE
          ==================================================== -->
 
-    <section class="gallery-intro">
-
-      <div class="container gallery-intro-grid">
-
-
-        <div>
-
-          <p class="eyebrow">
-            COMMUNITY ARCHIVE
-          </p>
-
-          <h2>
-            More than a gallery.
-            <br>
-            A growing history of AAVAN.
-          </h2>
-
-        </div>
-
-
-        <div class="gallery-intro-copy">
-
-          <p>
-            Over the years, AAVAN has brought people
-            together through Bihu celebrations,
-            picnics, cultural programs, community
-            gatherings and many other shared
-            experiences.
-          </p>
-
-          <p>
-            This archive is designed to keep those
-            memories organized year by year and
-            event by event — while continuing to grow
-            with every new chapter of our community.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ====================================================
-         ARCHIVE TOOLBAR
-         ==================================================== -->
-
-    <section class="gallery-archive">
+    <section
+      class="gallery-archive"
+      id="archive"
+    >
 
       <div class="container">
-
 
         <div class="gallery-archive-head">
 
@@ -299,6 +237,12 @@
               Memories by year
               and event.
             </h2>
+
+            <p class="gallery-archive-intro">
+              Browse AAVAN celebrations,
+              gatherings and community moments
+              across the years.
+            </p>
 
           </div>
 
@@ -328,13 +272,6 @@
 
         </div>
 
-
-        <!-- =================================================
-             MEDIA TYPE NAVIGATION
-
-             The next gallery JS upgrade will activate
-             Photos / Videos / All media filtering.
-             ================================================= -->
 
         <div
           class="gallery-media-tabs"
@@ -368,24 +305,12 @@
         </div>
 
 
-        <!-- =================================================
-             DYNAMIC ARCHIVE
-
-             gallery.js currently loads published albums
-             into this container.
-
-             Next JS pass will organize these automatically:
-             Year > Event > Media.
-             ================================================= -->
-
         <div
           id="publicGalleryAlbums"
           class="gallery-year-archive"
           aria-live="polite"
         ></div>
 
-
-        <!-- Loading / empty state -->
 
         <div
           id="galleryFallback"
@@ -402,9 +327,8 @@
           </h3>
 
           <p>
-            Photos and videos from our community
-            archive will appear here as albums
-            are published.
+            Published community albums will
+            appear here as the archive grows.
           </p>
 
         </div>
@@ -415,96 +339,82 @@
 
 
     <!-- ====================================================
-         ARCHIVE PHILOSOPHY
+         COMMUNITY CTA
          ==================================================== -->
 
-    <section class="gallery-story">
+    <section class="gallery-community-cta">
 
-      <div class="container gallery-story-inner">
+      <div class="container">
 
+        <div class="gallery-community-card">
 
-        <div class="gallery-story-number">
-          10+
-        </div>
+          <div class="gallery-community-copy">
 
+            <div
+              class="gallery-community-icon"
+              aria-hidden="true"
+            >
 
-        <div class="gallery-story-copy">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
 
-          <p class="eyebrow">
-            YEARS TOGETHER
-          </p>
+                <path
+                  d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                />
 
-          <h2>
-            Yesterday's moments.
-            Tomorrow's memories.
-          </h2>
+                <circle
+                  cx="9"
+                  cy="7"
+                  r="4"
+                />
 
-          <p>
-            Every photograph and video becomes part
-            of a larger story — one that grows with
-            every family, student, newcomer,
-            celebration and gathering that becomes
-            part of AAVAN.
-          </p>
+                <path
+                  d="M22 21v-2a4 4 0 0 0-3-3.87"
+                />
 
-        </div>
+                <path
+                  d="M16 3.13a4 4 0 0 1 0 7.75"
+                />
 
+              </svg>
 
-        <a
-          class="btn"
-          href="membership.html"
-        >
-          Be part of the next chapter
-        </a>
-
-      </div>
-
-    </section>
-
-
-    <!-- ====================================================
-         CONTACT / CONTRIBUTION
-         ==================================================== -->
-
-    <section class="gallery-contribute">
-
-      <div class="container gallery-contribute-card">
+            </div>
 
 
-        <div>
+            <div>
 
-          <p class="eyebrow">
-            HAVE AAVAN MEMORIES?
-          </p>
+              <p class="eyebrow">
+                OUR SHARED HISTORY
+              </p>
 
-          <h2>
-            Help us preserve
-            our community history.
-          </h2>
+              <h2>
+                Have AAVAN memories
+                to share?
+              </h2>
 
-          <p>
-            Have photos or videos from a past AAVAN
-            event that should be part of the archive?
-            Get in touch with the committee.
-          </p>
+              <p>
+                If you have photos or videos from
+                a past AAVAN event, help us preserve
+                them as part of our community archive.
+              </p>
 
-        </div>
+            </div>
 
+          </div>
 
-        <div class="gallery-contribute-actions">
 
           <a
-            class="btn btn-primary"
+            class="gallery-community-button"
             href="mailto:aavandir@gmail.com"
           >
-            Contact AAVAN
-          </a>
-
-          <a
-            class="btn"
-            href="index.html"
-          >
-            Back to Home
+            Share with AAVAN
+            <span aria-hidden="true">↗</span>
           </a>
 
         </div>
@@ -512,7 +422,6 @@
       </div>
 
     </section>
-
 
   </main>
 
@@ -521,92 +430,106 @@
        FOOTER
        ====================================================== -->
 
-  <footer class="footer">
+  <footer class="gallery-footer">
 
-    <div class="container footer-grid">
+    <div class="container">
 
-
-      <div class="footer-brand">
-
-        <img
-          src="assets/images/logo.png"
-          alt="AAVAN"
-        >
-
-        <h3>
-          Assam Association of Vancouver
-        </h3>
-
-        <p>
-          Connecting the Assamese community across
-          British Columbia through culture,
-          friendship, family and shared experiences.
-        </p>
-
-      </div>
+      <div class="gallery-footer-grid">
 
 
-      <div class="footer-col">
+        <div class="gallery-footer-brand">
 
-        <h4>
-          Explore
-        </h4>
+          <div class="gallery-footer-brandmark">
 
-        <a href="index.html#about">
-          About
-        </a>
+            <img
+              src="assets/images/logo.png"
+              alt="AAVAN"
+            >
 
-        <a href="index.html#events">
-          Events
-        </a>
+            <div>
 
-        <a href="discover-assam.html">
-          Discover Assam
-        </a>
+              <strong>
+                Assam Association
+                of Vancouver
+              </strong>
 
-        <a href="gallery.html">
-          Gallery
-        </a>
+              <span>
+                British Columbia
+              </span>
 
-        <a href="index.html#membership">
-          Membership
-        </a>
+            </div>
 
-      </div>
+          </div>
 
 
-      <div class="footer-col">
+          <p>
+            Connecting the Assamese community
+            through culture, friendship,
+            family and shared experiences.
+          </p>
 
-        <h4>
-          Community
-        </h4>
-
-        <a href="membership.html">
-          Join AAVAN
-        </a>
-
-        <a href="committee-login.html">
-          Committee Login
-        </a>
-
-        <span>
-          Member Directory / Leaderboards
-        </span>
-
-        <a href="index.html#contact">
-          Contact
-        </a>
-
-      </div>
+        </div>
 
 
-      <div class="footer-col">
+        <div class="gallery-footer-column">
 
-        <h4>
-          Contact
-        </h4>
+          <h3>
+            Explore
+          </h3>
 
-        <div class="footer-contact">
+          <a href="index.html#about">
+            About
+          </a>
+
+          <a href="index.html#events">
+            Events
+          </a>
+
+          <a href="discover-assam.html">
+            Discover Assam
+          </a>
+
+          <a href="gallery.html">
+            Gallery
+          </a>
+
+          <a href="index.html#membership">
+            Membership
+          </a>
+
+        </div>
+
+
+        <div class="gallery-footer-column">
+
+          <h3>
+            Community
+          </h3>
+
+          <a href="membership.html">
+            Join AAVAN
+          </a>
+
+          <a href="committee-login.html">
+            Committee Login
+          </a>
+
+          <span>
+            Member Directory / Leaderboards
+          </span>
+
+          <a href="index.html#contact">
+            Contact
+          </a>
+
+        </div>
+
+
+        <div class="gallery-footer-column">
+
+          <h3>
+            Contact
+          </h3>
 
           <span>
             17147 85A Ave
@@ -626,30 +549,132 @@
 
         </div>
 
-      </div>
 
-    </div>
+        <div class="gallery-footer-column">
+
+          <h3>
+            Follow Us
+          </h3>
 
 
-    <div class="footer-bottom">
+          <span class="gallery-social-item">
 
-      <div class="container footer-bottom-inner">
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                fill="currentColor"
+                d="M13.5 8H16V4.5c-.43-.06-1.91-.18-3.67-.18-3.63 0-6.12 2.22-6.12 6.3V14H2v3.91h4.21V24h5.16v-6.09h4.31L16.37 14h-5v-3c0-1.13.31-1.9 2.13-1.9z"
+              />
+            </svg>
 
-        <span>
-          © 2026 Assam Association of Vancouver
-        </span>
+            Facebook
 
-        <div class="footer-legal">
-
-          <span>
-            Privacy Policy
           </span>
 
-          <span>
-            Terms &amp; Community Guidelines
+
+          <span class="gallery-social-item">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+
+              <rect
+                x="3"
+                y="3"
+                width="18"
+                height="18"
+                rx="5"
+              />
+
+              <circle
+                cx="12"
+                cy="12"
+                r="4"
+              />
+
+              <circle
+                cx="17.4"
+                cy="6.6"
+                r="1"
+                fill="currentColor"
+                stroke="none"
+              />
+
+            </svg>
+
+            Instagram
+
+          </span>
+
+
+          <span class="gallery-social-item">
+
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+
+              <path
+                fill="currentColor"
+                d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.8 31.8 0 0 0 0 12a31.8 31.8 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.8 31.8 0 0 0 24 12a31.8 31.8 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"
+              />
+
+            </svg>
+
+            YouTube
+
+          </span>
+
+
+          <span class="gallery-social-item">
+
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+
+              <path
+                fill="currentColor"
+                d="M12.04 2C6.52 2 2.05 6.43 2.05 11.9c0 1.94.57 3.75 1.55 5.28L2 22l4.98-1.55A10 10 0 0 0 12.04 22C17.55 22 22 17.57 22 12.1 22 6.43 17.55 2 12.04 2Zm5.82 14.08c-.25.71-1.48 1.31-2.04 1.4-.52.08-1.18.12-1.9-.12-.44-.14-1-.33-1.72-.64-3.02-1.3-4.98-4.35-5.13-4.55-.15-.2-1.22-1.61-1.22-3.07 0-1.46.76-2.18 1.04-2.48.27-.3.6-.37.8-.37h.57c.18 0 .43-.07.67.51.25.6.85 2.06.93 2.21.07.15.12.33.02.53-.1.2-.15.33-.3.5-.15.17-.32.38-.45.51-.15.15-.3.31-.13.61.18.3.78 1.28 1.68 2.08 1.15 1.03 2.12 1.35 2.42 1.5.3.15.48.13.66-.08.17-.2.75-.87.95-1.17.2-.3.4-.25.68-.15.28.1 1.77.83 2.07.98.3.15.5.23.58.35.07.13.07.73-.18 1.44Z"
+              />
+
+            </svg>
+
+            WhatsApp
+
           </span>
 
         </div>
+
+      </div>
+
+
+      <div class="gallery-footer-bottom">
+
+        <div class="gallery-footer-mini-brand">
+
+          <img
+            src="assets/images/logo.png"
+            alt=""
+          >
+
+          <strong>
+            AAVAN
+          </strong>
+
+        </div>
+
+
+        <span>
+          © 2026 Assam Association of Vancouver.
+          All rights reserved.
+        </span>
 
       </div>
 
@@ -669,6 +694,7 @@
   <script src="js/supabase-config.js"></script>
 
   <script src="js/gallery.js"></script>
+
 
 </body>
 
