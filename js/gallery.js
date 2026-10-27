@@ -268,9 +268,41 @@
     new Date().getFullYear();
 
 
-  const getCoverImage = (album) =>
-    album.cover_image_url ||
-    'assets/images/community-group.jpg';
+  const getCoverImage = (album) => {
+  if (album.cover_image_url) {
+    return album.cover_image_url;
+  }
+
+  const albumVideo =
+    publicVideos.find(
+      (video) =>
+        String(video.album_id) ===
+        String(album.id)
+    );
+
+  if (albumVideo) {
+    return (
+      albumVideo.thumbnail_url ||
+      getYouTubeThumbnail(
+        albumVideo.video_url
+      ) ||
+      'assets/images/bihu-community.jpg'
+    );
+  }
+
+  const albumPhoto =
+    publicPhotos.find(
+      (photo) =>
+        String(photo.album_id) ===
+        String(album.id)
+    );
+
+  if (albumPhoto?.image_url) {
+    return albumPhoto.image_url;
+  }
+
+  return 'assets/images/bihu-community.jpg';
+};
 
 
   const refreshYearSelect = (
