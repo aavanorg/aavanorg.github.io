@@ -344,16 +344,7 @@
     #membership .membership-cta strong { font: 700 25px/1.2 Georgia,serif; }
     #membership .membership-cta .btn { min-height: 48px; }
 
-    /* Contact and footer: align visual rhythm with the header. */
-    #contact { background: #f7f3ea; }
-    #contact .contact-wrap { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px; }
-    #contact .contact-copy, #contact .contact-card { border-radius: 13px; padding: clamp(30px,3.9vw,52px); }
-    #contact .contact-copy { box-shadow: none; background: #173c31; }
-    #contact .contact-copy h2 { color: white; font-size: clamp(37px, 3.9vw,53px); line-height: 1.08; }
-    #contact .contact-copy > p:not(.eyebrow) { font-size: 16px; line-height: 1.75; color: #e3ebe5; max-width: 520px; }
-    #contact .contact-card { background: #fffdfa; border: 1px solid #e6ddd0; box-shadow: none; }
-    #contact .contact-item { padding: 16px 0; }
-    #contact .contact-item strong, #contact .contact-item a { font-size: 16px; }
+    /* Footer is the single home-page contact destination. */
     .aavan-homepage .footer { background: #112b24; padding-top: 68px; }
     .aavan-homepage .footer-grid { gap: 36px; }
     .aavan-homepage .footer-col a, .aavan-homepage .footer-col span { font-size: 14px; line-height: 1.65; color: #e0e8e2; }
@@ -368,8 +359,7 @@
     }
     @media (max-width: 800px) {
       .aavan-homepage main .section > .container { width: min(100% - 32px, 720px); }
-      .aavan-section-intro, .aavan-story-grid, .aavan-events-showcase, .aavan-discover-grid,
-      #contact .contact-wrap { grid-template-columns: minmax(0,1fr); }
+      .aavan-section-intro, .aavan-story-grid, .aavan-events-showcase, .aavan-discover-grid { grid-template-columns: minmax(0,1fr); }
       .aavan-section-intro { gap: 17px; margin-bottom: 30px; }
       .aavan-story-photo, .aavan-story-photo img { min-height: 290px; }
       .aavan-story-copy { padding: 34px 28px; }
@@ -396,12 +386,133 @@
       #membership .membership-row { min-height: 260px; padding: 27px 24px; }
       #membership .membership-cta { padding: 26px; display: flex; flex-direction: column; align-items: stretch; gap: 22px; }
       #membership .membership-cta .btn { width: 100%; }
-      #contact .contact-copy, #contact .contact-card { padding: 27px 25px; }
       .aavan-homepage .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
       .aavan-homepage .footer-brand { grid-column: 1/-1; }
     }
     @media (prefers-reduced-motion: reduce) {
       .aavan-homepage main *, .aavan-homepage main *::before, .aavan-homepage main *::after { transition: none !important; }
+    }
+  </style>
+
+  <style id="aavan-responsive-and-footer-refinement">
+    /* The approved AAVAN header remains unchanged. Everything here is homepage-only. */
+    html { scroll-padding-top: 20px; }
+    .aavan-homepage main .section {
+      padding-top: clamp(52px, 5.5vw, 78px);
+      padding-bottom: clamp(52px, 5.5vw, 78px);
+    }
+    .aavan-homepage .aavan-section-intro { margin-bottom: clamp(24px, 3vw, 36px); }
+    .aavan-homepage main .section .eyebrow { margin-bottom: 12px; }
+    #membership .membership-row { min-height: 290px; }
+    #membership .membership-benefits { margin-bottom: 22px; }
+
+    /* Footer is the only location for address, telephone and email details. */
+    .aavan-homepage footer#contact {
+      background: #112b24;
+      scroll-margin-top: 0;
+      padding-top: 58px;
+    }
+    .aavan-homepage footer .footer-grid {
+      width: min(1220px, calc(100% - 64px));
+      grid-template-columns: minmax(220px, 1.6fr) minmax(130px, .75fr)
+        minmax(160px, .85fr) minmax(210px, 1.15fr);
+      gap: 36px;
+      padding-bottom: 42px;
+    }
+    .aavan-homepage footer .footer-brand h3 { font-size: clamp(22px, 2vw, 27px); }
+    .aavan-homepage footer .footer-brand p { font-size: 15px; line-height: 1.65; }
+    .aavan-homepage footer .footer-col h4 {
+      color: #f6d999; font-size: 12px; letter-spacing: .12em;
+    }
+    .aavan-homepage footer .footer-col a,
+    .aavan-homepage footer .footer-col span {
+      font-size: 15px; line-height: 1.65;
+    }
+    .aavan-homepage footer .footer-contact a { overflow-wrap: anywhere; }
+    .aavan-homepage footer a:hover { color: #ffe3a1; }
+    .aavan-homepage footer a:focus-visible { outline: 3px solid #f6d999; outline-offset: 4px; }
+    .aavan-homepage footer .footer-bottom-inner {
+      width: min(1220px, calc(100% - 64px));
+      font-size: 13px;
+    }
+
+    /* iPad and small laptop: prevent four narrow footer columns. */
+    @media (max-width: 1050px) {
+      .aavan-homepage footer .footer-grid {
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+        grid-template-areas: 'brand contact' 'explore community';
+        gap: 30px 40px;
+      }
+      .aavan-homepage footer .footer-brand { grid-area: brand; }
+      .aavan-homepage footer .footer-col:nth-child(2) { grid-area: explore; }
+      .aavan-homepage footer .footer-col:nth-child(3) { grid-area: community; }
+      .aavan-homepage footer .aavan-footer-contact { grid-area: contact; }
+    }
+
+    /* Tablet: photos keep natural proportions and do not create dark empty slabs. */
+    @media (max-width: 800px) {
+      .aavan-homepage main .section {
+        padding-top: 55px;
+        padding-bottom: 55px;
+      }
+      .aavan-homepage .aavan-story-grid { min-height: 0; }
+      .aavan-homepage .aavan-story-photo { min-height: 0; }
+      .aavan-homepage .aavan-story-photo img {
+        display: block; width: 100%; height: auto; min-height: 0;
+        max-height: none; aspect-ratio: auto; object-fit: contain;
+      }
+      .aavan-homepage .aavan-story-photo::after { display: none; }
+      .aavan-homepage .aavan-story-photo figcaption {
+        position: static; color: #fff; background: #153b31;
+        padding: 12px 18px; line-height: 1.45;
+      }
+      .aavan-homepage footer .footer-grid,
+      .aavan-homepage footer .footer-bottom-inner {
+        width: min(100% - 32px, 720px);
+      }
+    }
+
+    /* Phone: one column for content cards, legible footer and touch-friendly links. */
+    @media (max-width: 600px) {
+      .aavan-homepage main .section {
+        padding-top: 46px;
+        padding-bottom: 46px;
+      }
+      .aavan-homepage main .section > .container { width: calc(100% - 32px); }
+      .aavan-homepage .aavan-section-intro { margin-bottom: 25px; }
+      .aavan-homepage #about .aavan-pillars,
+      .aavan-homepage #events #dynamic-events { grid-template-columns: minmax(0, 1fr) !important; }
+      .aavan-homepage #about .aavan-pillars .card { min-height: 0; padding: 23px; }
+      .aavan-homepage .aavan-story-copy { padding: 25px 22px; }
+      .aavan-homepage #events .aavan-events-side { display: flex; }
+      .aavan-homepage #events .event-mini > div { padding: 22px; }
+      .aavan-homepage #membership .membership-table {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 13px;
+      }
+      .aavan-homepage #membership .membership-row {
+        min-height: 0; padding: 22px 22px 24px;
+      }
+      .aavan-homepage #membership .membership-row-description { margin-bottom: 24px; }
+      .aavan-homepage footer#contact { padding-top: 45px; }
+      .aavan-homepage footer .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        grid-template-areas: 'brand brand' 'contact contact' 'explore community';
+        gap: 30px 22px;
+        padding-bottom: 35px;
+      }
+      .aavan-homepage footer .footer-col { min-width: 0; }
+      .aavan-homepage footer .footer-col a,
+      .aavan-homepage footer .footer-col span { font-size: 14px; }
+      .aavan-homepage footer .footer-contact { gap: 9px; }
+      .aavan-homepage footer .footer-bottom-inner {
+        display: flex; flex-direction: column; align-items: flex-start;
+        gap: 12px; font-size: 12px;
+      }
+    }
+    @media (max-width: 360px) {
+      .aavan-homepage footer .footer-grid { gap: 25px 16px; }
+      .aavan-homepage main .section h2 { font-size: clamp(33px, 9vw, 39px); }
     }
   </style>
 </head>
@@ -855,128 +966,14 @@
     </section>
 
 
-    <!-- ====================================================
-         CONTACT
-         ==================================================== -->
-
-    <section
-      class="section aavan-content-section"
-      id="contact"
-    >
-
-      <div class="container contact-wrap">
-
-
-        <div class="contact-copy">
-
-          <p
-            class="eyebrow"
-            style="color:#f1a48d"
-          >
-            CONTACT
-          </p>
-
-          <h2>
-            Stay connected
-            with AAVAN.
-          </h2>
-
-          <p>
-            Questions about membership, events
-            or the community? Reach out to the
-            Assam Association of Vancouver
-            committee.
-          </p>
-
-          <div class="contact-actions">
-
-            <a
-              class="btn"
-              href="mailto:aavandir@gmail.com"
-            >
-              Email us
-            </a>
-
-            <a
-              class="btn"
-              href="tel:+16046490469"
-            >
-              Call us
-            </a>
-
-          </div>
-
-        </div>
-
-
-        <div class="contact-card">
-
-          <div class="contact-item">
-
-            <span>
-              Organization
-            </span>
-
-            <strong>
-              Assam Association of Vancouver
-            </strong>
-
-          </div>
-
-
-          <div class="contact-item">
-
-            <span>
-              Address
-            </span>
-
-            <strong>
-              17147 85A Ave,
-              Surrey, BC V4N 0B1
-            </strong>
-
-          </div>
-
-
-          <div class="contact-item">
-
-            <span>
-              Phone
-            </span>
-
-            <a href="tel:+16046490469">
-              604-649-0469
-            </a>
-
-          </div>
-
-
-          <div class="contact-item">
-
-            <span>
-              Email
-            </span>
-
-            <a href="mailto:aavandir@gmail.com">
-              aavandir@gmail.com
-            </a>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
+      </main>
 
 
   <!-- ======================================================
        FOOTER
        ====================================================== -->
 
-  <footer class="footer">
+  <footer class="footer" id="contact" aria-label="AAVAN contact information and site links">
 
     <div class="container footer-grid">
 
@@ -1048,14 +1045,10 @@
           Member Directory / Leaderboards
         </span>
 
-        <a href="#contact">
-          Contact
-        </a>
-
       </div>
 
 
-      <div class="footer-col">
+      <div class="footer-col aavan-footer-contact">
 
         <h4>
           Contact
