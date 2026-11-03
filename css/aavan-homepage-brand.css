@@ -1,0 +1,89 @@
+/* AAVAN homepage brand/heritage feature — scoped so membership and admin pages are unaffected. */
+.section.aavan-heritage {
+  background: #fffdf9;
+  padding: clamp(60px, 7vw, 108px) 0;
+}
+.aavan-heritage-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .98fr);
+  align-items: center;
+  gap: clamp(30px, 6vw, 90px);
+}
+.aavan-heritage-content { max-width: 580px; }
+.aavan-heritage-content h2 {
+  font-family: Georgia, serif;
+  font-size: clamp(2.4rem, 4.3vw, 4.4rem);
+  line-height: 1.07;
+  letter-spacing: -.045em;
+  color: #143b32;
+  margin: 0 0 24px;
+}
+.aavan-heritage-content p:not(.eyebrow) {
+  color: #625f59;
+  font-size: 1rem;
+  line-height: 1.8;
+  margin: 0 0 18px;
+}
+.aavan-heritage-content .aavan-heritage-lead {
+  font-size: clamp(1.06rem, 1.6vw, 1.25rem) !important;
+  color: #252e29 !important;
+  line-height: 1.55 !important;
+}
+.aavan-heritage-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-top: 30px;
+}
+.aavan-heritage-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .95rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  color: #143b32;
+}
+.aavan-heritage-link:hover { color: #b7202e; }
+.aavan-heritage-link:focus-visible,
+.aavan-heritage-actions .btn:focus-visible {
+  outline: 3px solid #b7202e;
+  outline-offset: 4px;
+}
+.aavan-heritage-visual {
+  margin: 0;
+  padding: 12px 12px 18px;
+  border: 1px solid #e7e0d4;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 18px 54px rgba(35, 48, 41, .08);
+}
+.aavan-heritage-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 5 / 4;
+  object-fit: contain;
+  border-radius: 14px;
+  background: #fff0a1;
+}
+.aavan-heritage-visual figcaption {
+  padding: 16px 8px 0;
+  font-size: .82rem;
+  line-height: 1.5;
+  color: #6b6862;
+  text-align: center;
+}
+@media (max-width: 800px) {
+  .aavan-heritage-grid { grid-template-columns: 1fr; gap: 32px; }
+  .aavan-heritage-content { max-width: 670px; }
+  .aavan-heritage-visual { max-width: 650px; width: 100%; }
+}
+@media (max-width: 480px) {
+  .section.aavan-heritage { padding: 56px 0; }
+  .aavan-heritage-content h2 { font-size: clamp(2.2rem, 10vw, 3rem); }
+  .aavan-heritage-actions { align-items: flex-start; flex-direction: column; gap: 20px; }
+  .aavan-heritage-visual { padding: 8px 8px 14px; border-radius: 16px; }
+}
