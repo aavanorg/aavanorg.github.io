@@ -175,9 +175,238 @@
       .aavan-top *, .aavan-top *::before, .aavan-top *::after { transition: none !important; }
     }
   </style>
+
+  <style id="aavan-rest-of-homepage-design">
+    /* Home-only component system. The approved header above stays unchanged. */
+    .aavan-homepage main { overflow: clip; }
+    .aavan-homepage main .section { padding: clamp(70px, 7.5vw, 108px) 0; }
+    .aavan-homepage main .section > .container { width: min(1220px, calc(100% - 64px)); }
+    .aavan-homepage main .section h2 {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(39px, 4.4vw, 62px); line-height: 1.06;
+      letter-spacing: -.045em; color: #17392f; max-width: 800px;
+    }
+    .aavan-homepage main .section h2 em { font-style: normal; color: #ad2735; }
+    .aavan-homepage main .section .eyebrow {
+      color: #af2937; font-size: 12px; font-weight: 850;
+      letter-spacing: .16em; margin-bottom: 14px;
+    }
+    .aavan-section-intro {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .6fr);
+      gap: 42px; align-items: end; margin-bottom: clamp(34px, 4vw, 54px);
+    }
+    .aavan-section-intro h2 { margin: 0; }
+    .aavan-section-lead {
+      max-width: 460px; margin: 0 0 5px; font-size: clamp(16px, 1.35vw, 18px);
+      line-height: 1.75; color: #54635a;
+    }
+    .aavan-text-link {
+      width: fit-content; display: inline-flex; align-items: center; gap: 12px;
+      color: #17392f; font-size: 14px; font-weight: 850; border-bottom: 1px solid #17392f;
+      padding-bottom: 5px; text-decoration: none; transition: gap .2s ease;
+    }
+    .aavan-text-link:hover { gap: 18px; color: #a51f2d; }
+    .aavan-homepage main a:focus-visible { outline: 3px solid #b32b37; outline-offset: 4px; }
+
+    /* About: a photo-led story rather than a stack of generic statements. */
+    #about { background: #fffdf9; }
+    .aavan-story-grid {
+      display: grid; grid-template-columns: minmax(0, 1.06fr) minmax(0, .94fr);
+      gap: 0; min-height: 380px; overflow: hidden; background: #f7f1e5;
+      border-radius: 16px; border: 1px solid #e7decf;
+    }
+    .aavan-story-photo { margin: 0; position: relative; overflow: hidden; min-height: 380px; background: #e7dcc6; }
+    .aavan-story-photo img { width: 100%; height: 100%; min-height: 380px; object-fit: cover; }
+    .aavan-story-photo::after {
+      content: ''; position: absolute; inset: 55% 0 0;
+      background: linear-gradient(transparent, rgba(10,34,26,.65)); pointer-events: none;
+    }
+    .aavan-story-photo figcaption {
+      position: absolute; z-index: 1; bottom: 20px; left: 28px; right: 20px;
+      font-size: 13px; font-weight: 700; color: #fff;
+    }
+    .aavan-story-copy { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: clamp(30px, 4vw, 62px); }
+    .aavan-story-copy h3 {
+      font: 700 clamp(27px, 2.45vw, 38px)/1.15 Georgia,serif;
+      letter-spacing: -.035em; margin: 0 0 19px; max-width: 420px;
+    }
+    .aavan-story-copy > p:not(.eyebrow) {
+      font-size: 16px; line-height: 1.78; color: #4c584e; margin: 0 0 28px;
+    }
+    #about .aavan-pillars { margin-top: 22px; gap: 18px; }
+    #about .aavan-pillars .card {
+      position: relative; min-height: 205px; padding: 28px;
+      border: 1px solid #e9e2d6; border-radius: 13px; background: #fff;
+      box-shadow: none; transition: border-color .2s ease;
+    }
+    #about .aavan-pillars .card:hover { transform: none; border-color: #b8a989; box-shadow: none; }
+    #about .aavan-pillars .card::before { display: none; }
+    .aavan-pillar-number { display: block; font-size: 11px; font-weight: 850; letter-spacing: .15em; color: #af2937; margin-bottom: 27px; }
+    #about .aavan-pillars h3 { color: #17392f; font: 700 26px/1.2 Georgia,serif; margin: 0 0 11px; }
+    #about .aavan-pillars p { font-size: 15px; line-height: 1.65; color: #5d655e; }
+
+    /* Events: retain all live Supabase rendering targets; organize the feed. */
+    #events { background: #f6f1e8; }
+    .aavan-events-showcase {
+      display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, .78fr);
+      gap: 22px; align-items: stretch;
+    }
+    .aavan-subsection-label {
+      font-size: 12px; font-weight: 850; color: #25483b;
+      text-transform: uppercase; letter-spacing: .13em; margin: 0 0 16px;
+    }
+    #events .aavan-events-featured { min-width: 0; }
+    /* Hide empty headings when there are no published events. */
+    #events .aavan-events-featured:has(#featured-event-slot:empty),
+    #events .aavan-more-events:has(#dynamic-events:empty) { display: none; }
+    #events .aavan-events-showcase:has(#featured-event-slot:empty) { grid-template-columns: minmax(0,1fr); }
+    #events #featured-event-slot { margin: 0; }
+    #events #featured-event-slot:not(:empty) { margin: 0; }
+    #events .event-feature {
+      min-height: 100%; border-radius: 13px; border: 1px solid #e1d7c8;
+      box-shadow: none; background: #fff; grid-template-columns: minmax(0, 1fr);
+    }
+    #events .event-feature-media { width: 100%; background: #eee8dd; }
+    #events .event-feature-media img {
+      width: 100%; max-height: 430px; min-height: 0; height: auto;
+      aspect-ratio: 16/10; object-fit: contain; object-position: center;
+      background: #f5f0e8;
+    }
+    #events .event-feature-copy { padding: 22px 28px 28px; }
+    #events .event-feature-copy h3 { font: 700 clamp(24px,2.4vw,34px)/1.15 Georgia,serif; }
+    #events .event-feature-copy > p { font-size: 15px; }
+    #events .event-feature-image-only .event-feature-media img { aspect-ratio: 16/10; max-height: 470px; }
+    .aavan-events-side { min-width: 0; display: flex; flex-direction: column; background: #173c31; color: white; border-radius: 13px; overflow: hidden; }
+    .aavan-events-side > img { width: 100%; height: 210px; object-fit: cover; object-position: center; background: #2b5647; }
+    .aavan-events-side-copy { padding: 30px; display: flex; align-items: flex-start; flex-direction: column; flex: 1; }
+    #events .aavan-events-side .eyebrow { color: #f5c8a6; font-size: 10px; }
+    .aavan-events-side h3 { font: 700 clamp(25px,2.6vw,36px)/1.17 Georgia,serif; color: white; margin: 0 0 16px; }
+    .aavan-events-side p:not(.eyebrow) { color: #e0eae3; font-size: 15px; line-height: 1.7; margin: 0 0 22px; }
+    #events .aavan-events-side .aavan-text-link { color: #fff7ce; border-color: #fff7ce; margin-top: auto; }
+    .aavan-more-events { margin-top: 34px; }
+    #events #dynamic-events { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin: 0; }
+    #events #dynamic-events:empty, #events #featured-event-slot:empty { display: none; }
+    #events .event-mini { border-radius: 13px; border: 1px solid #e1d7c8; box-shadow: none; }
+    #events .event-mini:hover { transform: none; border-color: #b9ae9d; box-shadow: 0 6px 18px rgba(35,48,41,.05); }
+    #events .event-mini > div { padding: 26px; }
+    #events .event-mini h3 { font-size: 25px; color: #17392f; }
+    #events .event-mini > div > span { font-size: 13px; }
+    #events .event-mini p { font-size: 15px; }
+    #events .event-mini > img { height: 230px; }
+    #events .event-mini-image-only > img { height: auto; max-height: 360px; object-fit: contain; }
+    #events #events-empty { border-radius: 13px; padding: 30px; margin-top: 18px; text-align: left; }
+
+    /* Discover: meaningful content + a location photograph, no empty slab. */
+    .aavan-homepage main .section.dark.aavan-discover {
+      background: #133b30; color: #fff; position: relative;
+    }
+    .aavan-discover::before { display: none; }
+    .aavan-discover-grid { display: grid; align-items: center; gap: clamp(34px, 5vw, 76px); grid-template-columns: minmax(0,.95fr) minmax(0,1.05fr); }
+    .aavan-homepage .aavan-discover .eyebrow { color: #ffd79d !important; }
+    .aavan-homepage main .aavan-discover h2 { color: #fff; }
+    .aavan-homepage main .aavan-discover h2 em { color: #f6d893; }
+    .aavan-discover-copy > p:not(.eyebrow) { max-width: 520px; margin: 23px 0 30px; color: #dbe8df; font-size: 17px; line-height: 1.8; }
+    .aavan-light-button { display: inline-flex; justify-content: space-between; align-items: center; gap: 32px; padding: 15px 21px; border-radius: 5px; font-size: 14px; font-weight: 850; background: #fff4c7; color: #173b30; min-height: 50px; }
+    .aavan-light-button:hover { background: #fff; color: #173b30; }
+    .aavan-discover-photo { margin: 0; position: relative; }
+    .aavan-discover-photo img { width: 100%; height: 395px; display: block; object-fit: cover; border-radius: 13px; background: #2d5146; }
+    .aavan-discover-photo figcaption { font-size: 13px; color: #d9e8dd; padding: 13px 2px 0; }
+
+    /* Membership: three equal decisions, prices and plan descriptions remain unchanged. */
+    #membership { background: #fffdf9; }
+    #membership .section-head { align-items: end; gap: 30px; margin-bottom: 16px; }
+    #membership .section-head > div { max-width: 750px; }
+    #membership .membership-intro { max-width: 780px; margin-bottom: 23px; }
+    #membership .membership-intro p { font-size: 17px; line-height: 1.75; color: #5a655c; }
+    #membership .membership-benefits { margin-bottom: 31px; gap: 10px; }
+    #membership .membership-benefits span { font-size: 13px; background: #f8f3e8; border-color: #e3d8c7; box-shadow: none; }
+    #membership .membership-table {
+      display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px;
+      background: transparent; box-shadow: none; border-radius: 0; overflow: visible;
+    }
+    #membership .membership-row {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+      position: relative; min-height: 328px; padding: 30px 29px 28px;
+      border: 1px solid #e5dcd0; border-radius: 13px; background: #fff;
+      box-shadow: 0 5px 16px rgba(28,41,32,.03); transition: border-color .2s ease, transform .2s ease;
+    }
+    #membership .membership-row:hover { border-color: #a6b3a8; transform: translateY(-3px); box-shadow: 0 9px 24px rgba(28,41,32,.07); }
+    #membership .membership-row + .membership-row::before { display: none; }
+    #membership .membership-row-label { font-size: 10px; font-weight: 850; color: #8a8174; }
+    #membership .membership-row-plan { margin-bottom: 18px; }
+    #membership .membership-row-plan strong { font-size: 28px; line-height: 1.13; color: #19382f; }
+    #membership .membership-row-description { margin-bottom: 24px; }
+    #membership .membership-row-description > span:last-child { font-size: 15px; line-height: 1.65; }
+    #membership .membership-row-price { margin-top: auto; }
+    #membership .membership-row-price strong { font-size: 37px; color: #193e32; }
+    #membership .membership-row-arrow { position: absolute; right: 26px; bottom: 28px; width: 42px; height: 42px; font-size: 23px; }
+    #membership .membership-cta { margin-top: 23px; background: #173c31; border-radius: 13px; padding: 29px 32px; }
+    #membership .membership-cta strong { font: 700 25px/1.2 Georgia,serif; }
+    #membership .membership-cta .btn { min-height: 48px; }
+
+    /* Contact and footer: align visual rhythm with the header. */
+    #contact { background: #f7f3ea; }
+    #contact .contact-wrap { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px; }
+    #contact .contact-copy, #contact .contact-card { border-radius: 13px; padding: clamp(30px,3.9vw,52px); }
+    #contact .contact-copy { box-shadow: none; background: #173c31; }
+    #contact .contact-copy h2 { color: white; font-size: clamp(37px, 3.9vw,53px); line-height: 1.08; }
+    #contact .contact-copy > p:not(.eyebrow) { font-size: 16px; line-height: 1.75; color: #e3ebe5; max-width: 520px; }
+    #contact .contact-card { background: #fffdfa; border: 1px solid #e6ddd0; box-shadow: none; }
+    #contact .contact-item { padding: 16px 0; }
+    #contact .contact-item strong, #contact .contact-item a { font-size: 16px; }
+    .aavan-homepage .footer { background: #112b24; padding-top: 68px; }
+    .aavan-homepage .footer-grid { gap: 36px; }
+    .aavan-homepage .footer-col a, .aavan-homepage .footer-col span { font-size: 14px; line-height: 1.65; color: #e0e8e2; }
+    .aavan-homepage .footer-brand p { color: #d4dfd6; }
+    .aavan-homepage .footer-bottom { border-top-color: rgba(255,255,255,.16); }
+
+    /* Tablet and mobile: readable type and deliberate stacking. */
+    @media (max-width: 1000px) {
+      .aavan-section-intro { gap: 26px; }
+      .aavan-events-showcase { grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr); }
+      #membership .membership-row { padding: 24px; }
+    }
+    @media (max-width: 800px) {
+      .aavan-homepage main .section > .container { width: min(100% - 32px, 720px); }
+      .aavan-section-intro, .aavan-story-grid, .aavan-events-showcase, .aavan-discover-grid,
+      #contact .contact-wrap { grid-template-columns: minmax(0,1fr); }
+      .aavan-section-intro { gap: 17px; margin-bottom: 30px; }
+      .aavan-story-photo, .aavan-story-photo img { min-height: 290px; }
+      .aavan-story-copy { padding: 34px 28px; }
+      #events .aavan-events-side { display: grid; grid-template-columns: minmax(0,.7fr) minmax(0,1fr); }
+      .aavan-events-side > img { height: 100%; min-height: 255px; }
+      #membership .membership-table { grid-template-columns: minmax(0,1fr); }
+      #membership .membership-row { min-height: 230px; }
+      #membership .section-head { display: block; }
+      #membership .section-head .btn { margin-top: 22px; }
+      .aavan-discover-photo img { height: 340px; }
+    }
+    @media (max-width: 550px) {
+      .aavan-homepage main .section { padding: 64px 0; }
+      .aavan-homepage main .section h2 { font-size: clamp(35px, 9.7vw, 46px); }
+      .aavan-homepage main .section .eyebrow { font-size: 11px; }
+      #about .aavan-pillars { grid-template-columns: 1fr; }
+      #about .aavan-pillars .card { min-height: 0; padding: 24px; }
+      .aavan-pillar-number { margin-bottom: 12px; }
+      #events .aavan-events-side { display: flex; }
+      .aavan-events-side > img { min-height: 0; height: 200px; }
+      #events .event-feature-media img, #events .event-feature-image-only .event-feature-media img { max-height: 310px; }
+      #events #dynamic-events { grid-template-columns: 1fr; }
+      .aavan-more-events { margin-top: 30px; }
+      #membership .membership-row { min-height: 260px; padding: 27px 24px; }
+      #membership .membership-cta { padding: 26px; display: flex; flex-direction: column; align-items: stretch; gap: 22px; }
+      #membership .membership-cta .btn { width: 100%; }
+      #contact .contact-copy, #contact .contact-card { padding: 27px 25px; }
+      .aavan-homepage .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .aavan-homepage .footer-brand { grid-column: 1/-1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .aavan-homepage main *, .aavan-homepage main *::before, .aavan-homepage main *::after { transition: none !important; }
+    }
+  </style>
 </head>
 
-<body>
+<body class="aavan-homepage">
 
   <!-- ======================================================
        HEADER
@@ -260,170 +489,111 @@
 
 
     <!-- ====================================================
-         ABOUT
+         ABOUT — community-led presentation
          ==================================================== -->
 
-    <section
-      class="section"
-      id="about"
-    >
-
+    <section class="section aavan-content-section" id="about" aria-labelledby="about-heading">
       <div class="container">
-
-        <div class="section-head">
-
+        <div class="aavan-section-intro">
           <div>
-
-            <p class="eyebrow">
-              ABOUT AAVAN
-            </p>
-
-            <h2>
-              Culture, connection
-              and belonging.
-            </h2>
-
+            <p class="eyebrow">ABOUT AAVAN</p>
+            <h2 id="about-heading">More than a community.<br><em>A place to belong.</em></h2>
           </div>
-
-          <p>
-            We bring Assamese families, students,
-            newcomers and friends together through
-            cultural celebrations, community support
-            and shared experiences across
-            British Columbia.
-          </p>
-
+          <p class="aavan-section-lead">From a familiar Bihu song to a new friendship in British Columbia, AAVAN brings people together through the traditions and moments we share.</p>
         </div>
 
-
-        <div class="cards">
-
-          <article class="card">
-
-            <h3>
-              Culture
-            </h3>
-
-            <p>
-              Celebrate Assamese traditions,
-              music, food, festivals and the
-              heritage that connects generations.
-            </p>
-
-          </article>
-
-
-          <article class="card">
-
-            <h3>
-              Connection
-            </h3>
-
-            <p>
-              Build friendships across generations
-              and create meaningful connections
-              throughout British Columbia.
-            </p>
-
-          </article>
-
-
-          <article class="card">
-
-            <h3>
-              Community
-            </h3>
-
-            <p>
-              Create a welcoming space for families,
-              newcomers, students and everyone who
-              wants to stay connected with Assam.
-            </p>
-
-          </article>
-
+        <div class="aavan-story-grid">
+          <figure class="aavan-story-photo">
+            <img src="assets/images/community-group.jpg"
+                 alt="An AAVAN community gathering" loading="lazy" decoding="async">
+            <figcaption>Connected by culture. Brought together by community.</figcaption>
+          </figure>
+          <div class="aavan-story-copy">
+            <p class="eyebrow">OUR PURPOSE</p>
+            <h3>Keeping our roots close, wherever life takes us.</h3>
+            <p>We connect Assamese families, students, newcomers and friends across British Columbia through celebrations, cultural programs and meaningful community connections.</p>
+            <a class="aavan-text-link" href="gallery.html">Explore our community moments <span aria-hidden="true">→</span></a>
+          </div>
         </div>
 
+        <div class="cards aavan-pillars">
+          <article class="card">
+            <span class="aavan-pillar-number" aria-hidden="true">01</span>
+            <h3>Culture</h3>
+            <p>Celebrate the music, food, festivals and Assamese traditions that connect generations.</p>
+          </article>
+          <article class="card">
+            <span class="aavan-pillar-number" aria-hidden="true">02</span>
+            <h3>Connection</h3>
+            <p>Build friendships and find familiar faces throughout British Columbia.</p>
+          </article>
+          <article class="card">
+            <span class="aavan-pillar-number" aria-hidden="true">03</span>
+            <h3>Community</h3>
+            <p>Make room for families, students, newcomers and everyone who wants to stay connected.</p>
+          </article>
+        </div>
       </div>
-
     </section>
 
 
     <!-- ====================================================
-         EVENTS
+         EVENTS — the real events continue to load via js/events.js
          ==================================================== -->
 
-    <section
-      class="section alt"
-      id="events"
-    >
-
+    <section class="section alt aavan-content-section" id="events" aria-labelledby="events-heading">
       <div class="container">
-
-        <div class="section-head">
-
+        <div class="aavan-section-intro">
           <div>
-
-            <p class="eyebrow">
-              EVENTS
-            </p>
-
-            <h2>
-              What’s happening.
-            </h2>
-
+            <p class="eyebrow">WHAT'S ON</p>
+            <h2 id="events-heading">Good times.<br><em>Better together.</em></h2>
           </div>
-
-          <p>
-            Gather with the community for
-            celebrations, cultural programs,
-            social events and special occasions.
-          </p>
-
+          <p class="aavan-section-lead">Cultural celebrations, community gatherings and occasions to meet old friends and make new ones.</p>
         </div>
 
-
-        <div id="featured-event-slot"></div>
-
-        <div
-          id="dynamic-events"
-          class="cards"
-        ></div>
-
-        <div
-          id="events-empty"
-          class="card"
-          hidden
-        >
-          No upcoming events right now.
+        <div class="aavan-events-showcase">
+          <div class="aavan-events-featured">
+            <p class="aavan-subsection-label">Featured event</p>
+            <div id="featured-event-slot" aria-live="polite"></div>
+          </div>
+          <aside class="aavan-events-side" aria-label="Explore more of our community">
+            <img src="assets/images/bihu-community.jpg" alt="Assamese Bihu community celebration" loading="lazy" decoding="async">
+            <div class="aavan-events-side-copy">
+              <p class="eyebrow">THE PEOPLE MAKE THE MOMENTS</p>
+              <h3>Every gathering becomes a memory.</h3>
+              <p>Revisit the celebrations, friendships and traditions that make AAVAN feel like home.</p>
+              <a class="aavan-text-link" href="gallery.html">See community memories <span aria-hidden="true">→</span></a>
+            </div>
+          </aside>
         </div>
 
+        <div class="aavan-more-events">
+          <p class="aavan-subsection-label">Also on the calendar</p>
+          <div id="dynamic-events" class="cards" aria-live="polite"></div>
+        </div>
+        <div id="events-empty" class="card" hidden>No upcoming events right now. Check back for the next AAVAN gathering.</div>
       </div>
-
     </section>
 
 
     <!-- ====================================================
-         DISCOVER ASSAM
+         DISCOVER ASSAM — editorial landscape feature
          ==================================================== -->
 
-    
-    <section class="section dark">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">DISCOVER ASSAM</p>
-            <h2>Explore the place we call home.</h2>
-          </div>
-          <a class="btn" href="discover-assam.html">Discover Assam</a>
+    <section class="section dark aavan-discover" id="discover" aria-labelledby="discover-heading">
+      <div class="container aavan-discover-grid">
+        <div class="aavan-discover-copy">
+          <p class="eyebrow">DISCOVER ASSAM</p>
+          <h2 id="discover-heading">The place that<br><em>stays with us.</em></h2>
+          <p>From the Brahmaputra and sweeping tea gardens to music, food and festival traditions — explore the stories and landscapes that connect us to Assam.</p>
+          <a class="aavan-light-button" href="discover-assam.html">Discover Assam <span aria-hidden="true">↗</span></a>
         </div>
-        <p>
-          Tea gardens, river landscapes, music, food, textiles and traditions —
-          discover the culture, beauty and stories of Assam beyond the map.
-        </p>
+        <figure class="aavan-discover-photo">
+          <img src="assets/images/tea-garden.jpg" alt="Tea gardens in Assam" loading="lazy" decoding="async">
+          <figcaption>A heritage worth sharing across generations.</figcaption>
+        </figure>
       </div>
     </section>
-
 
 
     <!-- ====================================================
@@ -431,7 +601,7 @@
          ==================================================== -->
 
     <section
-      class="section alt"
+      class="section alt aavan-content-section"
       id="membership"
     >
 
@@ -446,8 +616,7 @@
             </p>
 
             <h2>
-              Belong. Participate.
-              Help AAVAN grow.
+              This is your community.<br> <em>Be part of it.</em>
             </h2>
 
           </div>
@@ -465,11 +634,7 @@
         <div class="membership-intro">
 
           <p>
-            Membership supports cultural programs,
-            community events, newcomer connections
-            and the shared experiences that keep
-            Assamese families, students and friends
-            connected across British Columbia.
+            AAVAN membership helps sustain our celebrations, community events and connections. Choose the annual plan that fits you, and take part in something meaningful.
           </p>
 
         </div>
@@ -496,7 +661,7 @@
         </div>
 
 
-        <div class="membership-table">
+        <div class="membership-table" aria-label="AAVAN annual membership plans">
 
           <a
             class="membership-row"
@@ -666,7 +831,7 @@
           <div>
 
             <strong>
-              Ready to join the community?
+              Your place in the community is here.
             </strong>
 
             <span>
@@ -695,7 +860,7 @@
          ==================================================== -->
 
     <section
-      class="section"
+      class="section aavan-content-section"
       id="contact"
     >
 
