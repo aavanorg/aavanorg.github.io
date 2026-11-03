@@ -20,7 +20,161 @@
     rel="stylesheet"
     href="css/public-v2.css?v=20261026-2"
   >
-  <link rel="stylesheet" href="css/aavan-homepage-brand.css?v=1">
+  <style>
+    /* AAVAN approved header design, scoped to the homepage. */
+    .aavan-top, .aavan-top * { box-sizing: border-box; }
+    .aavan-top { color: #17392f; background: #fceda2; }
+    .aavan-top a { text-decoration: none; }
+    .aavan-nav-shell {
+      position: relative; z-index: 80; background: #fceda2;
+      border-bottom: 1px solid rgba(32,58,42,.16);
+    }
+    .aavan-nav-inner {
+      max-width: 1370px; margin: 0 auto; min-height: 86px; padding: 12px 38px;
+      display: flex; gap: 22px; justify-content: space-between; align-items: center;
+    }
+    .aavan-brand {
+      display: flex; align-items: center; gap: 10px; min-width: 202px;
+      color: #17392f; flex: none;
+    }
+    .aavan-brand-logo { display: block; height: 48px; width: 48px; object-fit: contain; }
+    .aavan-brand-title {
+      font-family: Arial, sans-serif; font-weight: 900; font-size: 22px;
+      letter-spacing: -.055em; line-height: 1;
+    }
+    .aavan-brand-subtitle {
+      display: block; margin-top: 5px; font-weight: 750; font-size: 8.5px;
+      letter-spacing: .065em; line-height: 1.2;
+    }
+    .aavan-nav-links {
+      display: flex; align-items: center; gap: clamp(13px, 1.65vw, 28px);
+      margin: 0 auto; min-width: 0;
+    }
+    .aavan-nav-links a {
+      display: block; padding: 10px 0; color: #234537; font-size: 13px;
+      font-weight: 750; line-height: 1.3; white-space: nowrap;
+      transition: color .18s ease;
+    }
+    .aavan-nav-links a:hover { color: #b12536; }
+    .aavan-header-actions { display: flex; align-items: center; gap: 12px; flex: none; }
+    .aavan-login-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 44px; height: 44px; border: 1px solid #688274;
+      border-radius: 50%; color: #17392f; background: transparent;
+      transition: background .18s ease;
+    }
+    .aavan-login-icon:hover { background: rgba(255,255,255,.65); }
+    .aavan-login-icon svg { width: 21px; height: 21px; }
+    .aavan-join-button {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 44px; border-radius: 999px; background: #17392f;
+      color: #fff; padding: 11px 19px; font-size: 13px; font-weight: 800;
+      white-space: nowrap; transition: background .18s ease;
+    }
+    .aavan-join-button:hover { color: #fff; background: #0b2b23; }
+    .aavan-menu-button {
+      display: none; align-items: center; justify-content: center;
+      width: 44px; height: 44px; border: 1px solid #688274;
+      border-radius: 50%; background: transparent; color: #17392f;
+      cursor: pointer; padding: 0;
+    }
+    .aavan-menu-button svg { width: 21px; height: 21px; }
+    .aavan-top-hero {
+      max-width: 1370px; min-height: 570px; margin: 0 auto;
+      padding-left: 58px; display: grid; grid-template-columns: 41% 59%;
+      align-items: center; overflow: hidden;
+    }
+    .aavan-top-copy { padding: 55px 10px 55px 0; position: relative; z-index: 1; }
+    .aavan-top-eyebrow {
+      color: #ad2534; font-size: 12px; font-weight: 900; letter-spacing: .19em;
+      margin: 0 0 23px; text-transform: uppercase;
+    }
+    .aavan-top-title {
+      margin: 0 0 22px; max-width: 585px; color: #17392f;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(46px, 4.5vw, 69px); font-weight: 800;
+      line-height: 1.055; letter-spacing: -.048em;
+    }
+    .aavan-top-description {
+      max-width: 468px; color: #395246; font-size: 16px;
+      line-height: 1.7; margin: 0 0 30px;
+    }
+    .aavan-top-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+    .aavan-top-cta-primary, .aavan-top-cta-secondary {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 48px; padding: 13px 22px; border-radius: 5px;
+      font-size: 13px; line-height: 1.3; font-weight: 800;
+    }
+    .aavan-top-cta-primary { background: #ae2534; color: #fff; border: 1px solid #ae2534; }
+    .aavan-top-cta-primary:hover { background: #8d1d2a; color: #fff; }
+    .aavan-top-cta-secondary { color: #17392f; border: 1px solid #688274; background: transparent; }
+    .aavan-top-cta-secondary:hover { background: rgba(255,255,255,.6); }
+    .aavan-top-art { align-self: stretch; min-width: 0; display: flex; align-items: center; justify-content: center; }
+    .aavan-top-art img {
+      display: block; width: 100%; max-width: 830px; height: auto;
+      object-fit: contain; mix-blend-mode: multiply;
+    }
+    .aavan-values { background: #153b31; color: #fff; }
+    .aavan-values-inner {
+      max-width: 1250px; margin: auto; padding: 19px 25px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-around;
+      gap: 13px 28px; font-size: 13px; font-weight: 750;
+    }
+    .aavan-values-inner span::before { content: '✦'; color: #efc877; margin-right: 11px; }
+    .aavan-top a:focus-visible, .aavan-top button:focus-visible {
+      outline: 3px solid #ae2534; outline-offset: 4px;
+    }
+    @media (max-width: 1140px) {
+      .aavan-nav-inner { padding-left: 22px; padding-right: 22px; gap: 14px; }
+      .aavan-nav-links { gap: 13px; }
+      .aavan-nav-links a { font-size: 12px; }
+      .aavan-brand { min-width: 164px; }
+      .aavan-brand-title { font-size: 19px; }
+      .aavan-brand-subtitle { font-size: 7.3px; }
+      .aavan-top-hero { padding-left: 36px; grid-template-columns: 43% 57%; }
+    }
+    @media (max-width: 980px) {
+      .aavan-nav-inner { min-height: 74px; }
+      .aavan-brand { margin-right: auto; min-width: 0; }
+      .aavan-nav-links {
+        display: none; position: absolute; top: 100%; left: 0; right: 0;
+        margin: 0; padding: 13px 24px 23px; background: #fff8d8;
+        box-shadow: 0 18px 30px rgba(15,45,31,.14);
+        flex-direction: column; gap: 0; align-items: stretch;
+      }
+      .aavan-nav-links.is-open { display: flex; }
+      .aavan-nav-links a { font-size: 15px; padding: 13px 3px; border-bottom: 1px solid #e4d6a8; }
+      .aavan-menu-button { display: inline-flex; }
+      .aavan-top-hero { grid-template-columns: 1fr; padding: 0 24px; min-height: 0; }
+      .aavan-top-copy { padding: 58px 6px 0; }
+      .aavan-top-title { font-size: clamp(45px, 7vw, 65px); }
+      .aavan-top-art { max-width: 630px; width: 100%; margin: -8px auto 0; }
+    }
+    @media (max-width: 520px) {
+      .aavan-nav-inner { padding: 10px 15px; gap: 9px; }
+      .aavan-brand-logo { width: 39px; height: 39px; }
+      .aavan-brand-title { font-size: 18px; }
+      .aavan-brand-subtitle { font-size: 6.8px; }
+      .aavan-header-actions { gap: 8px; }
+      .aavan-join-button { display: none; }
+      .aavan-login-icon, .aavan-menu-button { width: 42px; height: 42px; }
+      .aavan-top-hero { padding: 0 20px; }
+      .aavan-top-copy { padding: 44px 0 0; }
+      .aavan-top-title { font-size: clamp(39px, 10.7vw, 51px); }
+      .aavan-top-description { font-size: 15px; line-height: 1.6; }
+      .aavan-top-ctas { gap: 10px; }
+      .aavan-top-cta-primary, .aavan-top-cta-secondary { padding: 12px 17px; }
+      .aavan-values-inner { justify-content: flex-start; gap: 12px 24px; }
+    }
+
+    .aavan-nav-links .aavan-mobile-join { display: none; }
+    @media (max-width: 520px) {
+      .aavan-nav-links .aavan-mobile-join { display: block; font-weight: 900; color: #ad2534; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .aavan-top *, .aavan-top *::before, .aavan-top *::after { transition: none !important; }
+    }
+  </style>
 </head>
 
 <body>
@@ -29,75 +183,73 @@
        HEADER
        ====================================================== -->
 
-  <header class="site-header">
-
-    <div class="container header-inner">
-
-      <a
-        class="brand"
-        href="index.html"
-        aria-label="Assam Association of Vancouver home"
-      >
-        <img
-          src="assets/images/logo.png"
-          alt="AAVAN"
-        >
-
-        <span>
-          Assam Association Vancouver
-        </span>
-      </a>
-
-      <nav
-        class="nav"
-        aria-label="Main navigation"
-      >
-        <a href="#about">
-          About
+  <header class="aavan-top" id="top">
+    <div class="aavan-nav-shell">
+      <div class="aavan-nav-inner">
+        <a href="index.html" class="aavan-brand" aria-label="AAVAN home">
+          <img class="aavan-brand-logo" src="assets/images/logo.png" alt="" width="48" height="48">
+          <span class="aavan-brand-title">AAVAN
+            <span class="aavan-brand-subtitle">ASSAM ASSOCIATION OF VANCOUVER</span>
+          </span>
         </a>
 
-        <a href="#events">
-          Events
-        </a>
+        <nav id="aavan-menu" class="aavan-nav-links" aria-label="Main navigation">
+          <a href="#about">About</a>
+          <a href="#events">Events</a>
+          <a href="discover-assam.html">Discover Assam</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="#membership">Membership</a>
+          <a href="#contact">Contact</a>
+          <a class="aavan-mobile-join" href="membership.html">Join AAVAN</a>
+        </nav>
 
-        <a href="discover-assam.html">
-          Discover Assam
-        </a>
-
-        <a href="gallery.html">
-          Gallery
-        </a>
-
-        <a href="#membership">
-          Membership
-        </a>
-
-        <a href="#contact">
-          Contact
-        </a>
-      </nav>
-
-      <div class="nav-actions">
-
-        <a
-          class="btn"
-          href="committee-login.html"
-        >
-          Committee Login
-        </a>
-
-        <a
-          class="btn btn-primary"
-          href="membership.html"
-        >
-          Join Us
-        </a>
-
+        <div class="aavan-header-actions">
+          <a class="aavan-login-icon" href="committee-login.html" aria-label="Committee login" title="Committee login">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="8" r="3.5"></circle>
+              <path d="M5 21c0-4.2 2.6-6.7 7-6.7s7 2.5 7 6.7"></path>
+            </svg>
+          </a>
+          <a class="aavan-join-button" href="membership.html">Join AAVAN</a>
+          <button id="aavan-menu-toggle" class="aavan-menu-button" type="button"
+                  aria-controls="aavan-menu" aria-expanded="false" aria-label="Open navigation menu">
+            <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"
+                 stroke-linecap="round" aria-hidden="true" focusable="false">
+              <path d="M4 7h16M4 12h16M4 17h16"></path>
+            </svg>
+          </button>
+        </div>
       </div>
-
     </div>
 
+    <div class="aavan-top-hero">
+      <div class="aavan-top-copy">
+        <p class="aavan-top-eyebrow">OUR CULTURE · OUR COMMUNITY</p>
+        <h1 class="aavan-top-title">A little closer to Assam. A lot closer together.</h1>
+        <p class="aavan-top-description">
+          A home for Assamese culture, celebrations, friendships and community life across British Columbia.
+        </p>
+        <div class="aavan-top-ctas">
+          <a class="aavan-top-cta-primary" href="#events">Explore events</a>
+          <a class="aavan-top-cta-secondary" href="membership.html">Become a member</a>
+        </div>
+      </div>
+      <div class="aavan-top-art">
+        <img src="assets/images/aavan-community-banner.webp"
+             alt="AAVAN artwork celebrating Assamese culture and the connection between Assam and Canada"
+             width="1600" height="1280" fetchpriority="high" decoding="async">
+      </div>
+    </div>
   </header>
+
+  <div class="aavan-values" aria-label="AAVAN community values">
+    <div class="aavan-values-inner">
+      <span>Assamese heritage</span>
+      <span>Community connections</span>
+      <span>Celebrations across BC</span>
+    </div>
+  </div>
 
 
   <!-- ======================================================
@@ -105,86 +257,6 @@
        ====================================================== -->
 
   <main>
-
-
-    <!-- ====================================================
-         HERO
-         ==================================================== -->
-
-    <section class="hero">
-
-      <div class="container hero-grid">
-
-        <div class="hero-copy">
-
-          <p class="eyebrow">
-            ASSAM · VANCOUVER · COMMUNITY
-          </p>
-
-          <h1>
-            Rooted in Assam.
-            <br>
-
-            <span>
-              Growing together
-            </span>
-
-            <br>
-            in Vancouver.
-          </h1>
-
-          <p>
-            A home for Assamese culture, friendship,
-            family and community life across
-            British Columbia.
-          </p>
-
-          <div class="nav-actions">
-
-            <a
-              class="btn btn-primary"
-              href="#events"
-            >
-              Explore Events
-            </a>
-
-            <a
-              class="btn"
-              href="membership.html"
-            >
-              Become a Member
-            </a>
-
-          </div>
-
-        </div>
-
-
-        <div class="hero-media">
-
-          <img
-            src="assets/images/hero-bihu.jpg"
-            alt="AAVAN community celebration"
-          >
-
-          <div class="hero-card">
-
-            <strong>
-              AAVAN COMMUNITY
-            </strong>
-
-            <span>
-              Culture feels closer when we
-              celebrate it together.
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
 
 
     <!-- ====================================================
@@ -336,56 +408,21 @@
          ==================================================== -->
 
     
-<section class="section aavan-heritage" aria-labelledby="aavan-heritage-heading">
-  <div class="container aavan-heritage-grid">
-
-    <div class="aavan-heritage-content">
-      <p class="eyebrow">ONE COMMUNITY · TWO HOMES</p>
-
-      <h2 id="aavan-heritage-heading">
-        Our roots in Assam. Our community in BC.
-      </h2>
-
-      <p class="aavan-heritage-lead">
-        The traditions we grew up with, the friendships
-        we make here, and the celebrations we share all
-        bring us closer together.
-      </p>
-
-      <p>
-        AAVAN connects Assamese families, students and
-        friends across British Columbia while keeping
-        our culture and heritage close.
-      </p>
-
-      <div class="aavan-heritage-actions">
-        <a class="btn btn-primary" href="discover-assam.html">
-          Discover Assam
-        </a>
-
-        <a class="aavan-heritage-link" href="gallery.html">
-          Explore community memories
-          <span aria-hidden="true">&rarr;</span>
-        </a>
+    <section class="section dark">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">DISCOVER ASSAM</p>
+            <h2>Explore the place we call home.</h2>
+          </div>
+          <a class="btn" href="discover-assam.html">Discover Assam</a>
+        </div>
+        <p>
+          Tea gardens, river landscapes, music, food, textiles and traditions —
+          discover the culture, beauty and stories of Assam beyond the map.
+        </p>
       </div>
-    </div>
-
-    <figure class="aavan-heritage-visual">
-      <img
-        src="assets/images/aavan-community-banner.webp"
-        alt="AAVAN artwork combining Assam, Canada, cultural performers and a city skyline"
-        width="1600"
-        height="1280"
-        loading="lazy"
-        decoding="async"
-      >
-      <figcaption>
-        Celebrating Assamese heritage in British Columbia.
-      </figcaption>
-    </figure>
-
-  </div>
-</section>
+    </section>
 
 
 
@@ -916,6 +953,31 @@
   <script src="js/supabase-config.js"></script>
 
   <script src="js/events.js"></script>
+
+  <script>
+    (() => {
+      const toggle = document.getElementById('aavan-menu-toggle');
+      const menu = document.getElementById('aavan-menu');
+      if (!toggle || !menu) return;
+      const close = () => {
+        menu.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open navigation menu');
+      };
+      toggle.addEventListener('click', () => {
+        const expanded = menu.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', String(expanded));
+        toggle.setAttribute('aria-label', expanded ? 'Close navigation menu' : 'Open navigation menu');
+      });
+      menu.querySelectorAll('a').forEach(link => link.addEventListener('click', close));
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') close();
+      });
+      document.addEventListener('click', (event) => {
+        if (!menu.contains(event.target) && !toggle.contains(event.target)) close();
+      });
+    })();
+  </script>
 
 </body>
 
