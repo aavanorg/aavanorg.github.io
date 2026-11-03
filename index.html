@@ -515,6 +515,187 @@
       .aavan-homepage main .section h2 { font-size: clamp(33px, 9vw, 39px); }
     }
   </style>
+  <style id="aavan-about-v2-responsive">
+    /* About AAVAN only — no changes to the approved header, events or other pages. */
+    .aavan-homepage #about.aavan-about-v2 {
+      background: #fffdf9;
+      padding-top: clamp(50px, 5.2vw, 72px);
+      padding-bottom: clamp(50px, 5.2vw, 72px);
+    }
+    .aavan-homepage #about .aavan-about-intro {
+      grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr);
+      gap: clamp(18px, 4vw, 52px);
+      align-items: end;
+      margin-bottom: 26px;
+    }
+    .aavan-homepage #about .aavan-about-intro h2 {
+      font-size: clamp(36px, 4.4vw, 58px);
+      line-height: 1.08;
+      letter-spacing: -.044em;
+      color: #17392f;
+    }
+    .aavan-homepage #about .aavan-about-intro h2 em {
+      font-style: normal;
+      color: #b42a39;
+    }
+    .aavan-homepage #about .aavan-about-intro .aavan-section-lead {
+      font-size: clamp(16px, 1.4vw, 18px);
+      line-height: 1.65;
+      color: #4d6054;
+      margin-bottom: 3px;
+    }
+    .aavan-homepage #about .aavan-about-feature {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid #e7dfd1;
+      border-radius: 16px;
+      background: #f6f0e5;
+    }
+    .aavan-homepage #about .aavan-about-photo {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+      background: #17392f;
+    }
+    .aavan-homepage #about .aavan-about-photo img {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      max-height: none;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: center 28%;
+    }
+    .aavan-homepage #about .aavan-about-photo figcaption {
+      position: static;
+      margin: 0;
+      padding: 11px 20px 13px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.5;
+      color: #fff;
+      background: #17392f;
+    }
+    .aavan-homepage #about .aavan-about-story {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      min-width: 0;
+      padding: clamp(26px, 3.4vw, 48px);
+    }
+    .aavan-homepage #about .aavan-about-story h3 {
+      max-width: 460px;
+      font: 700 clamp(27px, 2.6vw, 38px)/1.13 Georgia, serif;
+      letter-spacing: -.035em;
+      margin: 0 0 16px;
+      color: #17392f;
+    }
+    .aavan-homepage #about .aavan-about-story > p:not(.eyebrow) {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #4d5d51;
+      margin: 0 0 24px;
+      max-width: 490px;
+    }
+    .aavan-homepage #about .aavan-about-story .aavan-text-link {
+      min-height: 42px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .aavan-homepage #about .aavan-about-benefits {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .aavan-homepage #about .aavan-about-benefit {
+      display: flex;
+      gap: 17px;
+      min-width: 0;
+      min-height: 132px;
+      padding: 23px;
+      border: 1px solid #e8e1d6;
+      border-radius: 13px;
+      background: #fff;
+    }
+    .aavan-homepage #about .aavan-benefit-index {
+      flex: none;
+      padding-top: 5px;
+      color: #b42a39;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .1em;
+    }
+    .aavan-homepage #about .aavan-about-benefit h3 {
+      margin: 0 0 9px;
+      font: 700 clamp(20px, 1.9vw, 25px)/1.15 Georgia, serif;
+      color: #17392f;
+    }
+    .aavan-homepage #about .aavan-about-benefit p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.58;
+      color: #58645a;
+    }
+    @media (max-width: 950px) {
+      .aavan-homepage #about .aavan-about-feature { grid-template-columns: 1fr; }
+      .aavan-homepage #about .aavan-about-photo img { aspect-ratio: 16 / 9; }
+      .aavan-homepage #about .aavan-about-story { padding: 28px 30px 32px; }
+      .aavan-homepage #about .aavan-about-benefits { gap: 12px; }
+      .aavan-homepage #about .aavan-about-benefit { padding: 18px; gap: 12px; }
+    }
+    @media (max-width: 700px) {
+      .aavan-homepage #about.aavan-about-v2 {
+        padding-top: 42px;
+        padding-bottom: 44px;
+      }
+      .aavan-homepage #about .aavan-about-intro {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 13px;
+        margin-bottom: 23px;
+      }
+      .aavan-homepage #about .aavan-about-intro h2 {
+        font-size: clamp(33px, 9vw, 43px);
+      }
+      .aavan-homepage #about .aavan-about-intro .aavan-section-lead {
+        font-size: 16px;
+        line-height: 1.58;
+      }
+      .aavan-homepage #about .aavan-about-photo img {
+        aspect-ratio: 16 / 10;
+        object-position: center 25%;
+      }
+      .aavan-homepage #about .aavan-about-photo figcaption {
+        padding: 10px 15px 12px;
+        font-size: 12px;
+      }
+      .aavan-homepage #about .aavan-about-story { padding: 24px 20px 26px; }
+      .aavan-homepage #about .aavan-about-story h3 { font-size: clamp(27px, 7vw, 34px); }
+      .aavan-homepage #about .aavan-about-story > p:not(.eyebrow) { font-size: 15.5px; }
+      .aavan-homepage #about .aavan-about-benefits {
+        grid-template-columns: minmax(0, 1fr);
+        margin-top: 12px;
+        gap: 10px;
+      }
+      .aavan-homepage #about .aavan-about-benefit {
+        min-height: 0;
+        padding: 18px 17px;
+        gap: 16px;
+      }
+      .aavan-homepage #about .aavan-about-benefit h3 { font-size: 22px; margin-bottom: 6px; }
+      .aavan-homepage #about .aavan-about-benefit p { font-size: 15px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .aavan-homepage #about * { scroll-behavior: auto; }
+    }
+  </style>
 </head>
 
 <body class="aavan-homepage">
@@ -600,48 +781,68 @@
 
 
     <!-- ====================================================
-         ABOUT — community-led presentation
+         ABOUT — AAVAN community, culture and belonging
          ==================================================== -->
 
-    <section class="section aavan-content-section" id="about" aria-labelledby="about-heading">
+    <section class="section aavan-content-section aavan-about-v2" id="about" aria-labelledby="about-heading">
       <div class="container">
-        <div class="aavan-section-intro">
+        <div class="aavan-section-intro aavan-about-intro">
           <div>
             <p class="eyebrow">ABOUT AAVAN</p>
-            <h2 id="about-heading">More than a community.<br><em>A place to belong.</em></h2>
+            <h2 id="about-heading">Where Assamese culture<br><em>feels at home.</em></h2>
           </div>
-          <p class="aavan-section-lead">From a familiar Bihu song to a new friendship in British Columbia, AAVAN brings people together through the traditions and moments we share.</p>
+          <p class="aavan-section-lead">
+            AAVAN brings Assamese families, students and friends together
+            across British Columbia through festivals, gatherings and shared experiences.
+          </p>
         </div>
 
-        <div class="aavan-story-grid">
-          <figure class="aavan-story-photo">
-            <img src="assets/images/community-group.jpg"
-                 alt="An AAVAN community gathering" loading="lazy" decoding="async">
-            <figcaption>Connected by culture. Brought together by community.</figcaption>
+        <div class="aavan-about-feature">
+          <figure class="aavan-about-photo">
+            <img
+              src="assets/images/community-group.jpg"
+              alt="Members of the AAVAN community together at a gathering"
+              loading="lazy"
+              decoding="async"
+            >
+            <figcaption>Real people. Shared traditions. Lasting connections.</figcaption>
           </figure>
-          <div class="aavan-story-copy">
-            <p class="eyebrow">OUR PURPOSE</p>
-            <h3>Keeping our roots close, wherever life takes us.</h3>
-            <p>We connect Assamese families, students, newcomers and friends across British Columbia through celebrations, cultural programs and meaningful community connections.</p>
-            <a class="aavan-text-link" href="gallery.html">Explore our community moments <span aria-hidden="true">→</span></a>
+
+          <div class="aavan-about-story">
+            <p class="eyebrow">WHAT BRINGS US TOGETHER</p>
+            <h3>From familiar traditions to new friendships.</h3>
+            <p>
+              Whether you're new to British Columbia or have called it home for years,
+              AAVAN is a place to celebrate Assamese culture, meet people and build
+              meaningful connections across generations.
+            </p>
+            <a class="aavan-text-link" href="#events">
+              Explore upcoming events <span aria-hidden="true">→</span>
+            </a>
           </div>
         </div>
 
-        <div class="cards aavan-pillars">
-          <article class="card">
-            <span class="aavan-pillar-number" aria-hidden="true">01</span>
-            <h3>Culture</h3>
-            <p>Celebrate the music, food, festivals and Assamese traditions that connect generations.</p>
+        <div class="aavan-about-benefits" aria-label="Ways to connect through AAVAN">
+          <article class="aavan-about-benefit">
+            <span class="aavan-benefit-index" aria-hidden="true">01</span>
+            <div>
+              <h3>Celebrate Assam</h3>
+              <p>Enjoy Bihu, music, food and traditions that connect generations.</p>
+            </div>
           </article>
-          <article class="card">
-            <span class="aavan-pillar-number" aria-hidden="true">02</span>
-            <h3>Connection</h3>
-            <p>Build friendships and find familiar faces throughout British Columbia.</p>
+          <article class="aavan-about-benefit">
+            <span class="aavan-benefit-index" aria-hidden="true">02</span>
+            <div>
+              <h3>Meet your people</h3>
+              <p>Find familiar faces and form friendships across British Columbia.</p>
+            </div>
           </article>
-          <article class="card">
-            <span class="aavan-pillar-number" aria-hidden="true">03</span>
-            <h3>Community</h3>
-            <p>Make room for families, students, newcomers and everyone who wants to stay connected.</p>
+          <article class="aavan-about-benefit">
+            <span class="aavan-benefit-index" aria-hidden="true">03</span>
+            <div>
+              <h3>Stay connected</h3>
+              <p>Take part in gatherings and shared experiences that bring us together.</p>
+            </div>
           </article>
         </div>
       </div>
@@ -1055,14 +1256,6 @@
         </h4>
 
         <div class="footer-contact">
-
-          <span>
-            17147 85A Ave
-          </span>
-
-          <span>
-            Surrey, BC V4N 0B1
-          </span>
 
           <a href="tel:+16046490469">
             604-649-0469
