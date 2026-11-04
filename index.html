@@ -946,6 +946,135 @@
       .aavan-homepage .aavan-top-art img { max-height: 255px; }
     }
   </style>
+
+  <style id="aavan-hero-horizontal-20261104">
+    /* Horizontal hero only; existing shared page grid and other sections remain intact. */
+    .aavan-homepage .aavan-top-hero.aavan-hero-horizontal {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0;
+      min-height: 0;
+      padding-top: 27px;
+      padding-bottom: 27px;
+      overflow: visible;
+      text-align: center;
+    }
+    .aavan-homepage .aavan-hero-horizontal .aavan-top-copy {
+      width: 100%;
+      padding: 0;
+      max-width: none;
+    }
+    .aavan-homepage .aavan-hero-horizontal .aavan-top-eyebrow {
+      font-size: 11px;
+      letter-spacing: .18em;
+      margin: 0 0 10px;
+    }
+    .aavan-homepage .aavan-hero-horizontal .aavan-top-title {
+      max-width: none;
+      margin: 0 auto 15px;
+      font-size: clamp(29px, 3.35vw, 43px);
+      line-height: 1.13;
+      letter-spacing: -.042em;
+      text-wrap: balance;
+    }
+    .aavan-homepage .aavan-hero-horizontal .aavan-top-art {
+      display: block;
+      align-self: stretch;
+      width: 100%;
+      max-width: none;
+      min-width: 0;
+      margin: 0;
+    }
+    .aavan-homepage .aavan-hero-horizontal .aavan-top-art picture {
+      display: block;
+      width: 100%;
+    }
+    .aavan-homepage .aavan-hero-horizontal .aavan-top-art img {
+      display: block;
+      margin: auto;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      max-height: 310px;
+      object-fit: contain;
+      mix-blend-mode: normal;
+    }
+    .aavan-homepage .aavan-hero-horizontal .aavan-hero-bottom {
+      width: 100%;
+      padding-top: 10px;
+    }
+    .aavan-homepage .aavan-hero-horizontal .aavan-top-description {
+      max-width: 780px;
+      margin: 0 auto 16px;
+      font-size: 15px;
+      line-height: 1.52;
+      color: #395246;
+      text-align: center;
+    }
+    .aavan-homepage .aavan-hero-horizontal .aavan-top-ctas {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .aavan-homepage .aavan-hero-horizontal .aavan-top-cta-primary,
+    .aavan-homepage .aavan-hero-horizontal .aavan-top-cta-secondary {
+      min-height: 43px;
+      padding: 10px 21px;
+    }
+    @media (min-width: 1100px) {
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-title { white-space: nowrap; }
+    }
+    @media (min-width: 641px) and (max-width: 980px) {
+      .aavan-homepage .aavan-top-hero.aavan-hero-horizontal { padding-top: 26px; padding-bottom: 24px; }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-title { font-size: clamp(27px, 3.7vw, 36px); }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-art { margin: 0; }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-art img { max-height: 260px; }
+    }
+    @media (max-width: 640px) {
+      .aavan-homepage .aavan-top-hero.aavan-hero-horizontal { padding-top: 26px; padding-bottom: 23px; }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-copy { padding: 0; }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-eyebrow { font-size: 10px; margin-bottom: 10px; }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-title {
+        margin-bottom: 10px;
+        max-width: 480px;
+        font-size: clamp(28px, 7.2vw, 37px);
+        line-height: 1.11;
+        white-space: normal;
+      }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-art {
+        max-width: none;
+        width: 100%;
+        margin: 0;
+      }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-art img {
+        max-height: 250px;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+      }
+      .aavan-homepage .aavan-hero-horizontal .aavan-hero-bottom { padding-top: 9px; }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-description {
+        max-width: 430px;
+        margin: 0 auto 15px;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-cta-primary,
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-cta-secondary {
+        min-height: 42px;
+        padding: 10px 13px;
+      }
+    }
+    @media (max-width: 360px) {
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-ctas { flex-direction: column; }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-ctas a { width: 100%; }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-art img { max-height: 225px; }
+    }
+  </style>
 </head>
 
 <body class="aavan-homepage">
@@ -994,10 +1123,22 @@
       </div>
     </div>
 
-    <div class="aavan-top-hero">
+    <div class="aavan-top-hero aavan-hero-horizontal">
       <div class="aavan-top-copy">
         <p class="aavan-top-eyebrow">OUR CULTURE · OUR COMMUNITY</p>
         <h1 class="aavan-top-title">A little closer to Assam. A lot closer together.</h1>
+      </div>
+
+      <div class="aavan-top-art">
+        <picture>
+          <source media="(max-width: 640px)" srcset="assets/images/aavan-community-banner.webp">
+          <img src="assets/images/aavan-community-banner-horizontal.webp"
+               alt="Assam Association Vancouver artwork with the Assam silhouette, maple leaf, Assamese cultural performers and Vancouver skyline"
+               width="1740" height="475" fetchpriority="high" decoding="async">
+        </picture>
+      </div>
+
+      <div class="aavan-hero-bottom">
         <p class="aavan-top-description">
           A home for Assamese culture, celebrations, friendships and community life across British Columbia.
         </p>
@@ -1005,11 +1146,6 @@
           <a class="aavan-top-cta-primary" href="#events">Explore events</a>
           <a class="aavan-top-cta-secondary" href="membership.html">Become a member</a>
         </div>
-      </div>
-      <div class="aavan-top-art">
-        <img src="assets/images/aavan-community-banner.webp"
-             alt="AAVAN artwork celebrating Assamese culture and the connection between Assam and Canada"
-             width="1600" height="1280" fetchpriority="high" decoding="async">
       </div>
     </div>
   </header>
