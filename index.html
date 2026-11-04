@@ -803,6 +803,62 @@
       .aavan-homepage #about .aavan-about-photo:hover { transform: none; }
     }
   </style>
+
+  <style id="aavan-fullbleed-shared-content-grid">
+    /* Homepage-wide alignment only. Section backgrounds bleed edge-to-edge,
+       while text, photos, cards and footer share one centered 1220px grid. */
+    .aavan-homepage {
+      --aavan-grid-max: 1220px;
+      --aavan-grid-gutter: clamp(16px, 3.2vw, 32px);
+      margin: 0;
+      width: 100%;
+      max-width: none;
+      overflow-x: clip;
+    }
+
+    /* Backgrounds belong to full viewport sections, not the content grid. */
+    .aavan-homepage .aavan-top,
+    .aavan-homepage .aavan-nav-shell,
+    .aavan-homepage .aavan-values,
+    .aavan-homepage main,
+    .aavan-homepage main > .section,
+    .aavan-homepage footer#contact,
+    .aavan-homepage footer .footer-bottom {
+      width: 100%;
+      max-width: none;
+      margin-inline: 0;
+      border-inline: 0;
+    }
+
+    /* All primary content begins and ends on the SAME vertical guide lines. */
+    .aavan-homepage .aavan-nav-inner,
+    .aavan-homepage .aavan-top-hero,
+    .aavan-homepage .aavan-values-inner,
+    .aavan-homepage main .section > .container,
+    .aavan-homepage footer .footer-grid,
+    .aavan-homepage footer .footer-bottom-inner {
+      width: min(var(--aavan-grid-max), calc(100% - var(--aavan-grid-gutter) - var(--aavan-grid-gutter)));
+      max-width: none;
+      margin-inline: auto;
+      box-sizing: border-box;
+    }
+
+    /* Remove independent legacy side indents inside header + hero. */
+    .aavan-homepage .aavan-nav-inner,
+    .aavan-homepage .aavan-values-inner { padding-inline: 0; }
+    .aavan-homepage .aavan-top-hero { padding-inline: 0; }
+
+    /* On tablet the same grid stays consistent instead of snapping to a
+       narrower 720px container for some sections and not others. */
+    @media (max-width: 980px) {
+      .aavan-homepage .aavan-top-hero { padding-inline: 0; }
+      .aavan-homepage .aavan-top-copy { padding-left: 0; }
+    }
+    @media (max-width: 520px) {
+      .aavan-homepage .aavan-top-hero { padding-inline: 0; }
+      .aavan-homepage .aavan-top-copy { padding-inline: 0; }
+    }
+  </style>
 </head>
 
 <body class="aavan-homepage">
