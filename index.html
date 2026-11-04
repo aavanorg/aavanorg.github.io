@@ -1075,6 +1075,35 @@
       .aavan-homepage .aavan-hero-horizontal .aavan-top-art img { max-height: 225px; }
     }
   </style>
+
+  <style id="aavan-mobile-banner-full-width-20261104">
+    /* Mobile-only: allow the existing original artwork to reach the screen edges.
+       Keep the original image proportions — no stretching, cropping or new uploads.
+       Desktop and tablet above 640px retain their existing approved design. */
+    @media (max-width: 640px) {
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-art {
+        display: block;
+        flex: none;
+        align-self: center;
+        width: 100vw;
+        max-width: none;
+        margin-inline: calc(50% - 50vw);
+      }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-art picture {
+        display: block;
+        width: 100%;
+      }
+      .aavan-homepage .aavan-hero-horizontal .aavan-top-art img {
+        display: block;
+        width: 100%;
+        max-width: none;
+        height: auto;
+        max-height: none;
+        object-fit: contain;
+        margin: 0;
+      }
+    }
+  </style>
 </head>
 
 <body class="aavan-homepage">
