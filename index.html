@@ -859,6 +859,93 @@
       .aavan-homepage .aavan-top-copy { padding-inline: 0; }
     }
   </style>
+
+  <style id="aavan-hero-compact-20261104">
+    /* Hero-only refinement. Full-width section and unified alignment remain intact. */
+    .aavan-homepage .aavan-top-title { text-wrap: balance; }
+    @media (min-width: 981px) {
+      .aavan-homepage .aavan-top-hero {
+        min-height: 395px;
+        grid-template-columns: 46% minmax(0, 1fr);
+      }
+      .aavan-homepage .aavan-top-copy { padding: 26px 14px 26px 0; }
+      .aavan-homepage .aavan-top-eyebrow { margin-bottom: 14px; }
+      .aavan-homepage .aavan-top-title {
+        max-width: 550px;
+        font-size: clamp(46px, 4.05vw, 59px);
+        line-height: 1.045;
+        margin-bottom: 14px;
+      }
+      .aavan-homepage .aavan-top-description {
+        max-width: 440px;
+        font-size: 15px;
+        line-height: 1.55;
+        margin-bottom: 19px;
+      }
+      .aavan-homepage .aavan-top-cta-primary,
+      .aavan-homepage .aavan-top-cta-secondary { min-height: 44px; padding: 11px 18px; }
+      .aavan-homepage .aavan-top-art img {
+        width: auto;
+        height: 390px;
+        max-width: 100%;
+        max-height: 390px;
+        object-fit: contain;
+      }
+    }
+    /* The existing header menu changes at 980px; keep the hero clean below it. */
+    @media (min-width: 641px) and (max-width: 980px) {
+      .aavan-homepage .aavan-top-hero {
+        grid-template-columns: minmax(0, 48%) minmax(0, 52%);
+        min-height: 350px;
+        align-items: center;
+      }
+      .aavan-homepage .aavan-top-copy { padding: 27px 12px 27px 0; }
+      .aavan-homepage .aavan-top-eyebrow { margin-bottom: 12px; font-size: 10px; }
+      .aavan-homepage .aavan-top-title {
+        font-size: clamp(38px, 4.7vw, 47px);
+        line-height: 1.055;
+        margin-bottom: 13px;
+      }
+      .aavan-homepage .aavan-top-description { font-size: 14px; line-height: 1.5; margin-bottom: 17px; }
+      .aavan-homepage .aavan-top-art { margin: 0; max-width: none; }
+      .aavan-homepage .aavan-top-art img {
+        width: auto;
+        height: min(43vw, 335px);
+        max-width: 100%;
+        max-height: 335px;
+        object-fit: contain;
+      }
+      .aavan-homepage .aavan-top-cta-primary,
+      .aavan-homepage .aavan-top-cta-secondary { min-height: 42px; padding: 9px 12px; }
+    }
+    @media (max-width: 640px) {
+      .aavan-homepage .aavan-top-hero { grid-template-columns: 1fr; min-height: 0; }
+      .aavan-homepage .aavan-top-copy { padding: 31px 0 0; }
+      .aavan-homepage .aavan-top-eyebrow { margin-bottom: 11px; font-size: 10px; }
+      .aavan-homepage .aavan-top-title {
+        max-width: 470px;
+        font-size: clamp(37px, 9.1vw, 47px);
+        line-height: 1.06;
+        margin-bottom: 12px;
+      }
+      .aavan-homepage .aavan-top-description { margin-bottom: 16px; font-size: 14px; line-height: 1.5; }
+      .aavan-homepage .aavan-top-art { max-width: 470px; margin: 2px auto 0; }
+      .aavan-homepage .aavan-top-art img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 300px;
+        object-fit: contain;
+      }
+      .aavan-homepage .aavan-top-cta-primary,
+      .aavan-homepage .aavan-top-cta-secondary { min-height: 42px; padding: 10px 15px; }
+    }
+    @media (max-width: 400px) {
+      .aavan-homepage .aavan-top-copy { padding-top: 25px; }
+      .aavan-homepage .aavan-top-title { font-size: clamp(35px, 9vw, 38px); }
+      .aavan-homepage .aavan-top-art img { max-height: 255px; }
+    }
+  </style>
 </head>
 
 <body class="aavan-homepage">
