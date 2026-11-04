@@ -696,6 +696,112 @@
       .aavan-homepage #about * { scroll-behavior: auto; }
     }
   </style>
+  <style id="aavan-about-v3-original-photography">
+    /* Two individual, original community photographs. No cropping or distortion. */
+    .aavan-homepage #about .aavan-about-feature {
+      display: block;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #e7dfd1;
+      border-radius: 16px;
+    }
+    .aavan-homepage #about .aavan-about-gallery {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      padding: 16px;
+      align-items: stretch;
+      background: #f7f2e9;
+    }
+    .aavan-homepage #about .aavan-about-photo {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid #e5dfd4;
+      border-radius: 12px;
+      background: #fff;
+    }
+    .aavan-homepage #about .aavan-about-photo-media {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      min-width: 0;
+      overflow: hidden;
+      background: #eee9df;
+    }
+    .aavan-homepage #about .aavan-about-photo-media img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      max-height: none;
+      aspect-ratio: auto;
+      object-fit: contain;
+      object-position: center;
+    }
+    .aavan-homepage #about .aavan-about-photo figcaption {
+      position: static;
+      margin-top: auto;
+      padding: 13px 17px;
+      background: #fff;
+      color: #264a3a;
+      font-size: 13px;
+      line-height: 1.45;
+      font-weight: 700;
+      border-top: 1px solid #eee8de;
+    }
+    .aavan-homepage #about .aavan-about-story {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      align-items: center;
+      gap: clamp(24px, 4vw, 52px);
+      padding: clamp(26px, 3.2vw, 42px);
+      border-top: 1px solid #e7dfd1;
+    }
+    .aavan-homepage #about .aavan-about-story h3 {
+      max-width: 530px;
+      margin-bottom: 0;
+    }
+    .aavan-homepage #about .aavan-about-story-body > p {
+      max-width: 550px;
+      margin: 0 0 14px;
+      color: #4d5d51;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    @media (max-width: 900px) {
+      .aavan-homepage #about .aavan-about-gallery {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .aavan-homepage #about .aavan-about-photo-media { aspect-ratio: auto; }
+      .aavan-homepage #about .aavan-about-photo-media img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: auto;
+        object-fit: contain;
+      }
+      .aavan-homepage #about .aavan-about-story {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+      }
+    }
+    @media (max-width: 600px) {
+      .aavan-homepage #about .aavan-about-gallery { padding: 10px; gap: 12px; }
+      .aavan-homepage #about .aavan-about-photo figcaption {
+        padding: 11px 13px;
+        font-size: 12px;
+      }
+      .aavan-homepage #about .aavan-about-story { padding: 24px 19px 26px; }
+      .aavan-homepage #about .aavan-about-story-body > p {
+        font-size: 15.5px;
+        line-height: 1.68;
+      }
+    }
+  </style>
 </head>
 
 <body class="aavan-homepage">
@@ -798,27 +904,46 @@
         </div>
 
         <div class="aavan-about-feature">
-          <figure class="aavan-about-photo">
-            <img
-              src="assets/images/about-aavan-community-collage.jpg"
-              alt="AAVAN community group photos featuring members gathered together at recent events"
-              loading="lazy"
-              decoding="async"
-            >
-            <figcaption>Moments that reflect the people and connections behind AAVAN.</figcaption>
-          </figure>
+          <div class="aavan-about-gallery" aria-label="Photographs of AAVAN community celebrations">
+            <figure class="aavan-about-photo">
+              <div class="aavan-about-photo-media">
+                <img
+                  src="assets/images/aavan-community-celebration-original.jpg"
+                  width="2048" height="1157"
+                  alt="AAVAN members and children gathered in colourful traditional attire at a community celebration"
+                  loading="lazy" decoding="async"
+                >
+              </div>
+              <figcaption>Celebrating our culture together</figcaption>
+            </figure>
+            <figure class="aavan-about-photo">
+              <div class="aavan-about-photo-media">
+                <img
+                  src="assets/images/aavan-community-gathering-original.jpg"
+                  width="2048" height="1391"
+                  alt="AAVAN members and children posing together at an association gathering"
+                  loading="lazy" decoding="async"
+                >
+              </div>
+              <figcaption>Building connections across generations</figcaption>
+            </figure>
+          </div>
 
           <div class="aavan-about-story">
-            <p class="eyebrow">WHAT BRINGS US TOGETHER</p>
-            <h3>From familiar traditions to new friendships.</h3>
-            <p>
-              Whether you're new to British Columbia or have called it home for years,
-              AAVAN is a place to celebrate Assamese culture, meet people and build
-              meaningful connections across generations.
-            </p>
-            <a class="aavan-text-link" href="#events">
-              Explore upcoming events <span aria-hidden="true">→</span>
-            </a>
+            <div class="aavan-about-story-heading">
+              <p class="eyebrow">WHAT BRINGS US TOGETHER</p>
+              <h3>From familiar traditions to new friendships.</h3>
+            </div>
+            <div class="aavan-about-story-body">
+              <p>
+                Whether you're new to British Columbia or have called it home for years,
+                AAVAN is a place to celebrate Assamese culture, meet people and build
+                meaningful connections across generations.
+              </p>
+              <a class="aavan-text-link" href="#events">
+                Explore upcoming events <span aria-hidden="true">→</span>
+              </a>
+            </div>
           </div>
         </div>
 
