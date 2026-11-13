@@ -1104,6 +1104,35 @@
       }
     }
   </style>
+
+  <style id="aavan-social-media-20261113">
+    /* Footer-only links to AAVAN's community accounts; other layout is unchanged. */
+    .aavan-homepage .aavan-social-block { margin-top: 23px; }
+    .aavan-homepage .aavan-social-label {
+      margin: 0 0 11px; font: 800 11px/1.4 Arial, sans-serif;
+      letter-spacing: .13em; color: #f6d999; text-transform: uppercase;
+    }
+    .aavan-homepage .aavan-social-links { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .aavan-homepage .aavan-social-link {
+      display: inline-flex; align-items: center; justify-content: flex-start; gap: 9px;
+      min-height: 42px; padding: 9px 13px; color: #f8faf7;
+      background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.22);
+      border-radius: 8px; font: 700 13px/1.35 Arial, sans-serif;
+      text-decoration: none; transition: border-color .18s ease, background-color .18s ease;
+    }
+    .aavan-homepage .aavan-social-link svg { display: block; flex: none; width: 18px; height: 18px; }
+    .aavan-homepage .aavan-social-link:hover {
+      color: #fff7dc; background: rgba(255,255,255,.12); border-color: #f6d999;
+    }
+    .aavan-homepage .aavan-social-link:focus-visible { outline: 3px solid #f6d999; outline-offset: 3px; }
+    @media (max-width: 380px) {
+      .aavan-homepage .aavan-social-links { gap: 8px; }
+      .aavan-homepage .aavan-social-link { padding-inline: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .aavan-homepage .aavan-social-link { transition: none; }
+    }
+  </style>
 </head>
 
 <body class="aavan-homepage">
@@ -1603,6 +1632,22 @@
           British Columbia through culture,
           friendship, family and shared experiences.
         </p>
+
+      
+
+        <div class="aavan-social-block" aria-label="AAVAN social media">
+          <p class="aavan-social-label">Follow AAVAN</p>
+          <div class="aavan-social-links">
+            <a class="aavan-social-link" href="https://www.facebook.com/share/19DdZ9LkJz/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="AAVAN on Facebook (opens in a new tab)">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.56 9.88V14.9H7.9V12h2.54V9.8c0-2.52 1.5-3.91 3.78-3.91 1.09 0 2.24.2 2.24.2v2.46H15.2c-1.25 0-1.64.78-1.64 1.58V12h2.8l-.45 2.9h-2.35v6.98A10 10 0 0 0 22 12Z"/></svg>
+              <span>Facebook</span>
+            </a>
+            <a class="aavan-social-link" href="https://www.instagram.com/aavan_insta/" target="_blank" rel="noopener noreferrer" aria-label="AAVAN on Instagram (opens in a new tab)">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4"/><circle cx="17.7" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+              <span>Instagram</span>
+            </a>
+          </div>
+        </div>
 
       </div>
 
