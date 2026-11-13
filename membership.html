@@ -5,6 +5,97 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Membership | AAVAN</title>
   <link rel="stylesheet" href="css/public-v2.css">
+  <style id="aavan-membership-mobile-20261113">
+    /* Keep only the active application step visible, including after JS updates. */
+    .membership-shell [hidden] { display: none !important; }
+    .membership-shell .membership-step,
+    .membership-shell .membership-card,
+    .membership-shell .membership-card form,
+    .membership-shell .form-grid { min-width: 0; }
+    .membership-shell .family-row {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: end; gap: 12px; margin: 12px 0;
+    }
+    .membership-shell .family-row .remove-family-member {
+      width: fit-content; max-width: 100%; min-height: 40px;
+      padding: 8px 14px; border-radius: 9px; cursor: pointer;
+      border: 1px solid #d9d0c5; background: #fbf8f2; color: #322d26;
+    }
+    .membership-shell .payment-summary,
+    .membership-shell .payment-summary strong { overflow-wrap: anywhere; }
+    @media (max-width: 720px) {
+      .membership-shell .container,
+      .membership-shell main.container { width: calc(100% - 32px); max-width: 100%; }
+      .membership-shell .header-inner {
+        min-height: 72px; display: flex; flex-wrap: nowrap;
+        align-items: center; gap: 10px;
+      }
+      .membership-shell .header-inner .brand {
+        flex: 1 1 0; min-width: 0; gap: 8px;
+      }
+      .membership-shell .header-inner .brand img {
+        width: 40px; height: 40px; flex: 0 0 40px;
+      }
+      .membership-shell .header-inner .brand span {
+        font-size: 12px; line-height: 1.25; overflow-wrap: anywhere;
+      }
+      .membership-shell .header-inner > .btn {
+        flex: 0 0 auto; min-height: 40px; padding-inline: 11px; font-size: 12px;
+      }
+      .membership-shell .membership-hero { padding: 32px 0 19px; }
+      .membership-shell .membership-hero h1 {
+        font-size: clamp(32px, 8.8vw, 44px); line-height: 1.09;
+        overflow-wrap: anywhere; margin-bottom: 12px;
+      }
+      .membership-shell #membershipPlanPreview.cards {
+        display: grid; grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+      }
+      .membership-shell .membership-card {
+        padding: 19px 16px; border-radius: 17px; margin-bottom: 40px;
+      }
+      .membership-shell .membership-progress {
+        display: flex; flex-wrap: nowrap; gap: 8px;
+        overflow-x: auto; overscroll-behavior-x: contain;
+        padding-bottom: 10px; margin-bottom: 20px;
+        scrollbar-width: thin; scroll-snap-type: x proximity;
+      }
+      .membership-shell .membership-progress button {
+        flex: 0 0 auto; white-space: nowrap; scroll-snap-align: start;
+        min-height: 43px; padding: 10px 12px; font-size: 12px;
+      }
+      .membership-shell .form-grid,
+      .membership-shell .interest-grid,
+      .membership-shell .plan-grid,
+      .membership-shell .family-row {
+        display: grid; grid-template-columns: minmax(0, 1fr); gap: 15px;
+      }
+      .membership-shell .membership-step { gap: 16px; }
+      .membership-shell .membership-card label { min-width: 0; max-width: 100%; }
+      .membership-shell .membership-card input:not([type="checkbox"]):not([type="radio"]),
+      .membership-shell .membership-card textarea,
+      .membership-shell .membership-card select {
+        min-width: 0; width: 100%; max-width: 100%; font-size: 16px;
+        box-sizing: border-box;
+      }
+      .membership-shell .interest-card { min-height: 60px; padding: 14px; }
+      .membership-shell .interest-card input[type="checkbox"] {
+        width: 20px; height: 20px; flex: 0 0 20px;
+      }
+      .membership-shell .form-actions { align-items: stretch; gap: 10px; }
+      .membership-shell .form-actions > div { flex: 1 1 0; min-width: 0; }
+      .membership-shell .form-actions .btn { min-width: 0; }
+      .membership-shell .form-actions > div .btn { width: 100%; }
+    }
+    @media (max-width: 360px) {
+      .membership-shell .header-inner .brand img { width: 34px; height: 34px; flex-basis: 34px; }
+      .membership-shell .header-inner > .btn { padding-inline: 8px; font-size: 11px; }
+      .membership-shell .form-actions { flex-wrap: wrap; }
+      .membership-shell .form-actions > .btn,
+      .membership-shell .form-actions > div { flex: 1 1 100%; width: 100%; }
+      .membership-shell .form-actions > .btn { order: 2; }
+    }
+  </style>
 </head>
 <body class="membership-shell">
 <header class="site-header">
